@@ -3,6 +3,7 @@ using namespace std;
 
 bool Game::init(){
 	screen.create(sf::VideoMode(800,600), "Will To Power");
+	cout <<"GameInit"<<endl;
 	curMap.init(1,1);
 	return true;
 }

@@ -1,6 +1,7 @@
 #ifndef TILE_HPP
 #define TILE_HPP
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 enum TAG_TYPES {
 	IS_WALKABLE = 1,
@@ -12,8 +13,11 @@ const int HALF_TILE_HEIGHT = 16;
 
 class Tile {
 public:
-	sf::Sprite sprite;
+	sf::Sprite spr;
+	sf::Texture tex;
 	int tags;
+	Tile();
+	Tile(std::string filename);
 	void render(sf::RenderTarget &screen, int x, int y);
 	void update(float dt, int x, int y);
 };

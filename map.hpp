@@ -7,12 +7,13 @@
 class Map {
 	private:
 		int** tiles;
-		std::vector<Tile> tileDict;
+		std::vector<Tile*> tileDict;
 		int width, height;
 		sf::RenderTexture mapTex;
 		sf::Sprite mapSpr;
-		void addTile(Tile& tileToAdd);
+		void addTile(Tile* tileToAdd);
 	public:
+		~Map();
 		void init(int width, int height);
 		void update(float dt);
 		void render(sf::RenderWindow &screen);
