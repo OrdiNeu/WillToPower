@@ -22,14 +22,13 @@ void Map::reRender() {
 	for (int x = 0; x < width; x++) {
 		for (int y = 0; y < height; y++) {
 			// Draw the tile onto this texture
-			tileDict.at(tiles[x][y])->render(mapTex, x, y);
+			tileDict.at(tiles[x][y])->render(mapTex, (x*2 + y%2)*HALF_TILE_WIDTH, y*HALF_TILE_WIDTH);
 		}
 	}
 	mapSpr.setTexture(mapTex.getTexture());
 }
 
 void Map::init(int width, int height) {
-	cout << "Init" << endl;
 	this->width = width;
 	this->height = height;
 	tiles = new int*[width];
@@ -42,6 +41,7 @@ void Map::init(int width, int height) {
 	Tile* testTile = new Tile("./data/images/GrassTile1.png");
 	addTile(testTile);
 	mapTex.create(HALF_TILE_WIDTH*(2*width+1), HALF_TILE_HEIGHT*(height+1));
+	cout << HALF_TILE_WIDTH*(2*width+1) << endl;
 	mapSpr.setTexture(mapTex.getTexture());
 	reRender();
 }
