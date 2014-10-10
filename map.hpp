@@ -9,10 +9,13 @@ class Map {
 		int** tiles;
 		Tile* tileDict;
 		int width, height;
+		sf::Image mapImg;
+		sf::Texture mapTex;
+		sf::Sprite mapSpr;
 	public:
-		void init(int width, int height)
+		void init(int width, int height);
 		void update(float dt);
-		void render(sf::RenderWindow* screen);
+		void render(sf::RenderWindow &screen);
 		Tile* getTile(int x, int y);
 };
 
