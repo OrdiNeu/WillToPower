@@ -57,7 +57,8 @@ build/release/main.o: main.cpp game.hpp ../SFML/include/SFML/Graphics.hpp \
  ../SFML/include/SFML/Graphics/RectangleShape.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
- ../SFML/include/SFML/Graphics/Text.hpp map.hpp tile.hpp constants.hpp
+ ../SFML/include/SFML/Graphics/Text.hpp map.hpp tile.hpp constants.hpp \
+ mode.hpp
 
 game.hpp:
 
@@ -194,3 +195,5 @@ map.hpp:
 tile.hpp:
 
 constants.hpp:
+
+mode.hpp:

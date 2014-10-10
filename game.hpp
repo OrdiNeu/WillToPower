@@ -3,11 +3,12 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "map.hpp"
+#include "mode.hpp"
 
 class Game {
 	private:
 		sf::RenderWindow screen;
-		Map curMap;
+		Mode* curMode;
 	public:
 		bool init();
 		int run();

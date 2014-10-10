@@ -3,7 +3,7 @@ using namespace std;
 
 bool Game::init(){
 	screen.create(sf::VideoMode(800,600), "Will To Power");
-	curMap.init(5,5);
+	curMode->init();
 	return true;
 }
 
@@ -30,9 +30,9 @@ int Game::run(){
 }
 
 void Game::update(float dt){
-	curMap.update(dt);
+	curMode->update(dt);
 }
 
 void Game::render(){
-	curMap.render(screen);
+	curMode->render(&screen);
 }

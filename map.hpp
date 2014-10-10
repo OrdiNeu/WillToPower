@@ -16,7 +16,7 @@ class Map {
 		~Map();
 		void init(int width, int height);
 		void update(float dt);
-		void render(sf::RenderWindow &screen);
+		void render(sf::RenderTarget* screen);
 		void reRender();
 		Tile* getTile(int x, int y);
 };

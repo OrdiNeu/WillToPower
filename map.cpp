@@ -11,8 +11,8 @@ Map::~Map() {
 void Map::update(float dt) {
 }
 
-void Map::render(sf::RenderWindow &screen) {
-	screen.draw(mapSpr);
+void Map::render(sf::RenderTarget *screen) {
+	screen->draw(mapSpr);
 }
 
 // Redraw the map texture
@@ -30,6 +30,7 @@ void Map::reRender() {
 }
 
 void Map::init(int width, int height) {
+	// Set up the tiles
 	this->width = width;
 	this->height = height;
 	tiles = new int*[width];
@@ -39,10 +40,13 @@ void Map::init(int width, int height) {
 			tiles[x][y] = 0;
 		}
 	}
-	Tile* testTile = new Tile("./data/images/GrassTile1.png");
-	addTile(testTile);
+
+	// Add the default empty tile
+	Tile* emptyTile = new Tile();
+	addTile(emptyTile);
+	Tile* grassTile = new Tile("./data/images/GrassTile1.png");
+	addTile(grassTile);
 	mapTex.create(HALF_TILE_WIDTH*(2*width+1), HALF_TILE_HEIGHT*(height+1));
-	cout << HALF_TILE_WIDTH*(2*width+1) << endl;
 	mapSpr.setTexture(mapTex.getTexture());
 	reRender();
 }
