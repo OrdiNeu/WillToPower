@@ -12,8 +12,10 @@ void Map::init(int width, int height) {
 	for (int x = 0; x < width; x++) {
 		tiles[x] = new int[height];
 	}
-	mapTex.update(mapImg);
+	mapTex.loadFromFile("./data/images/noscale/MenuBack.png");
+	mapImg = mapTex.copyToImage();
 	mapSpr.setTexture(mapTex);
+	mapSpr.setScale(2,2);
 }
 
 Tile* Map::getTile(int x, int y) {
