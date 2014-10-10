@@ -11,9 +11,10 @@ const int HALF_TILE_WIDTH = 16;
 const int HALF_TILE_HEIGHT = 16;
 
 class Tile {
-	sf::Image image;
+public:
+	sf::Sprite sprite;
 	int tags;
-	void render(sf::Image* image, int x, int y);
+	void render(sf::RenderTarget &screen, int x, int y);
 	void update(float dt, int x, int y);
 };
 

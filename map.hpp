@@ -7,15 +7,16 @@
 class Map {
 	private:
 		int** tiles;
-		Tile* tileDict;
+		std::vector<Tile> tileDict;
 		int width, height;
-		sf::Image mapImg;
-		sf::Texture mapTex;
+		sf::RenderTexture mapTex;
 		sf::Sprite mapSpr;
+		void addTile();
 	public:
 		void init(int width, int height);
 		void update(float dt);
 		void render(sf::RenderWindow &screen);
+		void reRender();
 		Tile* getTile(int x, int y);
 };
 
