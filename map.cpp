@@ -19,12 +19,13 @@ void Map::render(sf::RenderWindow &screen) {
 void Map::reRender() {
 	mapTex.clear();
 	// Draw each tile
-	for (int x = 0; x < width; x++) {
-		for (int y = 0; y < height; y++) {
+	for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
 			// Draw the tile onto this texture
-			tileDict.at(tiles[x][y])->render(mapTex, (x*2 + y%2)*HALF_TILE_WIDTH, y*HALF_TILE_WIDTH);
+			tileDict.at(tiles[x][y])->render(mapTex, (x*2 + y%2)*HALF_TILE_WIDTH, y*HALF_TILE_HEIGHT);
 		}
 	}
+	mapTex.display();	// Update the texture
 	mapSpr.setTexture(mapTex.getTexture());
 }
 
