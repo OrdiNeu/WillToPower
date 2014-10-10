@@ -11,7 +11,7 @@ class Map {
 		int width, height;
 		sf::RenderTexture mapTex;
 		sf::Sprite mapSpr;
-		void addTile();
+		void addTile(Tile& tileToAdd);
 	public:
 		void init(int width, int height);
 		void update(float dt);

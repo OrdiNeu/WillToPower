@@ -35,3 +35,7 @@ void Map::init(int width, int height) {
 Tile* Map::getTile(int x, int y) {
 	return &(tileDict.at(tiles[x][y]));
 }
+
+void Map::addTile(Tile& tileToAdd) {
+	tileDict.push_back(tileToAdd);
+}
