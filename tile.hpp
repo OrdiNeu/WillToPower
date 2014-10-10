@@ -5,7 +5,7 @@
 enum TAG_TYPES {
 	IS_WALKABLE = 1,
 	IS_IRON_ORE = 2
-}
+};
 
 class Tile {
 	sf::Sprite sprite;
