@@ -1,4 +1,5 @@
 #include "a_star.hpp"
+using namespace std;
 
 AStarNode::AStarNode(int x, int y, int target_x, int target_y, int g, AStarNode* parent) {
 	this->x = x;
@@ -7,7 +8,8 @@ AStarNode::AStarNode(int x, int y, int target_x, int target_y, int g, AStarNode*
 	int dx = (x-target_x);
 	int dy = (y-target_y);
 	h = sqrt(dx*dx + dy*dy);
-	prev = parent;
+	this->parent = parent;
+	prev = NULL;
 	next = NULL;
 }
 
@@ -17,9 +19,9 @@ int AStarNode::getF() {
 }
 
 // Insert into this linked list in order of F
+// This will NOT replace this (root) node
 void AStarNode::insert(AStarNode* node) {
-	// Check if the inserted node has a lower cost than this (root) node
-	if (node->getF() < getF()) {
+	/*if (node->getF() < getF()) {
 		// Copy that node's properties here, and this node's properties there
 		// This is wildly unsafe (what if the inserted node is a child class?) but
 		// this is under crunch time
@@ -41,19 +43,29 @@ void AStarNode::insert(AStarNode* node) {
 		node->g = oldg;
 		node->h = oldh;
 		node->parent = oldparent;
+		cout << "node is performing a swap: " << node->x << "," << node->y << endl;
 		return;
-	}
+	}*/
 
-	// Otherwise, mvoe down this list and see where to insert it
+	// Otherwise, move down this list and see where to insert it
 	AStarNode* prevNode = this;
 	AStarNode* nextNode = next;
+	//cout << "Insertion: " << x << ',' << y << " -> ";
 	while (nextNode) {
 		// Does the inserted node have a lower F cost than the next one?
+		//cout << nextNode->x << ',' << nextNode->y << " -> ";
 		if (node->getF() < nextNode->getF()) {
 			nextNode->prev = node;
 			node->next = nextNode;
 			prevNode->next = node;
 			node->prev = prevNode;
+			//cout << "Insertion: " << prevNode->x << "," << prevNode->y << " -> " << node->x << "," << node->y << " -> " << nextNode->x << "," << nextNode->y << endl;
+			//cout << node->x << ',' << node->y << " -> ";
+			while (nextNode) {
+				//cout << nextNode->x << ',' << nextNode->y << " -> ";
+				nextNode = nextNode->next;
+			}
+			//cout << endl;
 			return;
 		}
 		// Otherwise, move on to the next one
@@ -61,6 +73,7 @@ void AStarNode::insert(AStarNode* node) {
 		nextNode = nextNode->next;
 	}
 	// End of chain: set it to the last node
+	//cout << node->x << ',' << node->y << endl;
 	prevNode->next = node;
 	node->prev = prevNode;
 }
@@ -84,19 +97,23 @@ std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int 
 	AStarNode* OpenList = new AStarNode(startx, starty, endx, endy, 0, NULL);
 	AStarNode* ClosedList = new AStarNode(startx, starty, endx, endy, 0, NULL);
 	std::vector<point*> retVal;
-	AStarNode* thisNode = OpenList;
+	AStarNode* thisNode;
 	while (OpenList) {
+		thisNode = OpenList;
 		int x = thisNode->x;
 		int y = thisNode->y;
+		//cout << "Now evaluating (" << x << "," << y << ")" << endl;
 
 		// At the end?
 		if (x == endx && y == endy) {
+			//cout << "Finished at (" << x << "," << y << ")" << endl;
 			// Populate the vector of points to nav through by looking through the parents
 			while (thisNode) {
 				point* thisPoint = new point;
 				thisPoint->x = thisNode->x;
 				thisPoint->y = thisNode->y;
 				retVal.push_back(thisPoint);
+				cout << thisNode->x << "," << thisNode->y << endl;
 				thisNode = thisNode->parent;
 			}
 
@@ -120,7 +137,7 @@ std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int 
 		// Search around the adjacent points
 		// On a staggered isometric grid, this means that where you can move depends on whether or not y is odd
 		// There's a speedup here if I used boolean math instead of branching, but it's unreadable: (x-1)+2*(y&1)
-		int newy[] = {y+1, y-1,   y,   y};
+		int newy[] = {y+1, y-1, y+1, y-1};
 		int* newx;
 		if (y&1) {	// is y odd?
 			newx = new int[4] {  x,   x, x+1, x+1};
@@ -128,16 +145,20 @@ std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int 
 			newx = new int[4] {  x,   x, x-1, x-1};
 		}
 		for (int i = 0; i < 4; i++) {
+			//cout << "\tadding (" << newx[i] << "," << newy[i] << ")" << endl;
 			if ( map->inBounds(newx[i], newy[i])
 					&& map->getTile(newx[i], newy[i])->tags & IS_WALKABLE
 					&& !ClosedList->contains(newx[i], newy[i])
 					&& !OpenList->contains(newx[i], newy[i]) ) {
+				//cout << "\t(" << x << "," << y << ")" << " added (" << newx[i] << "," << newy[i] << ")" << endl;
 				OpenList->insert(new AStarNode(newx[i], newy[i], endx, endy, thisNode->g + 1, thisNode));
 			}
 		}
 
+		//cout << "endInsert: ";
 		OpenList = OpenList->next;
-		ClosedList->insert(OpenList);	// TODO: Speedup closed list by not having it be sorted
+		thisNode->next = NULL;
+		ClosedList->insert(thisNode);	// TODO: Speedup closed list by not having it be sorted
 	}
 
 	// No path found - cleanup

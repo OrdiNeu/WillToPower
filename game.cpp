@@ -6,7 +6,7 @@ bool Game::init(){
 	curMode = new ModeMapEdit();
 	curMode->init();
 	Mode::curMap = new Map();
-	Mode::curMap->init(20,40);
+	Mode::curMap->init(10,10);
 	new Unit("./data/images/enemies/Slime.png", 5, 5);
 	return true;
 }

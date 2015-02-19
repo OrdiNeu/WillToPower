@@ -47,8 +47,10 @@ void Map::init(int width, int height) {
 	// Add the default empty tile
 	Tile* emptyTile = new Tile();
 	addTile(emptyTile);
-	Tile* grassTile = new Tile("./data/images/GrassTile1.png");
+	Tile* grassTile = new Tile("./data/images/GrassTile1.png", IS_WALKABLE);
 	addTile(grassTile);
+	Tile* dirtTile = new Tile("./data/images/DirtTile.png");
+	addTile(dirtTile);
 	mapTex.create(HALF_TILE_WIDTH*(2*width+1), HALF_TILE_HEIGHT*(height+1));
 	mapSpr.setTexture(mapTex.getTexture());
 	reRender();
@@ -94,6 +96,6 @@ point* Map::TexXYToTileXY(float texX, float texY) {
 	else
 		cout << "even y" << endl;
 	retVal->x = (int) (realX - 0.5*oddY);
-	retVal->y = (int) (floor(realY - 0.5*oddY)*2 + oddY);
+	retVal->y = (int) (floor(realY - 0.5*oddY)*2 + oddY);	// There is likely a more elegant way of stating this, but I just spent 5 hours getting the math right
 	return retVal;
 }

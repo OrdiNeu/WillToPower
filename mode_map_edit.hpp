@@ -1,14 +1,17 @@
 #ifndef MODE_MAP_EDIT
 #define MODE_MAP_EDIT
+
+#include <SFML/Graphics.hpp>
 #include "mode.hpp"
 #include "constants.hpp"
-#include <SFML/Graphics.hpp>
+#include "a_star.hpp"
 
 class ModeMapEdit : public Mode {
 private:
 	sf::RectangleShape sideBarBackground;
 	float curYOffset;
 	Tile* curSelectedTile;
+	bool rightClicked;
 public:
 	ModeMapEdit();
 	void init();

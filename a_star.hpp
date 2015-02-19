@@ -1,8 +1,9 @@
 #ifndef A_STAR_HPP
 #define A_STAR_HPP
 
-#include "map.hpp"
 #include <cmath>
+#include <iostream>
+#include "map.hpp"
 
 class AStarNode {
 public:

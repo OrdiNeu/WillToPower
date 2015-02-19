@@ -7,6 +7,7 @@ ModeMapEdit::ModeMapEdit() {
 	sideBarBackground.setPosition(WINDOW_WIDTH-SIDEBAR_WIDTH, 0);
 	curYOffset = 0.;
 	curSelectedTile = NULL;
+	rightClicked = false;
 }
 
 void ModeMapEdit::init() {
@@ -45,6 +46,20 @@ void ModeMapEdit::update(float dt, sf::RenderWindow* screen) {
 			point* clicked = curMap->TexXYToTileXY(mousePos.x, mousePos.y);
 			cout << "X: " << clicked->x << " Y: " << clicked->y << endl;
 			curMap->setTile(clicked->x, clicked->y, curSelectedTile);
+		}
+
+		if (!rightClicked && sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+			rightClicked = true;
+			std::vector<point*> route = AStarSearch(curMap, 0, 0, curMap->width-1, curMap->height-1);
+			while (route.size() > 0) {
+				point* thisPoint = route.back();
+				route.pop_back();
+				curMap->setTile(thisPoint->x, thisPoint->y, 2);
+				cout << thisPoint->x << "," << thisPoint->y << endl;
+				delete thisPoint;
+			}
+		} else if (!sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+			rightClicked = false;
 		}
 	}
 }
