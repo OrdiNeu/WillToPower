@@ -2,24 +2,22 @@
 using namespace std;
 
 bool Game::init(){
-	screen.create(sf::VideoMode(800,600), "Will To Power");
+	screen.create(sf::VideoMode(WINDOW_WIDTH,WINDOW_HEIGHT), "Will To Power");
+	curMode = new ModeMapEdit();
 	curMode->init();
+	Mode::curMap = new Map();
+	Mode::curMap->init(20,40);
+	new Unit("./data/images/enemies/Slime.png", 5, 5);
 	return true;
 }
 
 int Game::run(){
 	if(init() == false)
 		return EXIT_FAILURE;
-	sf::Event e;
 	sf::Clock dtTimer;
 	dtTimer.restart();
 	float dt = 0;
 	while(screen.isOpen()){
-		while(screen.pollEvent(e)){
-			if(e.type == sf::Event::Closed){
-				screen.close();
-			}
-		}
 		screen.clear(sf::Color::Black);
 		update(dt);
 		render();
@@ -30,7 +28,7 @@ int Game::run(){
 }
 
 void Game::update(float dt){
-	curMode->update(dt);
+	curMode->update(dt, &screen);
 }
 
 void Game::render(){

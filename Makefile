@@ -81,8 +81,8 @@ TIME_FILE = $(dir $@).$(notdir $@)_time
 START_TIME = date '+%s' > $(TIME_FILE)
 END_TIME = read st < $(TIME_FILE) ; \
 	$(RM) $(TIME_FILE) ; \
-	st=$$((`date '+%s'` - $$st - 86400)) ; \
-	echo `date -u -d @$$st '+%H:%M:%S'` 
+	st=$$((`date '+%s'` - $$st)) ; \
+	echo `date -u -d $$st '+%S:%M:%H'` 
 
 # Version macros
 # Comment/remove this section to remove versioning

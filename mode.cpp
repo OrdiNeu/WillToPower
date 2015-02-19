@@ -3,4 +3,5 @@
 Map* Mode::curMap = NULL;
 
 void Mode::init() {
+	
 }

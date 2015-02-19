@@ -4,6 +4,8 @@
 #include <iostream>
 #include "map.hpp"
 #include "mode.hpp"
+#include "mode_main_menu.hpp"
+#include "mode_map_edit.hpp"
 
 class Game {
 	private:

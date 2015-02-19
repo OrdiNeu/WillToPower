@@ -10,7 +10,7 @@ protected:
 	static Map* curMap;
 public:
 	static void init();
-	virtual void update(float dt){};
+	virtual void update(float dt, sf::RenderWindow* screen){};
 	virtual void render(sf::RenderTarget* screen){};
 };
 
