@@ -6,6 +6,8 @@
 #include "mode.hpp"
 #include "mode_main_menu.hpp"
 #include "mode_map_edit.hpp"
+#include "mode_order.hpp"
+#include "unit_manager.hpp"
 
 class Game {
 	private:

@@ -2,7 +2,7 @@
 using namespace std;
 
 Map::~Map() {
-	for (unsigned int i = 0; i < tileDict.size(); i++) {
+	while (!tileDict.empty()) {
 		tileDict.pop_back();
 	}
 	delete[] tiles;
@@ -86,16 +86,23 @@ void Map::setTile(int x, int y, int tileToAdd) {
 	tiles[x][y] = tileToAdd;
 }
 
+point* Map::TileXYToTexXY(int tileX, int tileY) {
+	point* retVal = new point;
+	retVal->realX = (tileX*2 + tileY%2 + 1) * HALF_TILE_WIDTH;
+	retVal->realY = (tileY + 1) * HALF_TILE_HEIGHT;
+	retVal->tileX = tileX;
+	retVal->tileY = tileY;
+	return retVal;
+}
+
 point* Map::TexXYToTileXY(float texX, float texY) {
 	point* retVal = new point;
 	float realX = texX / TILE_WIDTH;
 	float realY = texY / TILE_HEIGHT;
 	bool oddY = (int(floor(realY + realX - 0.5) + floor(realY - realX - 0.5))) % 2 == 0;
-	if (oddY)
-		cout << "odd y" << endl;
-	else
-		cout << "even y" << endl;
-	retVal->x = (int) (realX - 0.5*oddY);
-	retVal->y = (int) (floor(realY - 0.5*oddY)*2 + oddY);	// There is likely a more elegant way of stating this, but I just spent 5 hours getting the math right
+	retVal->realX = texX;
+	retVal->realY = texY;
+	retVal->tileX = (int) (realX - 0.5*oddY);
+	retVal->tileY = (int) (floor(realY - 0.5*oddY)*2 + oddY);	// There is likely a more elegant way of stating this, but I just spent 5 hours getting the math right
 	return retVal;
 }

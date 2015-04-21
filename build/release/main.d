@@ -58,7 +58,8 @@ build/release/main.o: main.cpp game.hpp ../SFML/include/SFML/Graphics.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp map.hpp tile.hpp constants.hpp \
- mode.hpp mode_main_menu.hpp unit.hpp mode_map_edit.hpp a_star.hpp
+ mode.hpp unit_manager.hpp unit.hpp a_star.hpp mode_main_menu.hpp \
+ mode_map_edit.hpp mode_order.hpp
 
 game.hpp:
 
@@ -198,10 +199,14 @@ constants.hpp:
 
 mode.hpp:
 
-mode_main_menu.hpp:
+unit_manager.hpp:
 
 unit.hpp:
 
+a_star.hpp:
+
+mode_main_menu.hpp:
+
 mode_map_edit.hpp:
 
-a_star.hpp:
+mode_order.hpp:

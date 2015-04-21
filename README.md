@@ -1,4 +1,4 @@
 WillToPower
 ===========
 
-Game about being an evil overlord yay
+Game about being an overlord yay

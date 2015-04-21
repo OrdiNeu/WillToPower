@@ -43,19 +43,19 @@ void ModeMapEdit::update(float dt, sf::RenderWindow* screen) {
 		// Otherwise, we're in the map area
 		// Check for clicks and swap the selected tile with the currently selected tile
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			point* clicked = curMap->TexXYToTileXY(mousePos.x, mousePos.y);
-			cout << "X: " << clicked->x << " Y: " << clicked->y << endl;
-			curMap->setTile(clicked->x, clicked->y, curSelectedTile);
+			point* clicked = Map::TexXYToTileXY(mousePos.x, mousePos.y);
+			cout << "X: " << clicked->tileX << " Y: " << clicked->tileY << endl;
+			curMap->setTile(clicked->tileX, clicked->tileY, curSelectedTile);
 		}
 
 		if (!rightClicked && sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 			rightClicked = true;
 			std::vector<point*> route = AStarSearch(curMap, 0, 0, curMap->width-1, curMap->height-1);
-			while (route.size() > 0) {
+			while (!route.empty()) {
 				point* thisPoint = route.back();
 				route.pop_back();
-				curMap->setTile(thisPoint->x, thisPoint->y, 2);
-				cout << thisPoint->x << "," << thisPoint->y << endl;
+				curMap->setTile(thisPoint->tileX, thisPoint->tileY, 2);
+				cout << thisPoint->tileX << "," << thisPoint->tileY << endl;
 				delete thisPoint;
 			}
 		} else if (!sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
@@ -66,6 +66,7 @@ void ModeMapEdit::update(float dt, sf::RenderWindow* screen) {
 
 void ModeMapEdit::render(sf::RenderTarget* screen) {
 	curMap->render(screen);
+	unitManager->render(screen);
 
 	// Draw the side bar
 	screen->draw(sideBarBackground);

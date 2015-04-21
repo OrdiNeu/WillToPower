@@ -3,11 +3,12 @@ using namespace std;
 
 bool Game::init(){
 	screen.create(sf::VideoMode(WINDOW_WIDTH,WINDOW_HEIGHT), "Will To Power");
-	curMode = new ModeMapEdit();
+	Mode::unitManager = new UnitManager();
+	curMode = new ModeOrder();
 	curMode->init();
 	Mode::curMap = new Map();
 	Mode::curMap->init(10,10);
-	new Unit("./data/images/enemies/Slime.png", 5, 5);
+	Mode::unitManager->curMap = Mode::curMap;
 	return true;
 }
 

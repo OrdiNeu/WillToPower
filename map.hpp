@@ -2,13 +2,9 @@
 #define MAP_HPP
 
 #include <SFML/Graphics.hpp>
-#include "tile.hpp"
 #include <iostream>
-
-struct point {
-	int x;
-	int y;
-};
+#include "tile.hpp"
+#include "constants.hpp"
 
 class Map {
 	private:
@@ -26,11 +22,13 @@ class Map {
 		void reRender();
 		void setTile(int x, int y, Tile* tileToAdd);
 		void setTile(int x, int y, int tileToAdd);
-		point* TexXYToTileXY(float texX, float texY);
 		Tile* getTile(int x, int y);
 		bool inBounds(int x, int y);
 		std::vector<Tile*> getTileDict(){ return tileDict; };
 		int width, height;
+
+		static point* TexXYToTileXY(float texX, float texY);
+		static point* TileXYToTexXY(int x, int y);
 };
 
 #endif
