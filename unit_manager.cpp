@@ -20,35 +20,46 @@ void UnitManager::update(float dt) {
 		// TODO: Move this to an AI class for each unit
 		if (thisUnit->state == STATE_WALKING) {
 			point* thisPoint = Map::TexXYToTileXY(thisUnit->realX, thisUnit->realY);
+			//if (thisPoint->tileX != thisUnit->tileX || thisPoint->tileY != thisUnit->tileY) {
 			if (thisPoint->tileX != thisUnit->tileX || thisPoint->tileY != thisUnit->tileY) {
-				std::cout << "Unit has moved" << std::endl;
-				// Are we at the target location?
-				point* nextLoc = thisUnit->curPath.back();
-				if (thisPoint->tileX != nextLoc->tileX || thisPoint->tileY != nextLoc->tileY) {
-					std::cout << "Unit ended up somewhere unexpected - need to recreate path" << std::endl;
-					std::cout << "(Expected " << nextLoc->tileX << "," << nextLoc->tileY << "), got (" << thisPoint->tileX << "," << thisPoint->tileY << "))" << std::endl;
-					// We meed to recreate the path
-					int targetX, targetY;
-					while (!thisUnit->curPath.empty()) {
+				// See if we've sufficiently close to the center of the tile
+#ifdef AI_MOVE_CENTER_OF_TILE
+				point* centerPoint = Map::TileXYToTexXY(thisPoint->tileX, thisPoint->tileY);
+				float dx = thisUnit->realX - centerPoint->realX;
+				float dy = thisUnit->realY - centerPoint->realY;
+				if (dx * dx + dy * dy < DISTANCE_FROM_CENTER_SQ) {
+#endif
+					std::cout << "Unit has moved" << std::endl;
+					// Are we at the target location?
+					point* nextLoc = thisUnit->curPath.back();
+					if (thisPoint->tileX != nextLoc->tileX || thisPoint->tileY != nextLoc->tileY) {
+						/*std::cout << "Unit ended up somewhere unexpected - need to recreate path" << std::endl;
+						std::cout << "(Expected " << nextLoc->tileX << "," << nextLoc->tileY << "), got (" << thisPoint->tileX << "," << thisPoint->tileY << "))" << std::endl;
+						// We meed to recreate the path
+						int targetX, targetY;
+						while (!thisUnit->curPath.empty()) {
+							point* pathPoint = thisUnit->curPath.back();
+							targetX = pathPoint->tileX;
+							targetY = pathPoint->tileY;
+							thisUnit->curPath.pop_back();
+							delete pathPoint;
+						}
+						thisUnit->curPath = AStarSearch(curMap, thisPoint->tileX, thisPoint->tileY, targetX, targetY);
+						// Remove the last point in the route, since it is the current position
+						point* last_point = thisUnit->curPath.back();
+						delete last_point;
+						thisUnit->curPath.pop_back();*/
+					} else {
+						// Just remove this point from the unit's list - it'll take care of the rest
 						point* pathPoint = thisUnit->curPath.back();
-						targetX = pathPoint->tileX;
-						targetY = pathPoint->tileY;
 						thisUnit->curPath.pop_back();
+						thisUnit->tileX = thisPoint->tileX;
+						thisUnit->tileY = thisPoint->tileY;
 						delete pathPoint;
 					}
-					thisUnit->curPath = AStarSearch(curMap, thisPoint->tileX, thisPoint->tileY, targetX, targetY);
-					// Remove the last point in the route, since it is the current position
-					/*point* last_point = thisUnit->curPath.back();
-					delete last_point;
-					thisUnit->curPath.pop_back();*/
-				} else {
-					// Just remove this point from the unit's list - it'll take care of the rest
-					point* pathPoint = thisUnit->curPath.back();
-					thisUnit->curPath.pop_back();
-					thisUnit->tileX = thisPoint->tileX;
-					thisUnit->tileY = thisPoint->tileY;
-					delete pathPoint;
+#ifdef AI_MOVE_CENTER_OF_TILE
 				}
+#endif
 			}
 			delete thisPoint;
 		}

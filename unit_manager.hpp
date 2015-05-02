@@ -7,6 +7,11 @@
 #include "map.hpp"
 #include "a_star.hpp"
 
+// Define some stuff to control unit movement behaviour - should be moved to AI.hpp when possible
+#define AI_MOVE_CENTER_OF_TILE
+const float DISTANCE_FROM_CENTER = 5;
+const float DISTANCE_FROM_CENTER_SQ = DISTANCE_FROM_CENTER * DISTANCE_FROM_CENTER;
+
 class UnitManager {
 	static std::vector<Unit*> units;
 public:

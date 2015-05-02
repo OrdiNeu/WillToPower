@@ -86,6 +86,7 @@ void Map::setTile(int x, int y, int tileToAdd) {
 	tiles[x][y] = tileToAdd;
 }
 
+// Converts a tileX, tileY to an X, Y relative to the texture's top left, where realX and realY is the center of tile (tileX, tileY)
 point* Map::TileXYToTexXY(int tileX, int tileY) {
 	point* retVal = new point;
 	retVal->realX = (tileX*2 + tileY%2 + 1) * HALF_TILE_WIDTH;

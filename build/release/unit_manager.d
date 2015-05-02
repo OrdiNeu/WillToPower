@@ -59,7 +59,7 @@ build/release/unit_manager.o: unit_manager.cpp unit_manager.hpp unit.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp constants.hpp map.hpp tile.hpp \
- a_star.hpp
+ entity.hpp job_queue.hpp a_star.hpp
 
 unit_manager.hpp:
 
@@ -198,5 +198,9 @@ constants.hpp:
 map.hpp:
 
 tile.hpp:
+
+entity.hpp:
+
+job_queue.hpp:
 
 a_star.hpp:

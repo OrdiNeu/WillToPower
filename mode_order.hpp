@@ -4,10 +4,12 @@
 #include "constants.hpp"
 #include "unit_manager.hpp"
 #include <SFML/Graphics.hpp>
+#include "job_queue.hpp"
 
 class ModeOrder : public Mode {
 private:
 	bool rightClicked;
+	bool leftClicked;
 	Unit* test;
 public:
 	ModeOrder();

@@ -5,16 +5,19 @@
 #include <iostream>
 #include "constants.hpp"
 #include "map.hpp"
+#include "entity.hpp"
+#include "job_queue.hpp"
 
 enum UNIT_STATES {
 	STATE_IDLE = 0,
 	STATE_WALKING = 1
 };
 
-class Unit {
+class Unit : public Entity {
 private:
 	int halfWidth, height;
-	float speed = 0.01;
+	float speed = 0.03;
+	float timeToComplete;
 public:
 	static std::vector<Unit*> units;
 	std::vector<point*> curPath;
@@ -26,10 +29,8 @@ public:
 	void render(sf::RenderTarget* screen);
 	void update(float dt);
 	void walkTo(std::vector<point*> path);
-	float realX, realY;
-	int tileX, tileY;
-	float dx, dy;
 	int state;
+	int skills;
 };
 
 #endif

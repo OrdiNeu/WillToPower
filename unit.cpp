@@ -6,11 +6,13 @@ std::vector<Unit*> Unit::units;
 Unit::Unit() {
 }
 
-Unit::Unit(std::string filename, int x, int y) : filename(filename), realX(x), realY(y) {
+Unit::Unit(std::string filename, int x, int y) : filename(filename) {
 	if (filename != "EMPTY" && !tex.loadFromFile(filename)) {
 		cout << "ERROR: Could not load " << filename << endl;
 		return;
 	};
+	realX = x;
+	realY = y;
 	halfWidth = (int) tex.getSize().x / 2;
 	height = (int) tex.getSize().y;
 	spr.setTexture(tex);
@@ -21,6 +23,8 @@ Unit::Unit(std::string filename, int x, int y) : filename(filename), realX(x), r
 	point* tilePos = Map::TexXYToTileXY(x,y);
 	tileX = tilePos->tileX;
 	tileY = tilePos->tileY;
+	timeToComplete = 1000;
+	skills = 1;
 	delete tilePos;
 }
 
@@ -58,6 +62,28 @@ void Unit::update(float dt) {
 			break;
 		}
 		case STATE_IDLE:
+			timeToComplete -= dt;
+			if (timeToComplete < 0) {
+				// See if there's a job available
+				for (Job thisJob : JobQueue::jobQueue) {
+					// Ignore this job if it is suspended or if we lack a requisite skill
+					if (thisJob.suspended) { continue; }
+					bool unavailable = false;
+					for (int skillID = 0; skillID <= NUM_SKILLS; skillID++) {
+						if (!((skills & skillID) == skillID)) {
+							unavailable = true;
+							break;
+						}
+					}
+					if (unavailable) { continue; }
+
+					// We can do this job: we act depending on what type of job it is
+					switch (thisJob.type) {
+						case JOB_TYPE_MINING:
+						break;
+					}
+				}
+			}
 		default:
 		break;
 	}

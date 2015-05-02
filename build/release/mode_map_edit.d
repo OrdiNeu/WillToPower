@@ -59,7 +59,8 @@ build/release/mode_map_edit.o: mode_map_edit.cpp mode_map_edit.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp mode.hpp map.hpp tile.hpp \
- constants.hpp unit_manager.hpp unit.hpp a_star.hpp
+ constants.hpp unit_manager.hpp unit.hpp entity.hpp job_queue.hpp \
+ a_star.hpp
 
 mode_map_edit.hpp:
 
@@ -202,5 +203,9 @@ constants.hpp:
 unit_manager.hpp:
 
 unit.hpp:
+
+entity.hpp:
+
+job_queue.hpp:
 
 a_star.hpp:
