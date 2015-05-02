@@ -4,20 +4,16 @@
 #include <iostream>
 #include <cstring>
 #include "unit.hpp"
-#include "map.hpp"
-#include "a_star.hpp"
-
-// Define some stuff to control unit movement behaviour - should be moved to AI.hpp when possible
-#define AI_MOVE_CENTER_OF_TILE
-const float DISTANCE_FROM_CENTER = 5;
-const float DISTANCE_FROM_CENTER_SQ = DISTANCE_FROM_CENTER * DISTANCE_FROM_CENTER;
+#include "unit_ai.hpp"
 
 class UnitManager {
+private:
 	static std::vector<Unit*> units;
+	static std::vector<AI*> ais;
 public:
 	void render(sf::RenderTarget* screen);
 	void update(float dt);
-	void addUnit(Unit* unit);
+	void addUnit(AI* ai);
 	Map* curMap;
 };
 

@@ -59,7 +59,8 @@ build/release/mode_main_menu.o: mode_main_menu.cpp mode_main_menu.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp tile.hpp constants.hpp \
- unit_manager.hpp unit.hpp entity.hpp job_queue.hpp a_star.hpp
+ unit_manager.hpp unit.hpp entity.hpp job_queue.hpp unit_ai.hpp \
+ a_star.hpp
 
 mode_main_menu.hpp:
 
@@ -206,5 +207,7 @@ unit.hpp:
 entity.hpp:
 
 job_queue.hpp:
+
+unit_ai.hpp:
 
 a_star.hpp:

@@ -11,6 +11,7 @@ private:
 	bool rightClicked;
 	bool leftClicked;
 	Unit* test;
+	AI* testai;
 public:
 	ModeOrder();
 	void init();

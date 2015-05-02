@@ -6,7 +6,8 @@ ModeOrder::ModeOrder() {
 
 void ModeOrder::init() {
 	test = new Unit("./data/images/enemies/yellowBox.png", 25, 15);
-	Mode::unitManager->addUnit(test);
+	testai = new AI(test, curMap);
+	Mode::unitManager->addUnit(testai);
 
 	// Force the user to let go of either button before acknowledging a click
 	leftClicked = true;
