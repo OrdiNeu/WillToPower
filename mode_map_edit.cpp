@@ -66,7 +66,7 @@ void ModeMapEdit::update(float dt, sf::RenderWindow* screen) {
 
 void ModeMapEdit::render(sf::RenderTarget* screen) {
 	curMap->render(screen);
-	unitManager->render(screen);
+	entManager->unitManager->render(screen);
 
 	// Draw the side bar
 	screen->draw(sideBarBackground);

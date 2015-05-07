@@ -19,7 +19,7 @@ void ModeMainMenu::update(float dt, sf::RenderWindow* screen) {
 
 void ModeMainMenu::render(sf::RenderTarget* screen) {
 	curMap->render(screen);
-	for (Unit* u : Unit::units) {
+	for (Unit* u : entManager->unitManager->units) {
 		u->render(screen);
 	}
 }

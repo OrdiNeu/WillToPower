@@ -3,12 +3,13 @@ using namespace std;
 
 bool Game::init(){
 	screen.create(sf::VideoMode(WINDOW_WIDTH,WINDOW_HEIGHT), "Will To Power");
-	Mode::unitManager = new UnitManager();
+	Mode::entManager = new EntityManager();
+	Mode::entManager->unitManager = new UnitManager();
 	curMode = new ModeOrder();
 	curMode->init();
 	Mode::curMap = new Map();
 	Mode::curMap->init(10,10);
-	Mode::unitManager->curMap = Mode::curMap;
+	Mode::entManager->unitManager->curMap = Mode::curMap;
 	return true;
 }
 

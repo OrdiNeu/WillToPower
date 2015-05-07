@@ -25,7 +25,7 @@ public:
 	sf::Texture tex;
 	std::string filename;
 	Unit();
-	Unit(std::string filename, int x, int y);
+	Unit(std::string ID, std::string filename, int x, int y);
 	void render(sf::RenderTarget* screen);
 	void update(float dt);
 	void walkTo(std::vector<point*> path);

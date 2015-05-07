@@ -4,13 +4,15 @@ using namespace std;
 std::vector<Unit*> Unit::units;
 
 Unit::Unit() {
+	id = "UNIT_UNDEFINED";
 }
 
-Unit::Unit(std::string filename, int x, int y) : filename(filename) {
+Unit::Unit(std::string ID, std::string filename, int x, int y) : filename(filename) {
 	if (filename != "EMPTY" && !tex.loadFromFile(filename)) {
 		cout << "ERROR: Could not load " << filename << endl;
 		return;
 	};
+	id = ID;
 	realX = x;
 	realY = y;
 	halfWidth = (int) tex.getSize().x / 2;

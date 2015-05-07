@@ -1,7 +1,7 @@
 #include "mode.hpp"
 
 Map* Mode::curMap = NULL;
-UnitManager* Mode::unitManager = NULL;
+EntityManager* Mode::entManager = NULL;
 
 void Mode::init() {
 	
