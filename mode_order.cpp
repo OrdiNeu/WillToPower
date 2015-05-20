@@ -53,8 +53,6 @@ void ModeOrder::update(float dt, sf::RenderWindow* screen) {
 
 			// Walk to the target location
 			test->walkTo(route);
-			std::cout << "Test unit at (" << test->tileX << "," << test->tileY << ") (" << test->realX << "," << test->realY << ") is moving to (" << \
-						 route.back()->tileX << "," << route.back()->tileY << ") (" << route.back()->realX << "," << route.back()->realY << ")" << std::endl;
 		}
 	} else if (!sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 		rightClicked = false;

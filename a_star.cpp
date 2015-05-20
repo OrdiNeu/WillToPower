@@ -20,33 +20,7 @@ int AStarNode::getF() {
 // Insert into this linked list in order of F
 // This will NOT replace this (root) node
 void AStarNode::insert(AStarNode* node) {
-	/*if (node->getF() < getF()) {
-		// Copy that node's properties here, and this node's properties there
-		// This is wildly unsafe (what if the inserted node is a child class?) but
-		// this is under crunch time
-		int oldx = x;
-		int oldy = y;
-		int oldg = g;
-		int oldh = h;
-		AStarNode* oldparent = parent;
-		node->next = next;
-		node->prev = this;
-		x = node->x;
-		y = node->y;
-		g = node->g;
-		h = node->h;
-		parent = node->parent;
-		next = node;
-		node->x = oldx;
-		node->y = oldy;
-		node->g = oldg;
-		node->h = oldh;
-		node->parent = oldparent;
-		cout << "node is performing a swap: " << node->x << "," << node->y << endl;
-		return;
-	}*/
-
-	// Otherwise, move down this list and see where to insert it
+	// Move down this list and see where to insert it
 	AStarNode* prevNode = this;
 	AStarNode* nextNode = next;
 	//cout << "Insertion: " << x << ',' << y << " -> ";
@@ -111,7 +85,6 @@ std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int 
 				while (thisNode) {
 					point* thisPoint = Map::TileXYToTexXY(thisNode->x, thisNode->y);
 					retVal.push_back(thisPoint);
-					cout << thisNode->x << "," << thisNode->y << endl;
 					thisNode = thisNode->parent;
 				}
 
@@ -135,12 +108,12 @@ std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int 
 			// Search around the adjacent points
 			// On a staggered isometric grid, this means that where you can move depends on whether or not y is odd
 			// There's a speedup here if I used boolean math instead of branching, but it's unreadable: (x-1)+2*(y&1)
-			int newy[] = {y+1, y-1, y+1, y-1};
+			int newy[] = {y+1, y+1, y-1, y-1};
 			int* newx;
 			if (y&1) {	// is y odd?
-				newx = new int[4] {  x,   x, x+1, x+1};
+				newx = new int[4] {x, x+1, x+1, x};
 			} else {
-				newx = new int[4] {  x,   x, x-1, x-1};
+				newx = new int[4] {x-1, x, x, x-1};
 			}
 			for (int i = 0; i < 4; i++) {
 				//cout << "\tadding (" << newx[i] << "," << newy[i] << ")" << endl;
@@ -150,6 +123,24 @@ std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int 
 						&& !OpenList->contains(newx[i], newy[i]) ) {
 					//cout << "\t(" << x << "," << y << ")" << " added (" << newx[i] << "," << newy[i] << ")" << endl;
 					OpenList->insert(new AStarNode(newx[i], newy[i], endx, endy, thisNode->g + 1, thisNode));
+				}
+			}
+
+			// Handle moving directly up, down, left, and right. In order to move in one of these directions,
+			// BOTH of the diagonal directions must be free to move.
+			int diagonal_x[] = {x-1, x, x+1, x};
+			int diagonal_y[] = {y, y-1, y, y+1};
+			for (int i = 0; i < 4; i++) {
+				int j = (i+1)%4;	// The other direction being checked
+				int thisx = diagonal_x[i];
+				int thisy = diagonal_y[i];
+				if ( map->inBounds(newx[i], newy[i])
+						&& map->getTile(newx[i], newy[i])->tags & IS_WALKABLE
+						&& map->inBounds(newx[j], newy[j])
+						&& map->getTile(newx[j], newy[j])->tags & IS_WALKABLE
+						&& !ClosedList->contains(thisx, thisy)
+						&& !OpenList->contains(thisx, thisy) ) {
+					OpenList->insert(new AStarNode(thisx, thisy, endx, endy, thisNode->g + 1, thisNode));
 				}
 			}
 
