@@ -1,8 +1,6 @@
 #include "unit.hpp"
 using namespace std;
 
-std::vector<Unit*> Unit::units;
-
 Unit::Unit() {
 	id = "UNIT_UNDEFINED";
 }
@@ -19,7 +17,6 @@ Unit::Unit(std::string ID, std::string filename, int x, int y) : filename(filena
 	height = (int) tex.getSize().y;
 	spr.setTexture(tex);
 	spr.setScale(X_SCALE, Y_SCALE);
-	units.push_back(this);
 	state = STATE_IDLE;
 
 	point* tilePos = Map::TexXYToTileXY(x,y);

@@ -60,7 +60,7 @@ build/release/mode_order.o: mode_order.cpp mode_order.hpp mode.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp tile.hpp constants.hpp \
  entity_manager.hpp entity.hpp unit_manager.hpp unit.hpp job_queue.hpp \
- unit_ai.hpp a_star.hpp request_queue.hpp
+ unit_ai.hpp a_star.hpp doodad_manager.hpp doodad.hpp request_queue.hpp
 
 mode_order.hpp:
 
@@ -213,5 +213,9 @@ job_queue.hpp:
 unit_ai.hpp:
 
 a_star.hpp:
+
+doodad_manager.hpp:
+
+doodad.hpp:
 
 request_queue.hpp:

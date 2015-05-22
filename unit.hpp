@@ -19,7 +19,6 @@ private:
 	float speed = 0.03;
 	float timeToComplete;
 public:
-	static std::vector<Unit*> units;
 	std::vector<point*> curPath;
 	sf::Sprite spr;
 	sf::Texture tex;

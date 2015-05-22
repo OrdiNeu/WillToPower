@@ -1,7 +1,7 @@
-build/release/mode.o: mode.cpp mode.hpp map.hpp \
- ../SFML/include/SFML/Graphics.hpp ../SFML/include/SFML/Window.hpp \
- ../SFML/include/SFML/System.hpp ../SFML/include/SFML/Config.hpp \
- ../SFML/include/SFML/System/Clock.hpp \
+build/release/entity_manager.o: entity_manager.cpp entity_manager.hpp \
+ entity.hpp unit_manager.hpp unit.hpp ../SFML/include/SFML/Graphics.hpp \
+ ../SFML/include/SFML/Window.hpp ../SFML/include/SFML/System.hpp \
+ ../SFML/include/SFML/Config.hpp ../SFML/include/SFML/System/Clock.hpp \
  ../SFML/include/SFML/System/Export.hpp \
  ../SFML/include/SFML/System/Time.hpp ../SFML/include/SFML/System/Err.hpp \
  ../SFML/include/SFML/System/InputStream.hpp \
@@ -58,13 +58,17 @@ build/release/mode.o: mode.cpp mode.hpp map.hpp \
  ../SFML/include/SFML/Graphics/RectangleShape.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
- ../SFML/include/SFML/Graphics/Text.hpp tile.hpp constants.hpp \
- entity_manager.hpp entity.hpp unit_manager.hpp unit.hpp job_queue.hpp \
- unit_ai.hpp a_star.hpp doodad_manager.hpp doodad.hpp request_queue.hpp
+ ../SFML/include/SFML/Graphics/Text.hpp constants.hpp map.hpp tile.hpp \
+ job_queue.hpp unit_ai.hpp a_star.hpp doodad_manager.hpp doodad.hpp \
+ request_queue.hpp
 
-mode.hpp:
+entity_manager.hpp:
 
-map.hpp:
+entity.hpp:
+
+unit_manager.hpp:
+
+unit.hpp:
 
 ../SFML/include/SFML/Graphics.hpp:
 
@@ -194,17 +198,11 @@ map.hpp:
 
 ../SFML/include/SFML/Graphics/Text.hpp:
 
-tile.hpp:
-
 constants.hpp:
 
-entity_manager.hpp:
+map.hpp:
 
-entity.hpp:
-
-unit_manager.hpp:
-
-unit.hpp:
+tile.hpp:
 
 job_queue.hpp:
 
