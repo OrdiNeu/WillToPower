@@ -19,7 +19,7 @@ void EntityManager::update(float dt) {
 	std::cout << std::endl;*/
 
 	std::smatch group;
-	std::regex add_unit("NEW_UNIT:(?:.*):(.*):(.*)");	// ADD_UNIT:typeID:X:Y
+	std::regex add_unit("NEW_UNIT:(.*):(.*):(.*)");	// ADD_UNIT:typeID:X:Y
 	std::regex add_doodad("NEW_DOODAD:(.*):(.+):(.+)");	// ADD_DOODAD:typeID:X:Y
 	while (!RequestQueues::entityRequests.empty()) {
 		// regex parse this
@@ -29,8 +29,8 @@ void EntityManager::update(float dt) {
 			for (unsigned i=0; i<group.size(); ++i) {
 			  std::cout << "[" << group[i] << "] ";
 			}
-			std::string X = group.str(2).c_str()+1;
-			std::string Y = group.str(2).c_str()+1;
+			const char* X = group.str(2).c_str()+1;
+			const char* Y = group.str(2).c_str()+1;
 			Unit* newUnit = unitManager->addNewUnitByType(group[1]);
 			newUnit->moveToRealXY( 	atoi(X),
 									atoi(Y));
