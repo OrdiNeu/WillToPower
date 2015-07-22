@@ -5,9 +5,12 @@ ModeOrder::ModeOrder() {
 }
 
 void ModeOrder::init() {
-	test = new Unit("UNIT_blargalarg","./data/images/enemies/yellowBox.png", 25, 15);
+	/*test = new Unit("UNIT_blargalarg","./data/images/enemies/yellowBox.png", 25, 15);
 	testai = new AI(test, curMap);
-	entManager->unitManager->addUnit(testai);
+	entManager->unitManager->addUnit(testai);*/
+	Unit testUnit = Unit("test","./data/images/enemies/yellowBox.png", 25, 15);
+	entManager->unitManager->addNewUnitType("testUnit",testUnit);
+	RequestQueues::entityRequests.push_back("NEW_UNIT:TEST_UNIT:0:0");
 
 	// Force the user to let go of either button before acknowledging a click
 	leftClicked = true;
@@ -21,7 +24,7 @@ void ModeOrder::update(float dt, sf::RenderWindow* screen) {
 			screen->close();
 		}
 	}
-	entManager->unitManager->update(dt);
+	entManager->update(dt);
 
 	if (!leftClicked && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		leftClicked = true;
@@ -61,5 +64,5 @@ void ModeOrder::update(float dt, sf::RenderWindow* screen) {
 
 void ModeOrder::render(sf::RenderTarget* screen) {
 	curMap->render(screen);
-	entManager->unitManager->render(screen);
+	entManager->render(screen);
 }

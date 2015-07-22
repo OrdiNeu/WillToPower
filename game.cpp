@@ -5,6 +5,7 @@ bool Game::init(){
 	screen.create(sf::VideoMode(WINDOW_WIDTH,WINDOW_HEIGHT), "Will To Power");
 	Mode::entManager = new EntityManager();
 	Mode::entManager->unitManager = new UnitManager();
+	Mode::entManager->doodadManager = new DoodadManager();
 	curMode = new ModeOrder();
 	curMode->init();
 	Mode::curMap = new Map();

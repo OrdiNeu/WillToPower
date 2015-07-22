@@ -8,6 +8,7 @@
 #include "mode_map_edit.hpp"
 #include "mode_order.hpp"
 #include "unit_manager.hpp"
+#include "doodad_manager.hpp"
 #include "entity_manager.hpp"
 
 class Game {

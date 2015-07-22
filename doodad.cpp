@@ -27,6 +27,11 @@ void Doodad::render(sf::RenderTarget* screen) {
 	screen->draw(spr);
 }
 
+Doodad* Doodad::clone() {
+	Doodad* newDoodad = new Doodad(id, filename, realX, realY);
+	return newDoodad;
+}
+
 void Doodad::update(float dt) {
 	// Empty for now
 }

@@ -16,6 +16,17 @@ void DoodadManager::addDoodad(Doodad* doodad) {
 	doodads.push_back(doodad);
 }
 
+Doodad* DoodadManager::addDoodadByType(std::string type) {
+	// Ensure that the type exists
+	if (doodad_library.find(type) == doodad_library.end()) {
+		std::cerr << "ERROR: attempted to create unit of unknown type " << type << std::endl;
+		return NULL;
+	}
+	Doodad* newDoodad = doodad_library[type].clone();
+	addDoodad(newDoodad);
+	return newDoodad;
+}
+
 void DoodadManager::removeDoodad(std::string id) {
 	// Find the Doodad and do an in-place swap with the final element, then shrink
 	for (std::vector<Doodad*>::iterator it = doodads.begin() ; it != doodads.end(); ++it) {

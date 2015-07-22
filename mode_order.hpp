@@ -5,6 +5,7 @@
 #include "unit_manager.hpp"
 #include <SFML/Graphics.hpp>
 #include "job_queue.hpp"
+#include "request_queue.hpp"
 
 class ModeOrder : public Mode {
 private:

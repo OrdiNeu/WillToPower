@@ -19,6 +19,7 @@ public:
 	std::string filename;
 	Doodad();
 	Doodad(std::string ID, std::string filename, int x, int y);
+	Doodad* clone();
 	void render(sf::RenderTarget* screen);
 	void update(float dt);
 };

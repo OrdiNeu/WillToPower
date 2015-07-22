@@ -20,6 +20,23 @@ void UnitManager::update(float dt) {
 	}
 }
 
+Unit* UnitManager::addNewUnitByType(std::string type) {
+	// Ensure that the type exists
+	if (unit_library.find(type) == unit_library.end()) {
+		std::cerr << "ERROR: attempted to create unit of unknown type " << type << std::endl;
+		return NULL;
+	}
+	Unit* newUnit = unit_library[type].clone();
+	//newUnit->id = type + itos(num_units_created[type]++);	// What is this...
+	AI* newAI = new AI(newUnit, curMap);
+	addUnit(newAI);
+	return newUnit;
+}
+
+void UnitManager::addNewUnitType(std::string type, Unit newUnit) {
+	unit_library[type] = newUnit;
+}
+
 void UnitManager::addUnit(AI* ai) {
 	ais.push_back(ai);
 	units.push_back(ai->controlled);

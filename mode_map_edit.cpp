@@ -34,7 +34,7 @@ void ModeMapEdit::update(float dt, sf::RenderWindow* screen) {
 		// Check for a click and switch currently selected tile if possible
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			int tileClicked = (int) (mousePos.y - TILE_Y_OFFSET - curYOffset) / TILE_Y_SIZE;
-			if (tileClicked >= 0 && tileClicked < curMap->getTileDict().size()) {
+			if (tileClicked >= 0 && tileClicked < (int) curMap->getTileDict().size()) {
 				curSelectedTile = curMap->getTileDict().at(tileClicked);
 				cout << curSelectedTile << endl;
 			}
@@ -66,7 +66,7 @@ void ModeMapEdit::update(float dt, sf::RenderWindow* screen) {
 
 void ModeMapEdit::render(sf::RenderTarget* screen) {
 	curMap->render(screen);
-	entManager->unitManager->render(screen);
+	entManager->render(screen);
 
 	// Draw the side bar
 	screen->draw(sideBarBackground);

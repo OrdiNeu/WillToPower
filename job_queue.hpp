@@ -25,6 +25,7 @@ struct Job {
 	Entity* assigned;
 };
 
+// The job queue is like a billboard of jobs that units can pick up and complete when their AI runs out of things to do
 class JobQueue {
 public:
 	static std::vector<Job> jobQueue;

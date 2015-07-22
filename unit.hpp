@@ -24,10 +24,13 @@ public:
 	sf::Texture tex;
 	std::string filename;
 	Unit();
-	Unit(std::string ID, std::string filename, int x, int y);
+	Unit(std::string ID, std::string filename, float x, float y);
 	void render(sf::RenderTarget* screen);
 	void update(float dt);
 	void walkTo(std::vector<point*> path);
+	void moveToRealXY(float x, float y);
+	void moveToTileXY(int x, int y);
+	Unit* clone();
 	int state;
 	int skills;
 };

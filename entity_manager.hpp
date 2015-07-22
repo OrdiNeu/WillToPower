@@ -1,6 +1,8 @@
 #ifndef ENTITY_MANAGER_HPP
 #define ENTITY_MANAGER_HPP
 
+#include <regex>
+#include <string>
 #include "entity.hpp"
 #include "unit_manager.hpp"
 #include "doodad_manager.hpp"

@@ -5,26 +5,21 @@ Unit::Unit() {
 	id = "UNIT_UNDEFINED";
 }
 
-Unit::Unit(std::string ID, std::string filename, int x, int y) : filename(filename) {
+Unit::Unit(std::string ID, std::string filename, float x, float y) : filename(filename) {
 	if (filename != "EMPTY" && !tex.loadFromFile(filename)) {
 		cout << "ERROR: Could not load " << filename << endl;
 		return;
 	};
 	id = ID;
-	realX = x;
-	realY = y;
 	halfWidth = (int) tex.getSize().x / 2;
 	height = (int) tex.getSize().y;
 	spr.setTexture(tex);
 	spr.setScale(X_SCALE, Y_SCALE);
 	state = STATE_IDLE;
 
-	point* tilePos = Map::TexXYToTileXY(x,y);
-	tileX = tilePos->tileX;
-	tileY = tilePos->tileY;
 	timeToComplete = 1000;
 	skills = 1;
-	delete tilePos;
+	moveToRealXY(x, y);
 }
 
 void Unit::render(sf::RenderTarget* screen) {
@@ -35,6 +30,29 @@ void Unit::render(sf::RenderTarget* screen) {
 void Unit::walkTo(std::vector<point*> path) {
 	curPath = path;
 	state = STATE_WALKING;
+}
+
+Unit* Unit::clone() {
+	Unit* newUnit = new Unit(id, filename, realX, realY);
+	return newUnit;
+}
+
+void Unit::moveToRealXY(float x, float y) {
+	realX = x;
+	realY = y;
+	point* tilePos = Map::TexXYToTileXY(x,y);
+	tileX = tilePos->tileX;
+	tileY = tilePos->tileY;
+	delete tilePos;
+}
+
+void Unit::moveToTileXY(int x, int y) {
+	tileX = x;
+	tileY = y;
+	point* tilePos = Map::TileXYToTexXY(x,y);
+	realX = tilePos->realX;
+	realY = tilePos->realY;
+	delete tilePos;
 }
 
 void Unit::update(float dt) {

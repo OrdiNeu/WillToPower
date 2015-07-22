@@ -6,7 +6,7 @@
 
 enum TAG_TYPES {
 	IS_WALKABLE = 1,
-	IS_IRON_ORE = 2
+	IS_MINABLE = 2
 };
 
 const int HALF_TILE_WIDTH = 16*X_SCALE;
