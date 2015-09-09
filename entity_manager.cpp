@@ -17,25 +17,15 @@ void EntityManager::update(float dt) {
 	  std::cout << "[" << group[i] << "] ";
 	}
 	std::cout << std::endl;*/
-
-	std::smatch group;
-	std::regex add_unit("NEW_UNIT:(.*):(.*):(.*)");	// ADD_UNIT:typeID:X:Y
-	std::regex add_doodad("NEW_DOODAD:(.*):(.+):(.+)");	// ADD_DOODAD:typeID:X:Y
 	while (!RequestQueues::entityRequests.empty()) {
-		// regex parse this
-		std::string request = RequestQueues::entityRequests.back();
-		std::cout << "Got request " << request << std::endl;
-		if (std::regex_match(request, group, add_unit)) {
-			for (unsigned i=0; i<group.size(); ++i) {
-			  std::cout << "[" << group[i] << "] ";
-			}
-			const char* X = group.str(2).c_str()+1;
-			const char* Y = group.str(2).c_str()+1;
-			Unit* newUnit = unitManager->addNewUnitByType(group[1]);
-			newUnit->moveToRealXY( 	atoi(X),
-									atoi(Y));
-			std::cout << "Adding ent to " << X << ", " << Y;
-		} else if (std::regex_match(request, group, add_doodad)) {
+		// parse this request
+		entRequest request = RequestQueues::entityRequests.back();
+		if (request.entRequestType == ENT_REQUEST_NEW_UNIT) {
+			Unit* newUnit = unitManager->addNewUnitByType(request.unitName);
+			newUnit->moveToRealXY( 	request.X,
+									request.Y);
+			std::cout << "Adding ent to " << request.X << ", " << request.Y;
+		} else if (request.entRequestType == ENT_REQUEST_DEL_UNIT) {
 			//Doodad* newDoodad = doodadManager->addDoodadByType();
 			//newDoodad.pos = asjdfhakf
 		}

@@ -10,7 +10,7 @@ void ModeOrder::init() {
 	entManager->unitManager->addUnit(testai);*/
 	Unit testUnit = Unit("test","./data/images/enemies/yellowBox.png", 25, 15);
 	entManager->unitManager->addNewUnitType("testUnit",testUnit);
-	RequestQueues::entityRequests.push_back("NEW_UNIT:TEST_UNIT:0:0");
+	RequestQueues::entityRequests.push_back(entRequest::newUnitRequest("testUnit", HALF_TILE_WIDTH, HALF_TILE_HEIGHT));
 
 	// Force the user to let go of either button before acknowledging a click
 	leftClicked = true;
