@@ -5,12 +5,11 @@ ModeOrder::ModeOrder() {
 }
 
 void ModeOrder::init() {
-	/*test = new Unit("UNIT_blargalarg","./data/images/enemies/yellowBox.png", 25, 15);
-	testai = new AI(test, curMap);
-	entManager->unitManager->addUnit(testai);*/
-	Unit testUnit = Unit("test","./data/images/enemies/yellowBox.png", 25, 15);
+	Unit testUnit = Unit("test","./data/images/enemies/yellowBox.png");
 	entManager->unitManager->addNewUnitType("testUnit",testUnit);
 	RequestQueues::entityRequests.push_back(entRequest::newUnitRequest("testUnit", HALF_TILE_WIDTH, HALF_TILE_HEIGHT));
+	entManager->flushRequests();
+	test = entManager->unitManager->lastCreatedUnit;
 
 	// Force the user to let go of either button before acknowledging a click
 	leftClicked = true;
@@ -44,6 +43,7 @@ void ModeOrder::update(float dt, sf::RenderWindow* screen) {
 	if (!rightClicked && sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 		rightClicked = true;
 		sf::Vector2i mousePos = sf::Mouse::getPosition(*screen);
+		// Code below is borked now that I don't initialize a unit
 		point* clicked = Map::TexXYToTileXY(mousePos.x, mousePos.y);
 		std::vector<point*> route = AStarSearch(curMap, test->tileX, test->tileY, clicked->tileX, clicked->tileY);
 		delete clicked;

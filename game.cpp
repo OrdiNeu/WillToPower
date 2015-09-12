@@ -6,11 +6,11 @@ bool Game::init(){
 	Mode::entManager = new EntityManager();
 	Mode::entManager->unitManager = new UnitManager();
 	Mode::entManager->doodadManager = new DoodadManager();
+	Mode::curMap = new Map();
+	Mode::entManager->unitManager->curMap = Mode::curMap;
+	Mode::curMap->init(10,10);
 	curMode = new ModeOrder();
 	curMode->init();
-	Mode::curMap = new Map();
-	Mode::curMap->init(10,10);
-	Mode::entManager->unitManager->curMap = Mode::curMap;
 	return true;
 }
 

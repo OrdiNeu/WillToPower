@@ -1,6 +1,8 @@
 #include "unit_ai.hpp"
+using namespace std;
 
 AI::AI(Unit* controlled, Map* curMap) : controlled(controlled), curMap(curMap) {
+	timeSinceLastUpdate = UNIT_AI_UPDATE_TIME;
 }
 
 // Dunno how much (if at all) I want to subclass AI, so it is non-virtual for now
@@ -47,5 +49,40 @@ void AI::update(float dt) {
 #endif
 		}
 		delete thisPoint;
+	} else {
+		timeSinceLastUpdate -= dt;
+		if (timeSinceLastUpdate <= 0) {
+			timeSinceLastUpdate = UNIT_AI_UPDATE_TIME;
+
+			// Check the job board for stuff to do
+			int jobPicked = -1;
+			for (unsigned int i = 0; i < JobQueue::jobQueue.size(); i++) {
+				Job job = JobQueue::jobQueue[i];
+				if (!job.suspended) {
+					if (job.targetEnt == controlled || job.targetEnt == NULL) {
+						if ((job.requirements & controlled->skills) == job.requirements) {
+							// Try to pick this job up
+							std::vector<point*> route = AStarSearch(curMap, controlled->tileX, controlled->tileY, job.targetPoint->tileX, job.targetPoint->tileY);
+							if (route.size() != 0) {
+								// Remove the last point in the route, since it is the current position
+								point* last_point = route.back();
+								delete last_point;
+								route.pop_back();
+
+								// Walk to the target location
+								controlled->walkTo(route);
+								jobPicked = i;
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			// Is there a job that is now taken?
+			if (jobPicked >= 0) {
+				JobQueue::jobQueue.erase(JobQueue::jobQueue.begin() + jobPicked);
+			}
+		}
 	}
 }

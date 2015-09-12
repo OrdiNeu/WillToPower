@@ -24,6 +24,7 @@ public:
 	sf::Texture tex;
 	std::string filename;
 	Unit();
+	Unit(std::string ID, std::string filename);
 	Unit(std::string ID, std::string filename, float x, float y);
 	void render(sf::RenderTarget* screen);
 	void update(float dt);

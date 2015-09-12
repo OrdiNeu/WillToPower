@@ -19,6 +19,7 @@ public:
 	void update(float dt);
 	void addEnt(Entity* ent, int type);
 	void removeEnt(std::string id, int type);
+	void flushRequests();
 	UnitManager* unitManager;
 	DoodadManager* doodadManager;
 };

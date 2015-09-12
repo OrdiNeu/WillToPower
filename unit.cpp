@@ -5,6 +5,10 @@ Unit::Unit() {
 	id = "UNIT_UNDEFINED";
 }
 
+Unit::Unit(std::string ID, std::string filename) : filename(filename) {
+	Unit(ID, filename, 0, 0);
+}
+
 Unit::Unit(std::string ID, std::string filename, float x, float y) : filename(filename) {
 	if (filename != "EMPTY" && !tex.loadFromFile(filename)) {
 		cout << "ERROR: Could not load " << filename << endl;

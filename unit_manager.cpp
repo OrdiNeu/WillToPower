@@ -30,6 +30,7 @@ Unit* UnitManager::addNewUnitByType(std::string type) {
 	//newUnit->id = type + itos(num_units_created[type]++);	// What is this...
 	AI* newAI = new AI(newUnit, curMap);
 	addUnit(newAI);
+	lastCreatedUnit = newUnit;
 	return newUnit;
 }
 

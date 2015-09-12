@@ -13,6 +13,7 @@ public:
 	std::unordered_map<std::string, Unit> unit_library;
 	std::unordered_map<std::string, int> num_units_created;
 	std::vector<AI*> ais;
+	Unit* lastCreatedUnit;
 	void render(sf::RenderTarget* screen);
 	void update(float dt);
 	void getNewUnitByType(std::string type);
