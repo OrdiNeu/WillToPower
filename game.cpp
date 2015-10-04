@@ -2,6 +2,7 @@
 using namespace std;
 
 bool Game::init(){
+	PerlinNoiseGenerator::getInstance();	// initialize it
 	screen.create(sf::VideoMode(WINDOW_WIDTH,WINDOW_HEIGHT), "Will To Power");
 	Mode::entManager = new EntityManager();
 	Mode::entManager->unitManager = new UnitManager();

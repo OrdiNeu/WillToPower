@@ -10,6 +10,7 @@
 #include "unit_manager.hpp"
 #include "doodad_manager.hpp"
 #include "entity_manager.hpp"
+#include "PerlinNoiseGenerator.hpp"
 
 class Game {
 	private:

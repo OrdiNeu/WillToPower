@@ -58,24 +58,35 @@ void AI::update(float dt) {
 			int jobPicked = -1;
 			for (unsigned int i = 0; i < JobQueue::jobQueue.size(); i++) {
 				Job job = JobQueue::jobQueue[i];
-				if (!job.suspended) {
-					if (job.targetEnt == controlled || job.targetEnt == NULL) {
-						if ((job.requirements & controlled->skills) == job.requirements) {
-							// Try to pick this job up
-							std::vector<point*> route = AStarSearch(curMap, controlled->tileX, controlled->tileY, job.targetPoint->tileX, job.targetPoint->tileY);
-							if (route.size() != 0) {
-								// Remove the last point in the route, since it is the current position
-								point* last_point = route.back();
-								delete last_point;
-								route.pop_back();
+				
+				// Can't pick up a suspended job
+				if (job.suspended) {
+					continue;
+				}
 
-								// Walk to the target location
-								controlled->walkTo(route);
-								jobPicked = i;
-								break;
-							}
-						}
-					}
+				// Can't pick up jobs that are assigned to someone else
+				if (job.targetEnt != controlled || job.targetEnt != NULL) {
+					continue;
+				}
+
+				// Can't pick up jobs we're not qualified for
+				if ((job.requirements & controlled->skills) != job.requirements) {
+					continue;
+				}
+
+				// Passed all checks: try to pick this job up
+				std::vector<point*> route = AStarSearch(curMap, controlled->tileX, controlled->tileY, job.targetPoint->tileX, job.targetPoint->tileY);
+				if (route.size() != 0) {
+					// Remove the last point in the route, since it is the current position
+					point* last_point = route.back();
+					delete last_point;
+					route.pop_back();
+
+					// Walk to the target location
+					controlled->walkTo(route);
+					jobPicked = i;
+					job.assigned = controlled;
+					break;
 				}
 			}
 
