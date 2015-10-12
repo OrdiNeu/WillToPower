@@ -52,8 +52,6 @@ void AI::update(float dt) {
 	} else {
 		timeSinceLastUpdate -= dt;
 		if (timeSinceLastUpdate <= 0) {
-			timeSinceLastUpdate = UNIT_AI_UPDATE_TIME;
-
 			// Check the job board for stuff to do
 			int jobPicked = -1;
 			for (unsigned int i = 0; i < JobQueue::jobQueue.size(); i++) {
@@ -65,7 +63,7 @@ void AI::update(float dt) {
 				}
 
 				// Can't pick up jobs that are assigned to someone else
-				if (job.targetEnt != controlled || job.targetEnt != NULL) {
+				if (job.targetEnt != controlled && job.targetEnt != NULL) {
 					continue;
 				}
 
@@ -84,6 +82,7 @@ void AI::update(float dt) {
 
 					// Walk to the target location
 					controlled->walkTo(route);
+					cout << controlled->state << endl;
 					jobPicked = i;
 					job.assigned = controlled;
 					break;
@@ -93,6 +92,9 @@ void AI::update(float dt) {
 			// Is there a job that is now taken?
 			if (jobPicked >= 0) {
 				JobQueue::jobQueue.erase(JobQueue::jobQueue.begin() + jobPicked);
+			} else {
+				// Otherwise, wait until a more opportune time
+				timeSinceLastUpdate = UNIT_AI_UPDATE_TIME;
 			}
 		}
 	}

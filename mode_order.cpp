@@ -6,6 +6,7 @@ ModeOrder::ModeOrder() {
 
 void ModeOrder::init() {
 	Unit testUnit = Unit("test","./data/images/enemies/yellowBox.png");
+	testUnit.skills = SKILL_MINING;
 	entManager->unitManager->addNewUnitType("testUnit",testUnit);
 	RequestQueues::entityRequests.push_back(entRequest::newUnitRequest("testUnit", HALF_TILE_WIDTH, HALF_TILE_HEIGHT));
 	entManager->flushRequests();
@@ -33,6 +34,7 @@ void ModeOrder::update(float dt, sf::RenderWindow* screen) {
 		thisJob.requirements = SKILL_MINING;
 		thisJob.suspended = false;
 		thisJob.repeating = false;
+		thisJob.targetEnt = NULL;
 		thisJob.targetPoint = clicked;
 		thisJob.type = JOB_TYPE_MINING;
 		JobQueue::jobQueue.push_back(thisJob);

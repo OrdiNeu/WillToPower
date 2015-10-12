@@ -105,9 +105,6 @@ std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int 
 				return retVal;
 			}
 
-			// Search around the adjacent points
-			// On a staggered isometric grid, this means that where you can move depends on whether or not y is odd
-			// There's a speedup here if I used boolean math instead of branching, but it's unreadable: (x-1)+2*(y&1)
 			int newy[] = {y+1, y+1, y-1, y-1};
 			int* newx;
 			if (y&1) {	// is y odd?
@@ -115,6 +112,10 @@ std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int 
 			} else {
 				newx = new int[4] {x-1, x, x, x-1};
 			}
+
+			// Search around the adjacent points
+			// On a staggered isometric grid, this means that where you can move depends on whether or not y is odd
+			// There's a speedup here if I used boolean math instead of branching, but it's unreadable: (x-1)+2*(y&1)
 			for (int i = 0; i < 4; i++) {
 				//cout << "\tadding (" << newx[i] << "," << newy[i] << ")" << endl;
 				if ( map->inBounds(newx[i], newy[i])
@@ -127,9 +128,11 @@ std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int 
 			}
 
 			// Handle moving directly up, down, left, and right. In order to move in one of these directions,
-			// BOTH of the diagonal directions must be free to move.
-			int diagonal_x[] = {x-1, x, x+1, x};
-			int diagonal_y[] = {y, y-1, y, y+1};
+			// BOTH of the diagonal directions AND the target direction must be free to move in.
+			//int diagonal_x[] = {x-1, x, x+1, x};
+			//int diagonal_y[] = {y, y-1, y, y+1};
+			int diagonal_x[] = {x, x+1, x, x-1};
+			int diagonal_y[] = {y+2, y, y-2, y};
 			for (int i = 0; i < 4; i++) {
 				int j = (i+1)%4;	// The other direction being checked
 				int thisx = diagonal_x[i];
@@ -138,6 +141,8 @@ std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int 
 						&& map->getTile(newx[i], newy[i])->tags & IS_WALKABLE
 						&& map->inBounds(newx[j], newy[j])
 						&& map->getTile(newx[j], newy[j])->tags & IS_WALKABLE
+						&& map->inBounds(thisx, thisy)
+						&& map->getTile(thisx, thisy)->tags & IS_WALKABLE
 						&& !ClosedList->contains(thisx, thisy)
 						&& !OpenList->contains(thisx, thisy) ) {
 					OpenList->insert(new AStarNode(thisx, thisy, endx, endy, thisNode->g + 1, thisNode));
