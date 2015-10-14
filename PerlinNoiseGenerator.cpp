@@ -1,13 +1,9 @@
 #include "PerlinNoiseGenerator.hpp"
 
-// Formula and naming convention obtained from http://webstaff.itn.liu.se/~stegu/TNM022-2005/perlinnoiselinks/perlin-noise-math-faq.html
-
-// Constants
 PerlinNoiseGenerator* PerlinNoiseGenerator::instance = NULL;
 const int PERLIN_WIDTH = 256;
 const int PERLIN_HEIGHT = 256;
 
-// Constructor
 PerlinNoiseGenerator::PerlinNoiseGenerator() {
 	// Generate the noise grid
 	noiseGridX = new double*[PERLIN_WIDTH];
@@ -16,12 +12,15 @@ PerlinNoiseGenerator::PerlinNoiseGenerator() {
 		noiseGridX[i] = new double[PERLIN_HEIGHT];
 		noiseGridY[i] = new double[PERLIN_HEIGHT];
 		for (int j = 0; j < PERLIN_HEIGHT; j++) {
-			// For each point, generate a random 2D unit vector
-			float angle = 2*PI*((float) rand() / (float) RAND_MAX);
-			noiseGridX[i][j] = sin(angle);
-			noiseGridY[i][j] = cos(angle);
+			// For each point, generate a random 2D unit vector. We also divide it by 2 to save time later
+			float angle = 2*M_PI*((float) rand() / (float) RAND_MAX);
+			noiseGridX[i][j] = sin(angle)/2;
+			noiseGridY[i][j] = cos(angle)/2;
 		}
 	}
+}
+
+PerlinNoiseGenerator::~PerlinNoiseGenerator() {
 }
 
 PerlinNoiseGenerator* PerlinNoiseGenerator::getInstance() {
@@ -39,16 +38,18 @@ double PerlinNoiseGenerator::getNonPeriodic(double x, double y) {
 	if (y < 0) y = -y;
 	
 	// Obtain the perlin height from the corresponding nearest four neighbours
+	// Naming convention / formula obtained from http://webstaff.itn.liu.se/~stegu/TNM022-2005/perlinnoiselinks/perlin-noise-math-faq.html
 	int lowerx = (int) x;
 	int lowery = (int) y;
-	int upperx = lowerx + 1;
-	int uppery = lowery + 1;
+	int upperx = (lowerx + 1) % PERLIN_WIDTH;
+	int uppery = (lowery + 1) % PERLIN_HEIGHT;
 	
-	double s = noiseGridX[lowerx][lowery] * (x - lowerx) + noiseGridY[lowerx][lowery] * (y - lowery);
-	double t = noiseGridX[upperx][lowery] * (x - upperx) + noiseGridY[upperx][lowery] * (y - lowery);
-	double u = noiseGridX[lowerx][uppery] * (x - lowerx) + noiseGridY[lowerx][uppery] * (y - uppery);
-	double v = noiseGridX[upperx][uppery] * (x - upperx) + noiseGridY[upperx][uppery] * (y - uppery);
-	
+	// Get the contribution from the four surrounding grid points. Note that we have previously halved noiseGrid
+	double s = noiseGridX[lowerx][lowery] * (1 - (x - lowerx)) + noiseGridY[lowerx][lowery] * (1 - (y - lowery));
+	double t = noiseGridX[upperx][lowery] * (1 - (x - upperx)) + noiseGridY[upperx][lowery] * (1 - (y - lowery));
+	double u = noiseGridX[lowerx][uppery] * (1 - (x - lowerx)) + noiseGridY[lowerx][uppery] * (1 - (y - uppery));
+	double v = noiseGridX[upperx][uppery] * (1 - (x - upperx)) + noiseGridY[upperx][uppery] * (1 - (y - uppery));
+
 	double Sx = 3*pow(x-lowerx,2) - 2*pow(x-lowerx,3);
 	double a = s + Sx*(t-s);
 	double b = u + Sx*(v-u);
@@ -58,9 +59,10 @@ double PerlinNoiseGenerator::getNonPeriodic(double x, double y) {
 
 double PerlinNoiseGenerator::get(double x, double y) {
 	// Confine x and y to be within the boundaries
-	x -= (int) (x/PERLIN_WIDTH) * PERLIN_WIDTH;
-	y -= (int) (y/PERLIN_HEIGHT) * PERLIN_HEIGHT;
+	x -= int(x/PERLIN_WIDTH) * PERLIN_WIDTH;
+	y -= int(y/PERLIN_HEIGHT) * PERLIN_HEIGHT;
 	
+	//std::cout << "Returning: " << getNonPeriodic(x,y) << "," << getNonPeriodic(x-PERLIN_WIDTH,y) << "," << getNonPeriodic(x-PERLIN_WIDTH,y-PERLIN_HEIGHT) << "," << getNonPeriodic(x,y-PERLIN_HEIGHT) << std::endl;
 	return (getNonPeriodic(x,y) * (PERLIN_WIDTH-x) * (PERLIN_HEIGHT-y) + \
 			getNonPeriodic(x-PERLIN_WIDTH,y) * (x) * (PERLIN_HEIGHT-y) + \
 			getNonPeriodic(x-PERLIN_WIDTH,y-PERLIN_HEIGHT) * (x) * (y) + \

@@ -7,16 +7,18 @@
 class PerlinNoiseGenerator {
 public:
 	static PerlinNoiseGenerator* getInstance();
-	PerlinNoiseGenerator();
 	
 	double get(double x, double y);
 	double getNonPeriodic(double x, double y);
 	double** noiseGridX;
 	double** noiseGridY;
+	//TODO: Add a random seed
 private:
 	static PerlinNoiseGenerator* instance;
+	
+	// Block construction and destruction of the instance except by getInstance();
+	PerlinNoiseGenerator();
+	~PerlinNoiseGenerator();
 };
-
-const double PI = 3.141592653589793238463;
 
 #endif
