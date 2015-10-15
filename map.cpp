@@ -1,6 +1,9 @@
 #include "map.hpp"
 using namespace std;
 
+Map::Map() {
+	dirty = true;
+}
 Map::~Map() {
 	while (!tileDict.empty()) {
 		tileDict.pop_back();
@@ -44,17 +47,9 @@ void Map::init(int width, int height) {
 		}
 	}
 
-	// Add the default empty tile
-	Tile* emptyTile = new Tile();
-	addTile(emptyTile);
-	Tile* grassTile = new Tile("./data/images/GrassTile1.png", IS_WALKABLE);
-	addTile(grassTile);
-	Tile* dirtTile = new Tile("./data/images/DirtTile.png");
-	addTile(dirtTile);
 	mapTex.create(HALF_TILE_WIDTH*(2*width+1), HALF_TILE_HEIGHT*(height+1));
 	mapSpr.setTexture(mapTex.getTexture());
-	reRender();
-	dirty = false;
+	dirty = true;
 }
 
 Tile* Map::getTile(int x, int y) {

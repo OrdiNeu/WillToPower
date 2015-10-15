@@ -41,24 +41,6 @@ Unit* Unit::clone() {
 	return newUnit;
 }
 
-void Unit::moveToRealXY(float x, float y) {
-	realX = x;
-	realY = y;
-	point* tilePos = Map::TexXYToTileXY(x,y);
-	tileX = tilePos->tileX;
-	tileY = tilePos->tileY;
-	delete tilePos;
-}
-
-void Unit::moveToTileXY(int x, int y) {
-	tileX = x;
-	tileY = y;
-	point* tilePos = Map::TileXYToTexXY(x,y);
-	realX = tilePos->realX;
-	realY = tilePos->realY;
-	delete tilePos;
-}
-
 void Unit::update(float dt) {
 	// Determine what to do depending on state
 	switch (state) {

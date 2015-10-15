@@ -1,4 +1,4 @@
-build/release/mode.o: mode.cpp mode.hpp map.hpp \
+build/debug/unit_ai.o: unit_ai.cpp unit_ai.hpp unit.hpp \
  ../SFML/include/SFML/Graphics.hpp ../SFML/include/SFML/Window.hpp \
  ../SFML/include/SFML/System.hpp ../SFML/include/SFML/Config.hpp \
  ../SFML/include/SFML/System/Clock.hpp \
@@ -58,14 +58,12 @@ build/release/mode.o: mode.cpp mode.hpp map.hpp \
  ../SFML/include/SFML/Graphics/RectangleShape.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
- ../SFML/include/SFML/Graphics/Text.hpp tile.hpp constants.hpp \
- entity_manager.hpp entity.hpp unit_manager.hpp unit.hpp job_queue.hpp \
- unit_ai.hpp a_star.hpp doodad_manager.hpp doodad.hpp request_queue.hpp \
- world_generator.hpp PerlinNoiseGenerator.hpp
+ ../SFML/include/SFML/Graphics/Text.hpp constants.hpp map.hpp tile.hpp \
+ entity.hpp job_queue.hpp a_star.hpp
 
-mode.hpp:
+unit_ai.hpp:
 
-map.hpp:
+unit.hpp:
 
 ../SFML/include/SFML/Graphics.hpp:
 
@@ -195,30 +193,14 @@ map.hpp:
 
 ../SFML/include/SFML/Graphics/Text.hpp:
 
-tile.hpp:
-
 constants.hpp:
 
-entity_manager.hpp:
+map.hpp:
+
+tile.hpp:
 
 entity.hpp:
 
-unit_manager.hpp:
-
-unit.hpp:
-
 job_queue.hpp:
 
-unit_ai.hpp:
-
 a_star.hpp:
-
-doodad_manager.hpp:
-
-doodad.hpp:
-
-request_queue.hpp:
-
-world_generator.hpp:
-
-PerlinNoiseGenerator.hpp:

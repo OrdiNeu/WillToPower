@@ -60,7 +60,8 @@ build/release/mode_main_menu.o: mode_main_menu.cpp mode_main_menu.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp tile.hpp constants.hpp \
  entity_manager.hpp entity.hpp unit_manager.hpp unit.hpp job_queue.hpp \
- unit_ai.hpp a_star.hpp doodad_manager.hpp doodad.hpp request_queue.hpp
+ unit_ai.hpp a_star.hpp doodad_manager.hpp doodad.hpp request_queue.hpp \
+ world_generator.hpp PerlinNoiseGenerator.hpp
 
 mode_main_menu.hpp:
 
@@ -219,3 +220,7 @@ doodad_manager.hpp:
 doodad.hpp:
 
 request_queue.hpp:
+
+world_generator.hpp:
+
+PerlinNoiseGenerator.hpp:

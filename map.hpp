@@ -7,28 +7,31 @@
 #include "constants.hpp"
 
 class Map {
-	private:
-		int** tiles;
-		std::vector<Tile*> tileDict;
-		sf::RenderTexture mapTex;
-		sf::Sprite mapSpr;
-		void addTile(Tile* tileToAdd);
-		bool dirty;
-	public:
-		~Map();
-		void init(int width, int height);
-		void update(float dt);
-		void render(sf::RenderTarget* screen);
-		void reRender();
-		void setTile(int x, int y, Tile* tileToAdd);
-		void setTile(int x, int y, int tileToAdd);
-		Tile* getTile(int x, int y);
-		bool inBounds(int x, int y);
-		std::vector<Tile*> getTileDict(){ return tileDict; };
-		int width, height;
+	friend class WorldGenerator;
+private:
+	int** tiles;
+	std::vector<Tile*> tileDict;
+	sf::RenderTexture mapTex;
+	sf::Sprite mapSpr;
+	bool dirty;
+protected:
+	void addTile(Tile* tileToAdd);
+public:
+	Map();
+	~Map();
+	void init(int width, int height);
+	void update(float dt);
+	void render(sf::RenderTarget* screen);
+	void reRender();
+	void setTile(int x, int y, Tile* tileToAdd);
+	void setTile(int x, int y, int tileToAdd);
+	Tile* getTile(int x, int y);
+	bool inBounds(int x, int y);
+	std::vector<Tile*> getTileDict(){ return tileDict; };
+	int width, height;
 
-		static point* TexXYToTileXY(float texX, float texY);
-		static point* TileXYToTexXY(int x, int y);
+	static point* TexXYToTileXY(float texX, float texY);
+	static point* TileXYToTexXY(int x, int y);
 };
 
 #endif

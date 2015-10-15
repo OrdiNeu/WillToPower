@@ -1,15 +1,21 @@
 #include "game.hpp"
 using namespace std;
 
+Game::~Game(){
+	delete Mode::entManager->unitManager;
+	delete Mode::entManager->doodadManager;
+	delete Mode::entManager;
+	delete Mode::worldGen;
+}
+
 bool Game::init(){
-	PerlinNoiseGenerator::getInstance();	// initialize it
 	screen.create(sf::VideoMode(WINDOW_WIDTH,WINDOW_HEIGHT), "Will To Power");
 	Mode::entManager = new EntityManager();
 	Mode::entManager->unitManager = new UnitManager();
 	Mode::entManager->doodadManager = new DoodadManager();
-	Mode::curMap = new Map();
+	Mode::worldGen = new WorldGenerator(Mode::entManager);
+	Mode::curMap = Mode::worldGen->generateMap(0,0);
 	Mode::entManager->unitManager->curMap = Mode::curMap;
-	Mode::curMap->init(10,10);
 	curMode = new ModeOrder();
 	curMode->init();
 	return true;

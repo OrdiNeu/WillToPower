@@ -19,7 +19,7 @@ void DoodadManager::addDoodad(Doodad* doodad) {
 Doodad* DoodadManager::addDoodadByType(std::string type) {
 	// Ensure that the type exists
 	if (doodad_library.find(type) == doodad_library.end()) {
-		std::cerr << "ERROR: attempted to create unit of unknown type " << type << std::endl;
+		std::cerr << "ERROR: attempted to create doodad of unknown type " << type << std::endl;
 		return NULL;
 	}
 	Doodad* newDoodad = doodad_library[type].clone();

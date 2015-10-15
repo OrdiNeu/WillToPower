@@ -7,9 +7,8 @@
 #include "mode_main_menu.hpp"
 #include "mode_map_edit.hpp"
 #include "mode_order.hpp"
-#include "unit_manager.hpp"
-#include "doodad_manager.hpp"
 #include "entity_manager.hpp"
+#include "world_generator.hpp"
 #include "PerlinNoiseGenerator.hpp"
 
 class Game {
@@ -21,6 +20,7 @@ class Game {
 		int run();
 		void update(float dt);
 		void render();
+		~Game();
 };
 
 #endif

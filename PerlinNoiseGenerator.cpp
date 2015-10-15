@@ -1,10 +1,11 @@
 #include "PerlinNoiseGenerator.hpp"
 
-PerlinNoiseGenerator* PerlinNoiseGenerator::instance = NULL;
-const int PERLIN_WIDTH = 256;
-const int PERLIN_HEIGHT = 256;
+const int PERLIN_WIDTH = 512;
+const int PERLIN_HEIGHT = 512;
 
-PerlinNoiseGenerator::PerlinNoiseGenerator() {
+PerlinNoiseGenerator::PerlinNoiseGenerator(int seed) : seed(seed) {
+	srand(seed);
+
 	// Generate the noise grid
 	noiseGridX = new double*[PERLIN_WIDTH];
 	noiseGridY = new double*[PERLIN_WIDTH];
@@ -13,22 +14,13 @@ PerlinNoiseGenerator::PerlinNoiseGenerator() {
 		noiseGridY[i] = new double[PERLIN_HEIGHT];
 		for (int j = 0; j < PERLIN_HEIGHT; j++) {
 			// For each point, generate a random 2D unit vector. We also divide it by 2 to save time later
-			float angle = 2*M_PI*((float) rand() / (float) RAND_MAX);
+			//TODO: FIgure out why I can't use M_PI in this scope
+			float angle = 2*3.14159*((float) rand() / (float) RAND_MAX);
 			noiseGridX[i][j] = sin(angle)/2;
 			noiseGridY[i][j] = cos(angle)/2;
 		}
 	}
 }
-
-PerlinNoiseGenerator::~PerlinNoiseGenerator() {
-}
-
-PerlinNoiseGenerator* PerlinNoiseGenerator::getInstance() {
-	if (!instance) {
-		instance = new PerlinNoiseGenerator;
-	}
-	return instance;
-};
 
 double PerlinNoiseGenerator::getNonPeriodic(double x, double y) {
 	// Confine x and y to be within the boundaries
