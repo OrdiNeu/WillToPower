@@ -2,7 +2,6 @@
 #define ROOM_HPP
 
 class Room {
-	
 };
 
 #endif

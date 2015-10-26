@@ -22,6 +22,37 @@ PerlinNoiseGenerator::PerlinNoiseGenerator(int seed) : seed(seed) {
 	}
 }
 
+// Smooths the noise grid
+void PerlinNoiseGenerator::smooth(double intensity) {
+	double** newNoiseX;
+	double** newNoiseY;
+	newNoiseX = new double*[PERLIN_WIDTH];
+	newNoiseY = new double*[PERLIN_WIDTH];
+	for (int x = 0; x < PERLIN_WIDTH; x++) {
+		newNoiseX[x] = new double[PERLIN_HEIGHT];
+		newNoiseY[x] = new double[PERLIN_HEIGHT];
+		for (int y = 0; y < PERLIN_HEIGHT; y++) {
+			// Average the surrounding eight points
+			int surround_x[] = {x-1, x-1, x-1, x, x, x+1, x+1, x+1};
+			int surround_y[] = {y-1, y, y+1, y-1, y+1, y-1, y, y+1};
+			double averageX = 0.0;
+			double averageY = 0.0;
+			for (int i = 0; i < 8; i++) {
+				averageX += newNoiseX[surround_x[i]][surround_y[i]];
+				averageY += newNoiseY[surround_x[i]][surround_y[i]];
+			}
+			averageX /= 8;
+			averageY /= 8;
+			noiseGridX[x][y] += (averageX-noiseGridX[x][y])*(intensity+1)/intensity;
+			noiseGridY[x][y] += (averageX-noiseGridY[x][y])*(intensity+1)/intensity;
+		}
+	}
+}
+
+void PerlinNoiseGenerator::smooth() {
+	this->smooth(1.0);
+}
+
 double PerlinNoiseGenerator::getNonPeriodic(double x, double y) {
 	// Confine x and y to be within the boundaries
 	x -= (int) (x/PERLIN_WIDTH) * PERLIN_WIDTH;

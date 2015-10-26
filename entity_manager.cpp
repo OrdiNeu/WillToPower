@@ -27,13 +27,6 @@ void EntityManager::update(float dt) {
 	doodadManager->update(dt);
 
 	// Handle entity requests
-	/*std::string teststr("Test0");
-	std::regex test("Test(.+)");
-	std::regex_match(teststr, group, test);
-	for (unsigned i=0; i<group.size(); ++i) {
-	  std::cout << "[" << group[i] << "] ";
-	}
-	std::cout << std::endl;*/
 	flushRequests();
 }
 

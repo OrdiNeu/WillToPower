@@ -27,7 +27,12 @@ void Map::reRender() {
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
 			// Draw the tile onto this texture
-			tileDict.at(tiles[x][y])->render(&mapTex, (x*2 + y%2)*HALF_TILE_WIDTH, y*HALF_TILE_HEIGHT);
+			Tile* thisTile = tileDict.at(tiles[x][y]);
+			if (thisTile->lastColor != colorize[x][y]) {
+				thisTile->lastColor = colorize[x][y];
+				thisTile->spr.setColor(sf::Color(colorDict.at(colorize[x][y])));
+			}
+			thisTile->render(&mapTex, (x*2 + y%2)*HALF_TILE_WIDTH, y*HALF_TILE_HEIGHT);
 		}
 	}
 	mapTex.display();	// Update the texture
@@ -40,15 +45,19 @@ void Map::init(int width, int height) {
 	this->width = width;
 	this->height = height;
 	tiles = new int*[width];
+	colorize = new int*[width];
 	for (int x = 0; x < width; x++) {
 		tiles[x] = new int[height];
+		colorize[x] = new int[height];
 		for (int y = 0; y < height; y++) {
 			tiles[x][y] = 1;
+			colorize[x][y] = 0;
 		}
 	}
 
 	mapTex.create(HALF_TILE_WIDTH*(2*width+1), HALF_TILE_HEIGHT*(height+1));
 	mapSpr.setTexture(mapTex.getTexture());
+	colorDict.push_back(sf::Color(255,255,255));	// Full color is the default
 	dirty = true;
 }
 
@@ -79,6 +88,27 @@ void Map::setTile(int x, int y, int tileToAdd) {
 		return;
 	dirty = true;
 	tiles[x][y] = tileToAdd;
+}
+
+void Map::setColor(int x, int y, sf::Color colorToAdd) {
+	// Look for this color in the colorDict
+	for (unsigned int i = 0; i < colorDict.size(); i++) {
+		if (colorDict.at(i) == colorToAdd) {
+			setColor(x,y,i-1);
+			return;
+		}
+	}
+}
+
+void Map::setColor(int x, int y, int colorToAdd) {
+	if (!inBounds(x,y))
+		return;
+	dirty = true;
+	colorize[x][y] = colorToAdd;
+}
+
+void Map::clearColor(int x, int y) {
+	setColor(x,y,0);
 }
 
 // Converts a tileX, tileY to an X, Y relative to the texture's top left, where realX and realY is the center of tile (tileX, tileY)

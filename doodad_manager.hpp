@@ -15,6 +15,7 @@ public:
 	void addDoodad(Doodad* doodad);
 	Doodad* addDoodadByType(std::string type);
 	void removeDoodad(std::string id);
+	std::vector<Doodad*> getDoodadsAtPoint(int x, int y);	// Expensive to use
 	Map* curMap;
 };
 

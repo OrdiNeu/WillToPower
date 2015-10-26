@@ -5,15 +5,13 @@ Tile::Tile() {
 	tags = 0;
 }
 
-Tile::Tile(string filename, int tags) {
+Tile::Tile(string filename, int tags) : filename(filename), tags(tags) {
 	if (filename != "EMPTY" && !tex.loadFromFile(filename)) {
 		cout << "ERROR: Could not load " << filename << endl;
 		return;
 	};
 	spr.setTexture(tex);
 	spr.setScale(X_SCALE, Y_SCALE);
-	this->tags = tags;
-	this->filename = filename;
 }
 
 void Tile::render(sf::RenderTarget* screen, float x, float y) {

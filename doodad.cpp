@@ -2,7 +2,7 @@
 
 Doodad::Doodad() {}
 
-Doodad::Doodad(std::string ID, std::string filename, int x, int y) : filename(filename) {
+Doodad::Doodad(std::string ID, std::string filename, int x, int y, int tags) : filename(filename), tags(tags) {
 	id = ID;	
 	if (filename != "EMPTY" && !tex.loadFromFile(filename)) {
 		std::cout << "ERROR: Could not load " << filename << std::endl;
@@ -28,7 +28,7 @@ void Doodad::render(sf::RenderTarget* screen) {
 }
 
 Doodad* Doodad::clone() {
-	Doodad* newDoodad = new Doodad(id, filename, realX, realY);
+	Doodad* newDoodad = new Doodad(id, filename, realX, realY, tags);
 	return newDoodad;
 }
 

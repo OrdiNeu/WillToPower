@@ -63,7 +63,7 @@ void AI::update(float dt) {
 				}
 
 				// Can't pick up jobs that are assigned to someone else
-				if (job.targetEnt != controlled && job.targetEnt != NULL) {
+				if (job.assigned != NULL && job.assigned != controlled) {
 					continue;
 				}
 

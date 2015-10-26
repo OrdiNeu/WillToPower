@@ -8,11 +8,13 @@
 const int NUM_SKILLS = 1;
 
 enum SKILLS {
-	SKILL_MINING = 0
+	SKILL_MINING,
+	SKILL_WOODCUT
 };
 
 enum JOB_TYPES {
-	JOB_TYPE_MINING = 0
+	JOB_TYPE_MINING,
+	JOB_TYPE_WOODCUT
 };
 
 struct Job {

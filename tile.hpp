@@ -4,7 +4,7 @@
 #include <iostream>
 #include "constants.hpp"
 
-enum TAG_TYPES {
+enum TILE_TAGS {
 	IS_WALKABLE = 1,
 	IS_MINABLE = 2
 };
@@ -20,6 +20,7 @@ public:
 	sf::Texture tex;
 	std::string filename;
 	int tags;
+	int lastColor;
 	Tile();
 	Tile(std::string filename, int tags = 0);
 	void render(sf::RenderTarget* screen, float x, float y);

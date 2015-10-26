@@ -36,3 +36,13 @@ void DoodadManager::removeDoodad(std::string id) {
 		}
 	}
 }
+
+std::vector<Doodad*> DoodadManager::getDoodadsAtPoint(int x, int y) {
+	std::vector<Doodad*> retVal;
+	for(Doodad* thisDoodad : doodads) {
+		if (thisDoodad->tileX == x && thisDoodad->tileY == y) {
+			retVal.push_back(thisDoodad);
+		}
+	}
+	return retVal;
+}

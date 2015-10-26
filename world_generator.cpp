@@ -1,6 +1,6 @@
 #include "world_generator.hpp"
 
-const float PerlinScalingFactor = 5.0;
+const float PerlinScalingFactor = 20.0;
 
 WorldGenerator::WorldGenerator(int seed, EntityManager* entManager) : seed(seed), entManager(entManager) {
 	srand(seed);
@@ -18,7 +18,7 @@ Map* WorldGenerator::generateMap(int x, int y) {
 	// Add the default empty tile
 	Tile* emptyTile = new Tile();
 	retVal->addTile(emptyTile);
-	Tile* grassTile = new Tile("./data/images/GrassTile1.png", IS_WALKABLE);
+	Tile* grassTile = new Tile("./data/images/GrassTile1.png", IS_WALKABLE | IS_MINABLE);
 	retVal->addTile(grassTile);
 	Tile* dirtTile = new Tile("./data/images/DirtTile.png");
 	retVal->addTile(dirtTile);
@@ -32,6 +32,8 @@ Map* WorldGenerator::generateMap(int x, int y) {
 				retVal->setTile(x,y,1);
 				// If the 6th digit is a 2, 1, or 0, put a tree here
 				if (int(forestFactor*10000) % 10 < 3) {
+					retVal->setTile(x,y,2);
+					//std::cout << "Adding a tree at " << x << "," << y << std::endl;
 					/*Doodad* thisTree = entManager->doodadManager->addDoodadByType("Tree");
 					thisTree->moveToTileXY(x,y);*/
 				}
