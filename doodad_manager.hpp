@@ -5,6 +5,7 @@
 #include <cstring>
 #include "doodad.hpp"
 #include <unordered_map>
+#include "map.hpp"
 
 class DoodadManager {
 public:
@@ -14,7 +15,7 @@ public:
 	void update(float dt);
 	void addDoodad(Doodad* doodad);
 	Doodad* addDoodadByType(std::string type);
-	void removeDoodad(std::string id);
+	void removeDoodad(std::string uid);
 	std::vector<Doodad*> getDoodadsAtPoint(int x, int y);	// Expensive to use
 	Map* curMap;
 };

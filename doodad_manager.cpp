@@ -27,10 +27,10 @@ Doodad* DoodadManager::addDoodadByType(std::string type) {
 	return newDoodad;
 }
 
-void DoodadManager::removeDoodad(std::string id) {
+void DoodadManager::removeDoodad(std::string uid) {
 	// Find the Doodad and do an in-place swap with the final element, then shrink
 	for (std::vector<Doodad*>::iterator it = doodads.begin() ; it != doodads.end(); ++it) {
-		if ((*it)->id == id) {
+		if ((*it)->uid == uid) {
 			*it = doodads[doodads.size()-1];
 			doodads.pop_back();
 		}
@@ -40,9 +40,12 @@ void DoodadManager::removeDoodad(std::string id) {
 std::vector<Doodad*> DoodadManager::getDoodadsAtPoint(int x, int y) {
 	std::vector<Doodad*> retVal;
 	for(Doodad* thisDoodad : doodads) {
-		if (thisDoodad->tileX == x && thisDoodad->tileY == y) {
+		// slow af
+		point* doodadPos = Map::TexXYToTileXY(thisDoodad->realX, thisDoodad->realY);
+		if (doodadPos->tileX == x && doodadPos->tileY == y) {
 			retVal.push_back(thisDoodad);
 		}
+		delete doodadPos;
 	}
 	return retVal;
 }

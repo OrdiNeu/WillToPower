@@ -20,7 +20,8 @@ public:
 	AI(Unit* controlled, Map* curMap);
 	Unit* controlled;
 	Map* curMap;
-	std::string id;
+	point* lastKnownPos;
+	std::string uid;
 	void update(float dt);
 };
 

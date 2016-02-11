@@ -15,7 +15,9 @@ public:
 	Map* generateMap(int x, int y);
 	int seed;
 private:
-	PerlinNoiseGenerator* forestryGen;
+	PerlinNoiseGenerator* forestryGen1;
+	PerlinNoiseGenerator* forestryGen2;
+	PerlinNoiseGenerator* forestryGen3;
 	EntityManager* entManager;
 };
 

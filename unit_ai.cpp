@@ -1,15 +1,16 @@
 #include "unit_ai.hpp"
-using namespace std;
+// using namespace std;
 
 AI::AI(Unit* controlled, Map* curMap) : controlled(controlled), curMap(curMap) {
 	timeSinceLastUpdate = UNIT_AI_UPDATE_TIME;
+	lastKnownPos = Map::TexXYToTileXY(controlled->realX, controlled->realY);
 }
 
 // Dunno how much (if at all) I want to subclass AI, so it is non-virtual for now
 void AI::update(float dt) {
 	if (controlled->state == STATE_WALKING) {
 		point* thisPoint = Map::TexXYToTileXY(controlled->realX, controlled->realY);
-		if (thisPoint->tileX != controlled->tileX || thisPoint->tileY != controlled->tileY) {
+		if (thisPoint->tileX != lastKnownPos->tileX || thisPoint->tileY != lastKnownPos->tileY) {
 			// See if we've sufficiently close to the center of the tile
 #ifdef AI_MOVE_CENTER_OF_TILE
 			point* centerPoint = Map::TileXYToTexXY(thisPoint->tileX, thisPoint->tileY);
@@ -22,6 +23,7 @@ void AI::update(float dt) {
 				if (thisPoint->tileX != nextLoc->tileX || thisPoint->tileY != nextLoc->tileY) {
 					std::cout << "Unit ended up somewhere unexpected - need to recreate path" << std::endl;
 					std::cout << "(Expected " << nextLoc->tileX << "," << nextLoc->tileY << "), got (" << thisPoint->tileX << "," << thisPoint->tileY << "))" << std::endl;
+					std::cout << "Last known position:" << lastKnownPos->tileX << "," << lastKnownPos->tileY << std::endl;
 					// We meed to recreate the path
 					int targetX, targetY;
 					while (!controlled->curPath.empty()) {
@@ -35,13 +37,15 @@ void AI::update(float dt) {
 					// Remove the last point in the route, since it is the current position
 					point* last_point = controlled->curPath.back();
 					delete last_point;
+					lastKnownPos->tileX = thisPoint->tileX;
+					lastKnownPos->tileY = thisPoint->tileY;
 					controlled->curPath.pop_back();
 				} else {
 					// Just remove this point from the unit's list - it'll take care of the rest
 					point* pathPoint = controlled->curPath.back();
 					controlled->curPath.pop_back();
-					controlled->tileX = thisPoint->tileX;
-					controlled->tileY = thisPoint->tileY;
+					lastKnownPos->tileX = thisPoint->tileX;
+					lastKnownPos->tileY = thisPoint->tileY;
 					delete pathPoint;
 				}
 #ifdef AI_MOVE_CENTER_OF_TILE
@@ -63,7 +67,7 @@ void AI::update(float dt) {
 				}
 
 				// Can't pick up jobs that are assigned to someone else
-				if (job.assigned != NULL && job.assigned != controlled) {
+				if (!(job.assigned == NULL || job.assigned == controlled)) {
 					continue;
 				}
 
@@ -73,7 +77,11 @@ void AI::update(float dt) {
 				}
 
 				// Passed all checks: try to pick this job up
-				std::vector<point*> route = AStarSearch(curMap, controlled->tileX, controlled->tileY, job.targetPoint->tileX, job.targetPoint->tileY);
+
+				point* curPoint = Map::TexXYToTileXY(controlled->realX, controlled->realY);
+				lastKnownPos->tileX = curPoint->tileX;
+				lastKnownPos->tileY = curPoint->tileY;
+				std::vector<point*> route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, job.targetPoint->tileX, job.targetPoint->tileY);
 				if (route.size() != 0) {
 					// Remove the last point in the route, since it is the current position
 					point* last_point = route.back();
@@ -82,11 +90,12 @@ void AI::update(float dt) {
 
 					// Walk to the target location
 					controlled->walkTo(route);
-					cout << controlled->state << endl;
+					std::cout << controlled->state << std::endl;
 					jobPicked = i;
 					job.assigned = controlled;
 					break;
 				}
+				delete curPoint;
 			}
 
 			// Is there a job that is now taken?

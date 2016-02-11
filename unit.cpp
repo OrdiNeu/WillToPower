@@ -2,19 +2,19 @@
 using namespace std;
 
 Unit::Unit() {
-	id = "UNIT_UNDEFINED";
+	uid = "UNIT_UNDEFINED";
 }
 
-Unit::Unit(std::string ID, std::string filename) : filename(filename) {
-	Unit(ID, filename, 0, 0);
+Unit::Unit(std::string uid, std::string filename) : filename(filename) {
+	Unit(uid, filename, 0, 0);
 }
 
-Unit::Unit(std::string ID, std::string filename, float x, float y) : filename(filename) {
+Unit::Unit(std::string uid, std::string filename, float x, float y) : filename(filename) {
 	if (filename != "EMPTY" && !tex.loadFromFile(filename)) {
 		cout << "ERROR: Could not load " << filename << endl;
 		return;
 	};
-	id = ID;
+	uid = uid;
 	halfWidth = (int) tex.getSize().x / 2;
 	height = (int) tex.getSize().y;
 	spr.setTexture(tex);
@@ -36,8 +36,8 @@ void Unit::walkTo(std::vector<point*> path) {
 	state = STATE_WALKING;
 }
 
-Unit* Unit::clone() {
-	Unit* newUnit = new Unit(id, filename, realX, realY);
+Unit* Unit::clone(std::string newUID) {
+	Unit* newUnit = new Unit(newUID, filename, realX, realY);
 	return newUnit;
 }
 
@@ -65,8 +65,12 @@ void Unit::update(float dt) {
 			break;
 		}
 		case STATE_IDLE:
+			/*
+			// The following job logic has been moved to unit_ai
+
 			timeToComplete -= dt;
 			if (timeToComplete < 0) {
+
 				// See if there's a job available
 				for (Job thisJob : JobQueue::jobQueue) {
 					// Ignore this job if it is suspended or if we lack a requisite skill
@@ -86,7 +90,7 @@ void Unit::update(float dt) {
 						break;
 					}
 				}
-			}
+			}*/
 		default:
 		break;
 	}

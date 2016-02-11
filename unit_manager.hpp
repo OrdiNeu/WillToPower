@@ -20,7 +20,7 @@ public:
 	Unit* addNewUnitByType(std::string type);
 	void addNewUnitType(std::string type, Unit newUnit);
 	void addUnit(AI* ai);
-	void removeUnit(std::string id);
+	void removeUnit(std::string uid);
 	Map* curMap;
 };
 

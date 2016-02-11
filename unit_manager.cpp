@@ -26,8 +26,7 @@ Unit* UnitManager::addNewUnitByType(std::string type) {
 		std::cerr << "ERROR: attempted to create unit of unknown type " << type << std::endl;
 		return NULL;
 	}
-	Unit* newUnit = unit_library[type].clone();
-	//newUnit->id = type + itos(num_units_created[type]++);	// What is this...
+	Unit* newUnit = unit_library[type].clone(type /*+ itos(num_units_created[type]++)*/);	// TODO: Lookup how to convert integers to string
 	AI* newAI = new AI(newUnit, curMap);
 	addUnit(newAI);
 	lastCreatedUnit = newUnit;
@@ -43,10 +42,10 @@ void UnitManager::addUnit(AI* ai) {
 	units.push_back(ai->controlled);
 }
 
-void UnitManager::removeUnit(std::string id) {
+void UnitManager::removeUnit(std::string uid) {
 	// Find the AI and do an in-place swap with the final element, then shrink
 	for (std::vector<AI*>::iterator it = ais.begin() ; it != ais.end(); ++it) {
-		if ((*it)->id == id) {
+		if ((*it)->uid == uid) {
 			*it = ais[ais.size()-1];
 			ais.pop_back();
 		}
@@ -54,7 +53,7 @@ void UnitManager::removeUnit(std::string id) {
 
 	// Do the same for the connected unit
 	for (std::vector<Unit*>::iterator it = units.begin() ; it != units.end(); ++it) {
-		if ((*it)->id == id) {
+		if ((*it)->uid == uid) {
 			*it = units[units.size()-1];
 			units.pop_back();
 		}

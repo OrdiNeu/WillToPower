@@ -40,10 +40,10 @@ void EntityManager::addEnt(Entity* ent, int type) {
 
 // The in-place swap childrens do may mess up for loops that are iterating over ents
 // But then, there are always problems with removals during iteration
-void EntityManager::removeEnt(std::string id, int type) {
+void EntityManager::removeEnt(std::string uid, int type) {
 	if (type & ENTITY_UNIT) {
-		unitManager->removeUnit(id);
+		unitManager->removeUnit(uid);
 	} else if (type & ENTITY_DOODAD) {
-		doodadManager->removeDoodad(id);
+		doodadManager->removeDoodad(uid);
 	}
 };

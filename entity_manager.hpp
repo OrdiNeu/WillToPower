@@ -18,7 +18,7 @@ public:
 	void render(sf::RenderTarget* screen);
 	void update(float dt);
 	void addEnt(Entity* ent, int type);
-	void removeEnt(std::string id, int type);
+	void removeEnt(std::string uid, int type);
 	void flushRequests();
 	UnitManager* unitManager;
 	DoodadManager* doodadManager;

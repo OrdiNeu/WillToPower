@@ -25,6 +25,8 @@ private:
 	int selectionActive;
 	int selectStartX;
 	int selectStartY;
+	int selectLastX;
+	int selectLastY;
 	Unit* test;
 	AI* testai;
 	sf::Sprite selectionTile;
@@ -32,10 +34,11 @@ private:
 	sf::RenderTexture selectionTex;
 	sf::Vector2i getMousePos();
 	void rerenderSelection();
-	void createJobsInArea(int type, int x0, int x1, int y0, int y1);
+	void findTasksInArea(int type, int x0, int x1, int y0, int y1, bool doCreateJob);
 	void createJob(int type, int requirements, Entity* targetEnt, point* targetPoint);
 	sf::Vector2i getMousePos(sf::RenderWindow* screen);
 	void rerenderSelection(sf::RenderWindow* screen);
+	void checkBounds(int* x0, int* x1);
 public:
 	int screenX;
 	int screenY;

@@ -8,7 +8,11 @@ Map::~Map() {
 	while (!tileDict.empty()) {
 		tileDict.pop_back();
 	}
+	while (!roomDict.empty()) {
+		roomDict.pop_back();
+	}
 	delete[] tiles;
+	delete[] rooms;
 }
 
 void Map::update(float dt) {
@@ -46,18 +50,23 @@ void Map::init(int width, int height) {
 	this->height = height;
 	tiles = new int*[width];
 	colorize = new int*[width];
+	rooms = new int*[width];
 	for (int x = 0; x < width; x++) {
 		tiles[x] = new int[height];
 		colorize[x] = new int[height];
+		rooms[x] = new int[height];
 		for (int y = 0; y < height; y++) {
 			tiles[x][y] = 1;
 			colorize[x][y] = 0;
+			rooms[x][y] = 0;
 		}
 	}
 
 	mapTex.create(HALF_TILE_WIDTH*(2*width+1), HALF_TILE_HEIGHT*(height+1));
 	mapSpr.setTexture(mapTex.getTexture());
-	colorDict.push_back(sf::Color(255,255,255));	// Full color is the default
+	for (int i = 0; i < NUM_DEFAULT_COLORS; i++) {
+		colorDict.push_back(DEFAULT_TILE_COLORS[i]);
+	}
 	dirty = true;
 }
 
@@ -67,6 +76,14 @@ Tile* Map::getTile(int x, int y) {
 
 void Map::addTile(Tile* tileToAdd) {
 	tileDict.push_back(tileToAdd);
+}
+
+void Map::addColor(sf::Color colorToAdd) {
+	colorDict.push_back(colorToAdd);
+}
+
+void Map::addRoom(Room* roomToAdd) {
+	roomDict.push_back(roomToAdd);
 }
 
 bool Map::inBounds(int x, int y) {
@@ -81,6 +98,10 @@ void Map::setTile(int x, int y, Tile* tileToAdd) {
 			return;
 		}
 	}
+
+	// Not in the dict, add it and go
+	addTile(tileToAdd);
+	setTile(x,y,tileDict.size()-1);
 }
 
 void Map::setTile(int x, int y, int tileToAdd) {
@@ -98,13 +119,37 @@ void Map::setColor(int x, int y, sf::Color colorToAdd) {
 			return;
 		}
 	}
+
+	// Not in the dict, add it and go
+	addColor(colorToAdd);
+	setColor(x,y,colorDict.size()-1);
 }
 
 void Map::setColor(int x, int y, int colorToAdd) {
 	if (!inBounds(x,y))
 		return;
-	dirty = true;
+	dirty = colorize[x][y] != colorToAdd;	// Only dirty if it's a change
 	colorize[x][y] = colorToAdd;
+}
+
+void Map::setRoom(int x, int y, Room* roomToAdd) {
+	// Look for this color in the colorDict
+	for (unsigned int i = 0; i < roomDict.size(); i++) {
+		if (roomDict.at(i) == roomToAdd) {
+			setRoom(x,y,i-1);
+			return;
+		}
+	}
+
+	// Not in the dict, add it and go
+	addRoom(roomToAdd);
+	setRoom(x,y,roomDict.size()-1);
+}
+
+void Map::setRoom(int x, int y, int roomToAdd) {
+	if (!inBounds(x,y))
+		return;
+	rooms[x][y] = roomToAdd;
 }
 
 void Map::clearColor(int x, int y) {

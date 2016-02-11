@@ -57,7 +57,8 @@ build/release/map.o: map.cpp map.hpp ../SFML/include/SFML/Graphics.hpp \
  ../SFML/include/SFML/Graphics/RectangleShape.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
- ../SFML/include/SFML/Graphics/Text.hpp tile.hpp constants.hpp
+ ../SFML/include/SFML/Graphics/Text.hpp tile.hpp constants.hpp room.hpp \
+ job_queue.hpp entity.hpp doodad.hpp
 
 map.hpp:
 
@@ -192,3 +193,11 @@ map.hpp:
 tile.hpp:
 
 constants.hpp:
+
+room.hpp:
+
+job_queue.hpp:
+
+entity.hpp:
+
+doodad.hpp:

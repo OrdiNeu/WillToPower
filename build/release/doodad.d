@@ -58,8 +58,7 @@ build/release/doodad.o: doodad.cpp doodad.hpp \
  ../SFML/include/SFML/Graphics/RectangleShape.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
- ../SFML/include/SFML/Graphics/Text.hpp constants.hpp map.hpp tile.hpp \
- entity.hpp job_queue.hpp
+ ../SFML/include/SFML/Graphics/Text.hpp constants.hpp entity.hpp
 
 doodad.hpp:
 
@@ -193,10 +192,4 @@ doodad.hpp:
 
 constants.hpp:
 
-map.hpp:
-
-tile.hpp:
-
 entity.hpp:
-
-job_queue.hpp:

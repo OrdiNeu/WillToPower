@@ -31,54 +31,60 @@ void ModeOrder::createJob(int type, int requirements, Entity* targetEnt, point* 
 	thisJob.requirements = requirements;//SKILL_MINING;
 	thisJob.suspended = false;
 	thisJob.repeating = false;
+	thisJob.assigned = NULL;
 	thisJob.targetEnt = targetEnt;//NULL;
 	thisJob.targetPoint = targetPoint;//clicked;
 	thisJob.type = type;//JOB_TYPE_MINING;
 	JobQueue::jobQueue.push_back(thisJob);
 }
 
-void ModeOrder::createJobsInArea(int type, int x0, int x1, int y0, int y1) {
-	// rearrange x0/y0 if necessary
-	if (x0 > x1) {
-		int xtemp = x0;
-		x0 = x1;
-		x1 = xtemp;
+// Rearranges x0 and x1, if necessary
+void ModeOrder::checkBounds(int* x0, int* x1) {
+	if (*x0 > *x1) {
+		int xtemp = *x0;
+		*x0 = *x1;
+		*x1 = xtemp;
 	}
-	if (y0 > y1) {
-		int ytemp = y0;
-		y0 = y1;
-		y1 = ytemp;
-	}
+}
+
+void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool doCreateJob) {
+	checkBounds(&x0, &x1);
+	checkBounds(&y0, &y1);
 
 	// What we do next depends on the type of job assiged
-	switch (type) {
-		case JOB_TYPE_MINING:
-			// Mining jobs: any minable tile is assigned a mining job
-			for (int x = x0; x <= x1; x++) {
-				for (int y = y0; y <= y1; y++) {
+	for (int y = y0; y <= y1; y++) {
+		int staggerFix = y%2;	// To only grab the tiles that are "inner", we need to account for tiles that are odd "sticking out"
+		for (int x = x0; x <= x1 - staggerFix; x++) {
+			switch (type) {
+				case ORDER_MODE_DIG:
+				{
+					// Mining jobs: any tile with the IS_MINABLE tag is assigned a mining job
 					if (curMap->inBounds(x,y) && (curMap->getTile(x,y)->tags & IS_MINABLE) > 0) {
 						point* thisSpot = Map::TileXYToTexXY(x, y);
-						createJob(JOB_TYPE_MINING, SKILL_MINING, NULL, thisSpot);
+						if (doCreateJob) createJob(JOB_TYPE_MINING, SKILL_MINING, NULL, thisSpot);
+						curMap->setColor(x, y, COLOR_TASKED);
 					}
+					break;
 				}
-			}
-		break;
-		case JOB_TYPE_WOODCUT:
-			// Woodcutting jobs: any doodad with the IS_TREE tag is assigned a mining job
-			for (int x = x0; x <= x1; x++) {
-				for (int y = y0; y <= y1; y++) {
+				case ORDER_MODE_CUTTREE:
+				{
+					// Woodcutting jobs: any doodad with the IS_TREE tag is assigned a mining job
 					std::vector<Doodad*> doodadsHere = entManager->doodadManager->getDoodadsAtPoint(x,y);
 					for (Doodad* thisDoodad : doodadsHere) {
 						if (thisDoodad->tags & IS_TREE) {
-							createJob(JOB_TYPE_WOODCUT, SKILL_WOODCUT, thisDoodad, NULL);
+							if (doCreateJob) createJob(JOB_TYPE_WOODCUT, SKILL_WOODCUT, thisDoodad, NULL);
+							curMap->setColor(x, y, COLOR_TASKED);
 						}
 					}
+					break;
+				}
+				default:
+				{
+					cerr << "Unknown jobtype in findTasksInArea: " << type << endl;
+					break;
 				}
 			}
-		break;
-		default:
-			cerr << "Unknown jobtype in createJobsInArea: " << type << endl;
-		break;
+		}
 	}
 }
 
@@ -118,22 +124,37 @@ void ModeOrder::update(float dt, sf::RenderWindow* screen) {
 
 	// Mouse controls
 	sf::Vector2i mousePos = getMousePos(screen);
-	if (!leftClicked && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-		if (selectionActive == SELECT_TYPE_NONE) {
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		//point mousePos;
+		if (!leftClicked && selectionActive == SELECT_TYPE_NONE) { // Initiate clicking
 			selectionActive = SELECT_TYPE_LEFT;
 			point* startPoint = Map::TexXYToTileXY(mousePos.x, mousePos.y);
 			selectStartX = startPoint->tileX;
 			selectStartY = startPoint->tileY;
 			leftClicked = true;
+			delete startPoint;
+		} else if (selectionActive == SELECT_TYPE_LEFT) {
+			point* thisPoint = Map::TexXYToTileXY(mousePos.x, mousePos.y);
+			if (thisPoint->tileX != selectLastX || thisPoint->tileY != selectLastY) {
+				// redraw
+				selectLastX = thisPoint->tileX;
+				selectLastY = thisPoint->tileY;
+				if (curOrderType == ORDER_MODE_DIG) {
+					findTasksInArea(JOB_TYPE_MINING, selectStartX, thisPoint->tileX, selectStartY, thisPoint->tileY, false);
+				} else if (curOrderType == ORDER_MODE_CUTTREE) {
+					findTasksInArea(JOB_TYPE_WOODCUT, selectStartX, thisPoint->tileX, selectStartY, thisPoint->tileY, false);
+				}
+			}
+			delete thisPoint;
 		}
-	} else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+	} else {
 		if (leftClicked && selectionActive == SELECT_TYPE_LEFT) {
 			selectionActive = SELECT_TYPE_NONE;
 			point* endPoint = Map::TexXYToTileXY(mousePos.x, mousePos.y);
 			if (curOrderType == ORDER_MODE_DIG) {
-				createJobsInArea(JOB_TYPE_MINING, selectStartX, endPoint->tileX, selectStartY, endPoint->tileY);
+				findTasksInArea(JOB_TYPE_MINING, selectStartX, endPoint->tileX, selectStartY, endPoint->tileY, true);
 			} else if (curOrderType == ORDER_MODE_CUTTREE) {
-				createJobsInArea(JOB_TYPE_WOODCUT, selectStartX, endPoint->tileX, selectStartY, endPoint->tileY);
+				findTasksInArea(JOB_TYPE_WOODCUT, selectStartX, endPoint->tileX, selectStartY, endPoint->tileY, true);
 			}
 			cout << "Worked: " << JobQueue::jobQueue.size() << endl;
 		}
@@ -144,7 +165,8 @@ void ModeOrder::update(float dt, sf::RenderWindow* screen) {
 		selectionActive = SELECT_TYPE_RIGHT;
 		rightClicked = true;
 		point* clicked = Map::TexXYToTileXY(mousePos.x, mousePos.y);
-		std::vector<point*> route = AStarSearch(curMap, test->tileX, test->tileY, clicked->tileX, clicked->tileY);
+		point* unitPoint = Map::TexXYToTileXY(test->realX, test->realY);
+		std::vector<point*> route = AStarSearch(curMap, unitPoint->tileX, unitPoint->tileY, clicked->tileX, clicked->tileY);
 		delete clicked;
 
 		if (route.size() != 0) {
