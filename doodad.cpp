@@ -30,3 +30,7 @@ Doodad* Doodad::clone() {
 void Doodad::update(float dt) {
 	// Empty for now
 }
+
+bool Doodad::hasTag(int tag) {
+	return (tags & tag) > 0;
+}

@@ -25,6 +25,7 @@ public:
 	Tile(std::string filename, int tags = 0);
 	void render(sf::RenderTarget* screen, float x, float y);
 	void update(float dt, int x, int y);
+	bool hasTag(int tag);
 };
 
 #endif

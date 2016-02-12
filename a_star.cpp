@@ -6,7 +6,7 @@ AStarNode::AStarNode(int x, int y, int target_x, int target_y, int g, AStarNode*
 	this->g = g;
 	int dx = (x-target_x);
 	int dy = (y-target_y);
-	h = sqrt(dx*dx + dy*dy);
+	h = sqrt(dx*dx + dy*dy/4);
 	this->parent = parent;
 	prev = NULL;
 	next = NULL;
@@ -129,8 +129,6 @@ std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int 
 
 			// Handle moving directly up, down, left, and right. In order to move in one of these directions,
 			// BOTH of the diagonal directions AND the target direction must be free to move in.
-			//int diagonal_x[] = {x-1, x, x+1, x};
-			//int diagonal_y[] = {y, y-1, y, y+1};
 			int diagonal_x[] = {x, x+1, x, x-1};
 			int diagonal_y[] = {y+2, y, y-2, y};
 			for (int i = 0; i < 4; i++) {

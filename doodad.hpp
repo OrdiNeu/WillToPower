@@ -25,6 +25,7 @@ public:
 	Doodad* clone();
 	void render(sf::RenderTarget* screen);
 	void update(float dt);
+	bool hasTag(int tag);
 };
 
 #endif

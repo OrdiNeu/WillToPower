@@ -16,6 +16,8 @@ const float UNIT_AI_UPDATE_TIME = 1;
 class AI {
 private:
 	float timeSinceLastUpdate;
+	void moveToNextPoint();
+	bool isUnitCloseToCenterOfTile(point* unitLoc);
 public:
 	AI(Unit* controlled, Map* curMap);
 	Unit* controlled;

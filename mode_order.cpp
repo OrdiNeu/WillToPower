@@ -59,7 +59,7 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 				case ORDER_MODE_DIG:
 				{
 					// Mining jobs: any tile with the IS_MINABLE tag is assigned a mining job
-					if (curMap->inBounds(x,y) && (curMap->getTile(x,y)->tags & IS_MINABLE) > 0) {
+					if (curMap->inBounds(x,y) && curMap->getTile(x,y)->hasTag(IS_MINABLE)) {
 						point* thisSpot = Map::TileXYToTexXY(x, y);
 						if (doCreateJob) createJob(JOB_TYPE_MINING, SKILL_MINING, NULL, thisSpot);
 						curMap->setColor(x, y, COLOR_TASKED);
@@ -71,7 +71,7 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 					// Woodcutting jobs: any doodad with the IS_TREE tag is assigned a mining job
 					std::vector<Doodad*> doodadsHere = entManager->doodadManager->getDoodadsAtPoint(x,y);
 					for (Doodad* thisDoodad : doodadsHere) {
-						if (thisDoodad->tags & IS_TREE) {
+						if (thisDoodad->hasTag(IS_TREE)) {
 							if (doCreateJob) createJob(JOB_TYPE_WOODCUT, SKILL_WOODCUT, thisDoodad, NULL);
 							curMap->setColor(x, y, COLOR_TASKED);
 						}

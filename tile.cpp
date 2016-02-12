@@ -22,3 +22,7 @@ void Tile::render(sf::RenderTarget* screen, float x, float y) {
 void Tile::update(float dt, int x, int y) {
 
 }
+
+bool Tile::hasTag(int tag) {
+	return (tags & tag) > 0;
+}
