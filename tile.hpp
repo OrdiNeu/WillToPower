@@ -9,11 +9,6 @@ enum TILE_TAGS {
 	IS_MINABLE = 2
 };
 
-const int HALF_TILE_WIDTH = 16*X_SCALE;
-const int HALF_TILE_HEIGHT = 8*Y_SCALE;
-const int TILE_WIDTH = 2*HALF_TILE_WIDTH;
-const int TILE_HEIGHT = 2*HALF_TILE_HEIGHT;
-
 class Tile {
 public:
 	sf::Sprite spr;

@@ -9,11 +9,11 @@ Game::~Game(){
 }
 
 bool Game::init(){
-	screen.create(sf::VideoMode(WINDOW_WIDTH,WINDOW_HEIGHT), "Will To Power");
+	screen.create(sf::VideoMode(WINDOW_WIDTH,WINDOW_HEIGHT), "Will To Power: 0 FPS");
 	Mode::entManager = new EntityManager();
 	Mode::entManager->unitManager = new UnitManager();
 	Mode::entManager->doodadManager = new DoodadManager();
-	Mode::worldGen = new WorldGenerator(Mode::entManager);
+	Mode::worldGen = new WorldGenerator(123,Mode::entManager);
 	Mode::curMap = Mode::worldGen->generateMap(0,0);
 	Mode::entManager->unitManager->curMap = Mode::curMap;
 	curMode = new ModeOrder();
@@ -27,12 +27,32 @@ int Game::run(){
 	sf::Clock dtTimer;
 	dtTimer.restart();
 	float dt = 0;
+	const float RENDER_DELAY = 1.0 / MAX_FPS;
+	float time_to_next_second = 1;
+	float time_to_render = RENDER_DELAY;
+	int frames_rendered = 0;
+	int updates = 0;
 	while(screen.isOpen()){
-		screen.clear(sf::Color::Black);
-		update(dt);
-		render();
-		screen.display();
 		dt = dtTimer.restart().asSeconds();
+		time_to_next_second -= dt;
+		time_to_render -= dt;
+		updates++;
+		update(dt);
+		if (frames_rendered < MAX_FPS && time_to_render < 0) {
+			time_to_render = RENDER_DELAY;
+			screen.clear(sf::Color::Black);
+			render();
+			screen.display();
+			frames_rendered++;
+		}
+		if (time_to_next_second < 0) {
+			time_to_next_second = 1;
+			char title[60];
+			snprintf(title, 60, "Will To Power: %i FPS, %i updates",frames_rendered,updates);
+			screen.setTitle(title);
+			frames_rendered = 0;
+			updates = 0;
+		}
 	}
 	return EXIT_SUCCESS;
 }

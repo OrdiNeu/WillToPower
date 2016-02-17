@@ -32,6 +32,8 @@ Map* WorldGenerator::generateMap(int x, int y) {
 	retVal->addTile(grassTile);
 	Tile* dirtTile = new Tile("./data/images/DirtTile.png");
 	retVal->addTile(dirtTile);
+	Doodad tree = Doodad("TREE", "./data/images/Tree.png", 0, 0, IS_TREE);
+	entManager->doodadManager->addNewDoodadType("Tree", tree);
 
 	// Get the forest layer
 	for (int x = 0; x < retVal->width; x++) {
@@ -46,10 +48,11 @@ Map* WorldGenerator::generateMap(int x, int y) {
 				if (int(forestFactor*10000) % 10 < 3) {
 					//retVal->setTile(x,y,2);
 					//std::cout << "Adding a tree at " << x << "," << y << std::endl;
-					/*Doodad* thisTree = entManager->doodadManager->addDoodadByType("Tree");
+					Doodad* thisTree = entManager->doodadManager->addDoodadByType("Tree");
+					//std::cout << thisTree->uid << std::endl;
 					point* thisPoint = Map::TileXYToTexXY(x,y);
 					thisTree->moveToRealXY(thisPoint->realX,thisPoint->realY);
-					delete thisPoint;*/
+					delete thisPoint;
 				}
 			}
 		}

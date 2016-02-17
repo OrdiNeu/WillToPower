@@ -7,6 +7,7 @@
 #include "entity.hpp"
 
 enum DOODAD_TAGS {
+	NONE,
 	IS_TREE
 };
 

@@ -3,16 +3,15 @@
 Doodad::Doodad() {}
 
 Doodad::Doodad(std::string uid, std::string filename, int x, int y, int tags) : filename(filename), tags(tags) {
-	uid = uid;	
 	if (filename != "EMPTY" && !tex.loadFromFile(filename)) {
 		std::cout << "ERROR: Could not load " << filename << std::endl;
 		return;
 	};
-	uid = uid;
+	this->uid = uid;
 	realX = x;
 	realY = y;
-	halfWidth = (int) tex.getSize().x / 2;
-	height = (int) tex.getSize().y;
+	halfWidth = (int) tex.getSize().x / 2 + (int) HALF_TILE_WIDTH / 2; // ?? Need to recheck this once I have more doodads
+	height = (int) tex.getSize().y + TILE_HEIGHT;
 	spr.setTexture(tex);
 	spr.setScale(X_SCALE, Y_SCALE);
 }

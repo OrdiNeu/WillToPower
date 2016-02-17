@@ -34,7 +34,7 @@ private:
 	sf::RenderTexture selectionTex;
 	sf::Vector2i getMousePos();
 	void rerenderSelection();
-	void findTasksInArea(int type, int x0, int x1, int y0, int y1, bool doCreateJob);
+	void findTasksInArea(int type, int x0, int x1, int y0, int y1, bool doCreateJob, bool colorize, bool uncolorize);
 	void createJob(int type, int requirements, Entity* targetEnt, point* targetPoint);
 	sf::Vector2i getMousePos(sf::RenderWindow* screen);
 	void rerenderSelection(sf::RenderWindow* screen);

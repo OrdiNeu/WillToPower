@@ -90,11 +90,13 @@ void AI::update(float dt) {
 
 					// Walk to the target location
 					controlled->walkTo(route);
-					std::cout << controlled->state << std::endl;
+					std::cout << route.size() << std::endl;
+					std::cout << curPoint->tileX << "," << curPoint->tileY << "," << job.targetPoint->tileX << "," << job.targetPoint->tileY << "," << std::endl;
 					jobPicked = i;
 					job.assigned = controlled;
 				}
 				delete curPoint;
+				break;
 			}
 
 			// Is there a job that is now taken?

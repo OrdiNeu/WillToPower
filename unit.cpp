@@ -53,44 +53,18 @@ void Unit::update(float dt) {
 			}
 			point* nextLoc = curPath.back();
 			if (realX < nextLoc->realX) {
-				dx = 2*speed;
+				dx = 2*speed*dt;
 			} else if (realX > nextLoc->realX) {
-				dx = -2*speed;
+				dx = -2*speed*dt;
 			}
 			if (realY < nextLoc->realY) {
-				dy = speed;
+				dy = speed*dt;
 			} else if (realY > nextLoc->realY) {
-				dy = -speed;
+				dy = -speed*dt;
 			}
 			break;
 		}
 		case STATE_IDLE:
-			/*
-			// The following job logic has been moved to unit_ai
-
-			timeToComplete -= dt;
-			if (timeToComplete < 0) {
-
-				// See if there's a job available
-				for (Job thisJob : JobQueue::jobQueue) {
-					// Ignore this job if it is suspended or if we lack a requisite skill
-					if (thisJob.suspended) { continue; }
-					bool unavailable = false;
-					for (int skillID = 0; skillID <= NUM_SKILLS; skillID++) {
-						if (!((skills & skillID) == skillID)) {
-							unavailable = true;
-							break;
-						}
-					}
-					if (unavailable) { continue; }
-
-					// We can do this job: we act depending on what type of job it is
-					switch (thisJob.type) {
-						case JOB_TYPE_MINING:
-						break;
-					}
-				}
-			}*/
 		default:
 		break;
 	}

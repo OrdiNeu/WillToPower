@@ -16,7 +16,7 @@ enum UNIT_STATES {
 class Unit : public Entity {
 private:
 	int halfWidth, height;
-	float speed = 0.03;
+	float speed = 10;
 	float timeToComplete;
 public:
 	std::vector<point*> curPath;

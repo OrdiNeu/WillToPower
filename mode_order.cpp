@@ -47,11 +47,10 @@ void ModeOrder::checkBounds(int* x0, int* x1) {
 	}
 }
 
-void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool doCreateJob) {
+void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool doCreateJob, bool colorize, bool uncolorize) {
 	checkBounds(&x0, &x1);
 	checkBounds(&y0, &y1);
 
-	// What we do next depends on the type of job assiged
 	for (int y = y0; y <= y1; y++) {
 		int staggerFix = y%2;	// To only grab the tiles that are "inner", we need to account for tiles that are odd "sticking out"
 		for (int x = x0; x <= x1 - staggerFix; x++) {
@@ -60,9 +59,15 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 				{
 					// Mining jobs: any tile with the IS_MINABLE tag is assigned a mining job
 					if (curMap->inBounds(x,y) && curMap->getTile(x,y)->hasTag(IS_MINABLE)) {
-						point* thisSpot = Map::TileXYToTexXY(x, y);
-						if (doCreateJob) createJob(JOB_TYPE_MINING, SKILL_MINING, NULL, thisSpot);
-						curMap->setColor(x, y, COLOR_TASKED);
+						if (doCreateJob) {
+							point* thisSpot = Map::TileXYToTexXY(x, y);
+							createJob(JOB_TYPE_MINING, SKILL_MINING, NULL, thisSpot);
+							//delete thisSpot; // Don't delete this point
+						}
+
+						// need to rethink this: where should the color for a tile actually be determined? In map?
+						if (colorize) curMap->setColor(x, y, COLOR_TASKED);
+						if (uncolorize) curMap->setColor(x, y, COLOR_NONE);
 					}
 					break;
 				}
@@ -71,9 +76,11 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 					// Woodcutting jobs: any doodad with the IS_TREE tag is assigned a mining job
 					std::vector<Doodad*> doodadsHere = entManager->doodadManager->getDoodadsAtPoint(x,y);
 					for (Doodad* thisDoodad : doodadsHere) {
+						std::cout << thisDoodad->uid << std::endl;
 						if (thisDoodad->hasTag(IS_TREE)) {
 							if (doCreateJob) createJob(JOB_TYPE_WOODCUT, SKILL_WOODCUT, thisDoodad, NULL);
-							curMap->setColor(x, y, COLOR_TASKED);
+							if (colorize) curMap->setColor(x, y, COLOR_TASKED);
+							if (uncolorize) curMap->setColor(x, y, COLOR_NONE);
 						}
 					}
 					break;
@@ -89,7 +96,7 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 }
 
 sf::Vector2i ModeOrder::getMousePos(sf::RenderWindow* screen) {
-	return sf::Mouse::getPosition(*screen) - sf::Vector2i(screenX,screenY);
+	return sf::Mouse::getPosition(*screen) + sf::Vector2i(screenX,screenY);
 }
 
 void ModeOrder::update(float dt, sf::RenderWindow* screen) {
@@ -103,16 +110,16 @@ void ModeOrder::update(float dt, sf::RenderWindow* screen) {
 
 	// Keyboard controls
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-		screenX -= MAP_SCROLL_SPEED;
+		screenX -= MAP_SCROLL_SPEED*dt;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		screenX += MAP_SCROLL_SPEED;
+		screenX += MAP_SCROLL_SPEED*dt;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-		screenY -= MAP_SCROLL_SPEED;
+		screenY -= MAP_SCROLL_SPEED*dt;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-		screenY += MAP_SCROLL_SPEED;
+		screenY += MAP_SCROLL_SPEED*dt;
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
@@ -123,7 +130,11 @@ void ModeOrder::update(float dt, sf::RenderWindow* screen) {
 	}
 
 	// Mouse controls
-	sf::Vector2i mousePos = getMousePos(screen);
+	//sf::Vector2i mouseScreenPos = getMousePos(screen);
+	sf::Vector2i mousePos =  getMousePos(screen);
+	//mousePos.x += screenX;
+	//mousePos.y += screenY;
+
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		//point mousePos;
 		if (!leftClicked && selectionActive == SELECT_TYPE_NONE) { // Initiate clicking
@@ -137,13 +148,15 @@ void ModeOrder::update(float dt, sf::RenderWindow* screen) {
 			point* thisPoint = Map::TexXYToTileXY(mousePos.x, mousePos.y);
 			if (thisPoint->tileX != selectLastX || thisPoint->tileY != selectLastY) {
 				// redraw
+				if (curOrderType == ORDER_MODE_DIG) {
+					findTasksInArea(JOB_TYPE_MINING, selectStartX, selectLastX, selectStartY, selectLastY, false, false, true);
+					findTasksInArea(JOB_TYPE_MINING, selectStartX, thisPoint->tileX, selectStartY, thisPoint->tileY, false, true, false);
+				} else if (curOrderType == ORDER_MODE_CUTTREE) {
+					findTasksInArea(JOB_TYPE_WOODCUT, selectStartX, selectLastX, selectStartY, selectLastY, false, false, true);
+					findTasksInArea(JOB_TYPE_WOODCUT, selectStartX, thisPoint->tileX, selectStartY, thisPoint->tileY, false, true, false);
+				}
 				selectLastX = thisPoint->tileX;
 				selectLastY = thisPoint->tileY;
-				if (curOrderType == ORDER_MODE_DIG) {
-					findTasksInArea(JOB_TYPE_MINING, selectStartX, thisPoint->tileX, selectStartY, thisPoint->tileY, false);
-				} else if (curOrderType == ORDER_MODE_CUTTREE) {
-					findTasksInArea(JOB_TYPE_WOODCUT, selectStartX, thisPoint->tileX, selectStartY, thisPoint->tileY, false);
-				}
 			}
 			delete thisPoint;
 		}
@@ -152,9 +165,9 @@ void ModeOrder::update(float dt, sf::RenderWindow* screen) {
 			selectionActive = SELECT_TYPE_NONE;
 			point* endPoint = Map::TexXYToTileXY(mousePos.x, mousePos.y);
 			if (curOrderType == ORDER_MODE_DIG) {
-				findTasksInArea(JOB_TYPE_MINING, selectStartX, endPoint->tileX, selectStartY, endPoint->tileY, true);
+				findTasksInArea(JOB_TYPE_MINING, selectStartX, endPoint->tileX, selectStartY, endPoint->tileY, true, true, false);
 			} else if (curOrderType == ORDER_MODE_CUTTREE) {
-				findTasksInArea(JOB_TYPE_WOODCUT, selectStartX, endPoint->tileX, selectStartY, endPoint->tileY, true);
+				findTasksInArea(JOB_TYPE_WOODCUT, selectStartX, endPoint->tileX, selectStartY, endPoint->tileY, true, true, false);
 			}
 			cout << "Worked: " << JobQueue::jobQueue.size() << endl;
 		}

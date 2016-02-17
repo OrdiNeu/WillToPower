@@ -16,6 +16,10 @@ void DoodadManager::addDoodad(Doodad* doodad) {
 	doodads.push_back(doodad);
 }
 
+void DoodadManager::addNewDoodadType(std::string type, Doodad newDoodad) {
+	doodad_library[type] = newDoodad;
+}
+
 Doodad* DoodadManager::addDoodadByType(std::string type) {
 	// Ensure that the type exists
 	if (doodad_library.find(type) == doodad_library.end()) {
