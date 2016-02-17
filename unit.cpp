@@ -14,7 +14,7 @@ Unit::Unit(std::string uid, std::string filename, float x, float y) : filename(f
 		cout << "ERROR: Could not load " << filename << endl;
 		return;
 	};
-	uid = uid;
+	this->uid = uid;
 	halfWidth = (int) tex.getSize().x / 2;
 	height = (int) tex.getSize().y;
 	spr.setTexture(tex);
