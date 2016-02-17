@@ -4,8 +4,8 @@ const float PerlinScalingFactor1 = 20.0;
 const float PerlinScalingFactor2 = 8.0;
 const float PerlinScalingFactor3 = 3.0;
 const float PerlinWeightFactor1 = 2;
-const float PerlinWeightFactor2 = 1.5;
-const float PerlinWeightFactor3 = 1;
+const float PerlinWeightFactor2 = 2;
+const float PerlinWeightFactor3 = 2;
 
 WorldGenerator::WorldGenerator(int seed, EntityManager* entManager) : seed(seed), entManager(entManager) {
 	srand(seed);

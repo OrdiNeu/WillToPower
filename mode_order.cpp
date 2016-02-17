@@ -1,7 +1,7 @@
 #include "mode_order.hpp"
 using namespace std;
 
-int MAP_SCROLL_SPEED = 1;
+float MAP_SCROLL_SPEED = 300;
 
 ModeOrder::ModeOrder() {
 }

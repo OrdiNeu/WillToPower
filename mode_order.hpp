@@ -40,8 +40,8 @@ private:
 	void rerenderSelection(sf::RenderWindow* screen);
 	void checkBounds(int* x0, int* x1);
 public:
-	int screenX;
-	int screenY;
+	float screenX;
+	float screenY;
 	int curOrderType;
 	ModeOrder();
 	void init();
