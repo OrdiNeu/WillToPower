@@ -1,0 +1,8 @@
+TODO:
+Jobs have been implemented. Now the only thing left to do is to MAKE MORE OF THEM
+
+Major Milestones:
+x Random Terrain Generation
+x	Doodad generation
+- "Room" building
+	
