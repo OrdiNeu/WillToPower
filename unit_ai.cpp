@@ -54,6 +54,18 @@ void AI::update(float dt) {
 			}
 		}
 		delete curPos;
+	} else if (controlled->state == STATE_FINISHED_JOB) {
+		switch(jobState) {
+			case JOB_STAGE_WALKING_TO_DEST: {
+
+				break;
+			}
+			case JOB_STAGE_ACTING: {
+
+			}
+			default:
+			break;
+		}
 	} else {
 		timeSinceLastUpdate -= dt;
 		if (timeSinceLastUpdate <= 0) {
@@ -73,15 +85,23 @@ void AI::update(float dt) {
 				}
 
 				// Can't pick up jobs we're not qualified for
-				if ((job.requirements & controlled->skills) != job.requirements) {
+				if ((job.requirements & controlled->skills) == 0) {
 					continue;
 				}
 
-				// Passed all checks: try to pick this job up
+				// Passed all checks: move to target
 				point* curPoint = Map::TexXYToTileXY(controlled->realX, controlled->realY);
 				lastKnownPos->tileX = curPoint->tileX;
 				lastKnownPos->tileY = curPoint->tileY;
-				std::vector<point*> route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, job.targetPoint->tileX, job.targetPoint->tileY);
+				std::vector<point*> route;
+				if (job.targetPoint != NULL) {
+					route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, job.targetPoint->tileX, job.targetPoint->tileY);
+				}
+				if (job.targetEnt != NULL) {
+					point* targetPoint = Map::TexXYToTileXY(job.targetEnt->realX, job.targetEnt->realY);
+					route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, targetPoint->tileX, targetPoint->tileY);
+					delete targetPoint;
+				}
 				if (route.size() != 0) {
 					// Remove the last point in the route, since it is the current position
 					point* last_point = route.back();
@@ -90,17 +110,25 @@ void AI::update(float dt) {
 
 					// Walk to the target location
 					controlled->walkTo(route);
-					std::cout << route.size() << std::endl;
-					std::cout << curPoint->tileX << "," << curPoint->tileY << "," << job.targetPoint->tileX << "," << job.targetPoint->tileY << "," << std::endl;
+
+					// Pick up the job
 					jobPicked = i;
 					job.assigned = controlled;
+					jobState = JOB_STAGE_WALKING_TO_DEST;
+					delete curPoint;
+					break;
+				} else {
+					// No path to the target
+					delete curPoint;
+					continue;
 				}
-				delete curPoint;
-				break;
+
+				
 			}
 
 			// Is there a job that is now taken?
 			if (jobPicked >= 0) {
+				curJob = JobQueue::jobQueue[jobPicked];
 				JobQueue::jobQueue.erase(JobQueue::jobQueue.begin() + jobPicked);
 			} else {
 				// Otherwise, wait until a more opportune time

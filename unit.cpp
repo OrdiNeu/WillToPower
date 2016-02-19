@@ -46,7 +46,7 @@ void Unit::update(float dt) {
 	switch (state) {
 		case STATE_WALKING: {
 			if (curPath.empty()) {
-				state = STATE_IDLE;
+				state = STATE_FINISHED_JOB;
 				dx = 0;
 				dy = 0;
 				break;

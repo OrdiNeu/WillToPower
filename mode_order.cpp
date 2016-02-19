@@ -55,7 +55,7 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 		int staggerFix = y%2;	// To only grab the tiles that are "inner", we need to account for tiles that are odd "sticking out"
 		for (int x = x0; x <= x1 - staggerFix; x++) {
 			switch (type) {
-				case ORDER_MODE_DIG:
+				case JOB_TYPE_MINING:
 				{
 					// Mining jobs: any tile with the IS_MINABLE tag is assigned a mining job
 					if (curMap->inBounds(x,y) && curMap->getTile(x,y)->hasTag(IS_MINABLE)) {
@@ -71,12 +71,11 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 					}
 					break;
 				}
-				case ORDER_MODE_CUTTREE:
+				case JOB_TYPE_WOODCUT:
 				{
 					// Woodcutting jobs: any doodad with the IS_TREE tag is assigned a mining job
 					std::vector<Doodad*> doodadsHere = entManager->doodadManager->getDoodadsAtPoint(x,y);
 					for (Doodad* thisDoodad : doodadsHere) {
-						std::cout << thisDoodad->uid << std::endl;
 						if (thisDoodad->hasTag(IS_TREE)) {
 							if (doCreateJob) createJob(JOB_TYPE_WOODCUT, SKILL_WOODCUT, thisDoodad, NULL);
 							if (colorize) curMap->setColor(x, y, COLOR_TASKED);
@@ -169,7 +168,6 @@ void ModeOrder::update(float dt, sf::RenderWindow* screen) {
 			} else if (curOrderType == ORDER_MODE_CUTTREE) {
 				findTasksInArea(JOB_TYPE_WOODCUT, selectStartX, endPoint->tileX, selectStartY, endPoint->tileY, true, true, false);
 			}
-			cout << "Worked: " << JobQueue::jobQueue.size() << endl;
 		}
 		leftClicked = false;
 	}

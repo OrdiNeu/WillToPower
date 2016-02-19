@@ -10,13 +10,14 @@
 
 enum UNIT_STATES {
 	STATE_IDLE = 0,
-	STATE_WALKING = 1
+	STATE_FINISHED_JOB = 1,
+	STATE_WALKING = 2
 };
 
 class Unit : public Entity {
 private:
 	int halfWidth, height;
-	float speed = 10;
+	float speed = 40;
 	float timeToComplete;
 public:
 	std::vector<point*> curPath;

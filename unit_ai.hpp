@@ -12,16 +12,23 @@ const float DISTANCE_FROM_CENTER = 3;
 const float DISTANCE_FROM_CENTER_SQ = DISTANCE_FROM_CENTER * DISTANCE_FROM_CENTER;
 const float UNIT_AI_UPDATE_TIME = 0.5;
 
+enum JOB_STAGES {
+	JOB_STAGE_WALKING_TO_DEST,
+	JOB_STAGE_ACTING
+};
+
 // Due to the way adding/removing AIs works, one should only assign ONE AI per Unit
 class AI {
 private:
 	float timeSinceLastUpdate;
 	void moveToNextPoint();
 	bool isUnitCloseToCenterOfTile(point* unitLoc);
+	int jobState;
 public:
 	AI(Unit* controlled, Map* curMap);
 	Unit* controlled;
 	Map* curMap;
+	Job curJob;
 	point* lastKnownPos;
 	std::string uid;
 	void update(float dt);
