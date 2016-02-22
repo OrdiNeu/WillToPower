@@ -57,11 +57,14 @@ void AI::update(float dt) {
 	} else if (controlled->state == STATE_FINISHED_JOB) {
 		switch(jobState) {
 			case JOB_STAGE_WALKING_TO_DEST: {
-
+				jobState = JOB_STAGE_ACTING;
+				controlled->state = STATE_IDLE;
 				break;
 			}
 			case JOB_STAGE_ACTING: {
-
+				jobState = 0;
+				controlled->state = STATE_IDLE;
+				break;
 			}
 			default:
 			break;

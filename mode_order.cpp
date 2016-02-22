@@ -62,12 +62,13 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 						if (doCreateJob) {
 							point* thisSpot = Map::TileXYToTexXY(x, y);
 							createJob(JOB_TYPE_MINING, SKILL_MINING, NULL, thisSpot);
-							//delete thisSpot; // Don't delete this point
+							curMap->setTasked(x,y,true);
+							// Don't delete this point
 						}
 
 						// need to rethink this: where should the color for a tile actually be determined? In map?
 						if (colorize) curMap->setColor(x, y, COLOR_TASKED);
-						if (uncolorize) curMap->setColor(x, y, COLOR_NONE);
+						if (uncolorize && !curMap->getTasked(x,y)) curMap->setColor(x, y, COLOR_NONE);
 					}
 					break;
 				}
@@ -78,8 +79,8 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 					for (Doodad* thisDoodad : doodadsHere) {
 						if (thisDoodad->hasTag(IS_TREE)) {
 							if (doCreateJob) createJob(JOB_TYPE_WOODCUT, SKILL_WOODCUT, thisDoodad, NULL);
-							if (colorize) curMap->setColor(x, y, COLOR_TASKED);
-							if (uncolorize) curMap->setColor(x, y, COLOR_NONE);
+							//if (colorize) curMap->setColor(x, y, COLOR_TASKED);
+							//if (uncolorize) curMap->setColor(x, y, COLOR_NONE);
 						}
 					}
 					break;

@@ -13,6 +13,8 @@ Map::~Map() {
 	}
 	delete[] tiles;
 	delete[] rooms;
+	delete[] tasked;
+	delete[] colorize;
 }
 
 void Map::update(float dt) {
@@ -32,6 +34,9 @@ void Map::reRender() {
 		for (int x = 0; x < width; x++) {
 			// Draw the tile onto this texture
 			Tile* thisTile = tileDict.at(tiles[x][y]);
+			if (tasked[x][y] && colorize[x][y] == COLOR_NONE) {
+				colorize[x][y] = COLOR_TASKED;
+			}
 			if (thisTile->lastColor != colorize[x][y]) {
 				thisTile->lastColor = colorize[x][y];
 				thisTile->spr.setColor(sf::Color(colorDict.at(colorize[x][y])));
@@ -51,14 +56,17 @@ void Map::init(int width, int height) {
 	tiles = new int*[width];
 	colorize = new int*[width];
 	rooms = new int*[width];
+	tasked = new bool*[width];
 	for (int x = 0; x < width; x++) {
 		tiles[x] = new int[height];
 		colorize[x] = new int[height];
 		rooms[x] = new int[height];
+		tasked[x] = new bool[height];
 		for (int y = 0; y < height; y++) {
 			tiles[x][y] = 1;
 			colorize[x][y] = 0;
 			rooms[x][y] = 0;
+			tasked[x][y] = false;
 		}
 	}
 
@@ -150,6 +158,17 @@ void Map::setRoom(int x, int y, int roomToAdd) {
 	if (!inBounds(x,y))
 		return;
 	rooms[x][y] = roomToAdd;
+}
+
+void Map::setTasked(int x, int y, bool tasked) {
+	if (!inBounds(x,y))
+		return;
+	this->tasked[x][y] = tasked;
+	dirty = true;
+}
+
+bool Map::getTasked(int x, int y) {
+	return tasked[x][y];
 }
 
 void Map::clearColor(int x, int y) {

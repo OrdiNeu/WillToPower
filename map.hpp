@@ -20,6 +20,7 @@ private:
 	int** tiles;
 	int** colorize;	// Flag that tells if the tile is supposed to be colorized prior to rendering
 	int** rooms;
+	bool** tasked; // Flag that tells if the tile has an associated task
 	std::vector<Tile*> tileDict;
 	std::vector<sf::Color> colorDict;
 	std::vector<Room*> roomDict;
@@ -44,6 +45,8 @@ public:
 	void setColor(int x, int y, int colorToAdd);
 	void setRoom(int x, int y, Room* roomToAdd);
 	void setRoom(int x, int y, int roomToAdd);
+	void setTasked(int x, int y, bool tasked);
+	bool getTasked(int x, int y);
 	Tile* getRoom(int x, int y);
 	void clearColor(int x, int y);
 	bool inBounds(int x, int y);
