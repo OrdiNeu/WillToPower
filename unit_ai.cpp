@@ -58,12 +58,16 @@ void AI::update(float dt) {
 		switch(jobState) {
 			case JOB_STAGE_WALKING_TO_DEST: {
 				jobState = JOB_STAGE_ACTING;
-				controlled->state = STATE_IDLE;
+				controlled->state = STATE_FINISHED_JOB;
 				break;
 			}
 			case JOB_STAGE_ACTING: {
 				jobState = 0;
 				controlled->state = STATE_IDLE;
+				if (curJob.targetPoint != NULL) {
+					curMap->setTasked(curJob.targetPoint->tileX,curJob.targetPoint->tileY, false);
+					curMap->setColor(curJob.targetPoint->tileX,curJob.targetPoint->tileY, COLOR_NONE);
+				}
 				break;
 			}
 			default:
