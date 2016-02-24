@@ -58,8 +58,9 @@ build/release/unit_manager.o: unit_manager.cpp unit_manager.hpp unit.hpp \
  ../SFML/include/SFML/Graphics/RectangleShape.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
- ../SFML/include/SFML/Graphics/Text.hpp constants.hpp map.hpp tile.hpp \
- room.hpp job_queue.hpp entity.hpp doodad.hpp unit_ai.hpp a_star.hpp
+ ../SFML/include/SFML/Graphics/Text.hpp constants.hpp entity.hpp \
+ unit_ai.hpp map.hpp tile.hpp room.hpp job_queue.hpp doodad.hpp \
+ a_star.hpp
 
 unit_manager.hpp:
 
@@ -195,6 +196,10 @@ unit.hpp:
 
 constants.hpp:
 
+entity.hpp:
+
+unit_ai.hpp:
+
 map.hpp:
 
 tile.hpp:
@@ -203,10 +208,6 @@ room.hpp:
 
 job_queue.hpp:
 
-entity.hpp:
-
 doodad.hpp:
-
-unit_ai.hpp:
 
 a_star.hpp:

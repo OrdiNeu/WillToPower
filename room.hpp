@@ -4,7 +4,6 @@
 #include "doodad.hpp"
 
 class Room {
-	std::vector<Job*> jobsAvailable;
 	std::vector<int*> doodadIDsUsed;
 	std::vector<Doodad*> doodadsAvailable;
 };

@@ -57,8 +57,7 @@ build/release/unit.o: unit.cpp unit.hpp ../SFML/include/SFML/Graphics.hpp \
  ../SFML/include/SFML/Graphics/RectangleShape.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
- ../SFML/include/SFML/Graphics/Text.hpp constants.hpp map.hpp tile.hpp \
- room.hpp job_queue.hpp entity.hpp doodad.hpp
+ ../SFML/include/SFML/Graphics/Text.hpp constants.hpp entity.hpp
 
 unit.hpp:
 
@@ -192,14 +191,4 @@ unit.hpp:
 
 constants.hpp:
 
-map.hpp:
-
-tile.hpp:
-
-room.hpp:
-
-job_queue.hpp:
-
 entity.hpp:
-
-doodad.hpp:

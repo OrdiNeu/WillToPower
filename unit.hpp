@@ -4,9 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "constants.hpp"
-#include "map.hpp"
 #include "entity.hpp"
-#include "job_queue.hpp"
 
 enum UNIT_STATES {
 	STATE_IDLE = 0,
