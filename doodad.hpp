@@ -14,17 +14,12 @@ enum DOODAD_TAGS {
 // For those who don't know Blizzard terminology: doodads are background fixtures that do not have AI, and generally do less than units
 // They may still have HP, but they definitely have no kinematics
 class Doodad : public Entity {
-private:
-	int halfWidth, height;
 public:
 	std::string filename;
 	int tags;
-	sf::Sprite spr;
-	sf::Texture tex;
 	Doodad();
 	Doodad(std::string uid, std::string filename, int x, int y, int tags);
 	Doodad* clone();
-	void render(sf::RenderTarget* screen);
 	void update(float dt);
 	bool hasTag(int tag);
 };

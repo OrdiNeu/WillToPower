@@ -6,6 +6,7 @@
 #include "tile.hpp"
 #include "constants.hpp"
 #include "room.hpp"
+#include "entity.hpp"
 
 const int NUM_DEFAULT_COLORS = 2;
 const sf::Color DEFAULT_TILE_COLORS[] = {sf::Color(255,255,255), sf::Color(255,0,0)};
@@ -27,6 +28,7 @@ private:
 	sf::RenderTexture mapTex;
 	sf::Sprite mapSpr;
 	bool dirty;
+	Entity*** ents; 
 protected:
 	void addTile(Tile* tileToAdd);
 	void addColor(sf::Color colorToAdd);
@@ -47,6 +49,9 @@ public:
 	void setRoom(int x, int y, int roomToAdd);
 	void setTasked(int x, int y, bool tasked);
 	bool getTasked(int x, int y);
+	bool isWalkable(int x, int y);
+	//void moveEnt(int oldX, int oldY)
+	//Entity* getEnts(int x, int y);
 	Tile* getRoom(int x, int y);
 	void clearColor(int x, int y);
 	bool inBounds(int x, int y);

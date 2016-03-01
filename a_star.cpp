@@ -118,8 +118,7 @@ std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int 
 			// There's a speedup here if I used boolean math instead of branching, but it's unreadable: (x-1)+2*(y&1)
 			for (int i = 0; i < 4; i++) {
 				//cout << "\tadding (" << newx[i] << "," << newy[i] << ")" << endl;
-				if ( map->inBounds(newx[i], newy[i])
-						&& map->getTile(newx[i], newy[i])->tags & IS_WALKABLE
+				if ( map->isWalkable(newx[i], newy[i])
 						&& !ClosedList->contains(newx[i], newy[i])
 						&& !OpenList->contains(newx[i], newy[i]) ) {
 					//cout << "\t(" << x << "," << y << ")" << " added (" << newx[i] << "," << newy[i] << ")" << endl;
@@ -135,12 +134,9 @@ std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int 
 				int j = (i+1)%4;	// The other direction being checked
 				int thisx = diagonal_x[i];
 				int thisy = diagonal_y[i];
-				if ( map->inBounds(newx[i], newy[i])
-						&& map->getTile(newx[i], newy[i])->tags & IS_WALKABLE
-						&& map->inBounds(newx[j], newy[j])
-						&& map->getTile(newx[j], newy[j])->tags & IS_WALKABLE
-						&& map->inBounds(thisx, thisy)
-						&& map->getTile(thisx, thisy)->tags & IS_WALKABLE
+				if ( map->isWalkable(newx[i], newy[i])
+						&& map->isWalkable(newx[j], newy[j])
+						&& map->isWalkable(thisx, thisy)
 						&& !ClosedList->contains(thisx, thisy)
 						&& !OpenList->contains(thisx, thisy) ) {
 					OpenList->insert(new AStarNode(thisx, thisy, endx, endy, thisNode->g + 1, thisNode));

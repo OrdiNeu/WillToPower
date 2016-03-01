@@ -9,31 +9,37 @@ const float PerlinWeightFactor3 = 2;
 
 WorldGenerator::WorldGenerator(int seed, EntityManager* entManager) : seed(seed), entManager(entManager) {
 	srand(seed);
-	//TODO: Read up on "shadowing a parameter" so I can just call the other version below
-	forestryGen1 = new PerlinNoiseGenerator(rand());
-	forestryGen2 = new PerlinNoiseGenerator(rand());
-	forestryGen3 = new PerlinNoiseGenerator(rand());
+	createGenerators();
 }
 
 WorldGenerator::WorldGenerator(EntityManager* entManager) : entManager(entManager) {
+	createGenerators();
+}
+
+void WorldGenerator::createGenerators() {
 	forestryGen1 = new PerlinNoiseGenerator(rand());
 	forestryGen2 = new PerlinNoiseGenerator(rand());
 	forestryGen3 = new PerlinNoiseGenerator(rand());
 }
 
-Map* WorldGenerator::generateMap(int x, int y) {
+void WorldGenerator::addDefaultTiles(Map* map) {
+	Tile* emptyTile = new Tile();
+	map->addTile(emptyTile);
+	Tile* grassTile = new Tile("./data/images/GrassTile1.png", IS_WALKABLE | IS_MINABLE);
+	map->addTile(grassTile);
+	Tile* dirtTile = new Tile("./data/images/DirtTile1.png", IS_WALKABLE);
+	map->addTile(dirtTile);
+	Tile* dirtTile2 = new Tile("./data/images/DirtTile2.png", IS_WALKABLE);
+	map->addTile(dirtTile2);
+	Doodad tree = Doodad("TREE", "./data/images/Tree.png", 0, 0, IS_TREE);
+	entManager->doodadManager->addNewDoodadType("Tree", tree);
+}
+
+Map* WorldGenerator::generateMap(int map_x, int map_y) {
 	Map* retVal = new Map();
 	retVal->init(MAP_WIDTH, MAP_HEIGHT);
 	
-	// Add the default empty tile
-	Tile* emptyTile = new Tile();
-	retVal->addTile(emptyTile);
-	Tile* grassTile = new Tile("./data/images/GrassTile1.png", IS_WALKABLE | IS_MINABLE);
-	retVal->addTile(grassTile);
-	Tile* dirtTile = new Tile("./data/images/DirtTile.png");
-	retVal->addTile(dirtTile);
-	Doodad tree = Doodad("TREE", "./data/images/Tree.png", 0, 0, IS_TREE);
-	entManager->doodadManager->addNewDoodadType("Tree", tree);
+	addDefaultTiles(retVal);
 
 	// Get the forest layer
 	for (int x = 0; x < retVal->width; x++) {
@@ -45,14 +51,18 @@ Map* WorldGenerator::generateMap(int x, int y) {
 				// This is a forest-y region
 				retVal->setTile(x,y,1);
 				// If the 6th digit is a 2, 1, or 0, put a tree here
-				if (int(forestFactor*10000) % 10 < 3) {
-					//retVal->setTile(x,y,2);
-					//std::cout << "Adding a tree at " << x << "," << y << std::endl;
+				if (rand() % 10 < 3) {
 					Doodad* thisTree = entManager->doodadManager->addDoodadByType("Tree");
-					//std::cout << thisTree->uid << std::endl;
 					point* thisPoint = Map::TileXYToTexXY(x,y);
 					thisTree->moveToRealXY(thisPoint->realX,thisPoint->realY);
 					delete thisPoint;
+				}
+			} else if (forestFactor < -0.5) {
+				// This is a dry region
+				if (rand() % 2 == 1) {
+					retVal->setTile(x,y,2);
+				} else {
+					retVal->setTile(x,y,3);
 				}
 			}
 		}

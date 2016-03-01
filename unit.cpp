@@ -10,17 +10,9 @@ Unit::Unit(std::string uid, std::string filename) : filename(filename) {
 }
 
 Unit::Unit(std::string uid, std::string filename, float x, float y) : filename(filename) {
-	if (filename != "EMPTY" && !tex.loadFromFile(filename)) {
-		cout << "ERROR: Could not load " << filename << endl;
-		return;
-	};
 	this->uid = uid;
-	halfWidth = (int) tex.getSize().x / 2;
-	height = (int) tex.getSize().y;
-	spr.setTexture(tex);
-	spr.setScale(X_SCALE, Y_SCALE);
+	loadSprite(filename);
 	state = STATE_IDLE;
-
 	timeToComplete = 1000;
 	skills = 1;
 	moveToRealXY(x, y);

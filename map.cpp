@@ -196,3 +196,7 @@ point* Map::TexXYToTileXY(float texX, float texY) {
 	retVal->tileY = (int) (floor(realY - 0.5*oddY)*2 + oddY);	// There is likely a more elegant way of stating this, but I just spent 5 hours getting the math right
 	return retVal;
 }
+
+bool Map::isWalkable(int x, int y) {
+	return (inBounds(x, y) && (getTile(x, y)->tags & IS_WALKABLE));
+}
