@@ -1,26 +1,22 @@
 #include "unit.hpp"
 using namespace std;
 
-Unit::Unit() {
-	init("UNIT_UNDEFINED","EMPTY",0,0);
+Unit::Unit() : Entity("UNIT_UNDEFINED","EMPTY",0,0) {
+	init();
 }
 
-Unit::Unit(std::string uid, std::string filename) {
-	init(uid, filename, 0, 0);
+Unit::Unit(std::string uid, std::string filename) : Entity(uid, filename, 0, 0) {
+	init();
 }
 
-Unit::Unit(std::string uid, std::string filename, float x, float y) {
-	init(uid,filename,x,y);
+Unit::Unit(std::string uid, std::string filename, float x, float y) : Entity(uid, filename, x, y){
+	init();
 }
 
-void Unit::init(std::string uid, std::string filename, float x, float y) {
-	this->filename = filename;
-	this->uid = uid;
-	loadSprite(filename);
+void Unit::init(){
 	state = STATE_IDLE;
 	timeToComplete = 1000;
 	skills = 1;
-	moveToRealXY(x, y);
 }
 
 void Unit::walkTo(std::vector<point*> path) {

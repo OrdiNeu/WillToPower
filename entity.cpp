@@ -1,5 +1,9 @@
 #include "Entity.hpp"
 
+Entity::Entity(std::string uid, std::string filename, float realX, float realY) : uid(uid), filename(filename), realX(realX), realY(realY) {
+	loadSprite(filename);
+}
+
 void Entity::moveToRealXY(float x, float y) {
 	realX = x;
 	realY = y;

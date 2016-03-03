@@ -12,8 +12,8 @@ const int X_SCALE = 2;
 const int Y_SCALE = 2;
 const int WINDOW_HEIGHT = 600;
 const int WINDOW_WIDTH = 800;
-const int MAP_HEIGHT = 32;
-const int MAP_WIDTH = 32;
+const int MAP_HEIGHT = 64;
+const int MAP_WIDTH = 16;
 
 // Moved over from tile.hpp because some objects need to know how to draw themselves
 const int HALF_TILE_WIDTH = 16*X_SCALE;

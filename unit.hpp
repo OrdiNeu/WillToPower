@@ -16,7 +16,7 @@ class Unit : public Entity {
 private:
 	float speed = 40;
 	float timeToComplete;
-	void init(std::string uid, std::string filename, float x, float y);
+	void init();
 public:
 	std::vector<point*> curPath;
 	Unit();

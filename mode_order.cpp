@@ -7,9 +7,9 @@ ModeOrder::ModeOrder() {
 }
 
 void ModeOrder::init() {
-	Unit* testUnit = new Unit("test","./data/images/enemies/yellowBox.png",0,0);
-	testUnit->skills = SKILL_MINING;
-	entManager->unitManager->addNewUnitType("testUnit",*testUnit);
+	Unit testUnit = Unit("test","./data/images/enemies/yellowBox.png",0,0);
+	testUnit.skills = SKILL_MINING;
+	entManager->unitManager->addNewUnitType("testUnit",testUnit);
 	RequestQueues::entityRequests.push_back(entRequest::newUnitRequest("testUnit", HALF_TILE_WIDTH, HALF_TILE_HEIGHT));
 	entManager->flushRequests();
 	test = entManager->unitManager->lastCreatedUnit;
@@ -52,7 +52,7 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 	checkBounds(&y0, &y1);
 
 	for (int y = y0; y <= y1; y++) {
-		int staggerFix = y%2;	// To only grab the tiles that are "inner", we need to account for tiles that are odd "sticking out"
+		int staggerFix = y%2-y0%2;	// To only grab the tiles that are "inner", we need to account for tiles that are odd "sticking out"
 		for (int x = x0; x <= x1 - staggerFix; x++) {
 			switch (type) {
 				case JOB_TYPE_MINING:
