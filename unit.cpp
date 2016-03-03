@@ -10,7 +10,7 @@ Unit::Unit(std::string uid, std::string filename) : filename(filename) {
 }
 
 Unit::Unit(std::string uid, std::string filename, float x, float y) : filename(filename) {
-	this->uid = uid;
+	this->uid = uid;	// No idea why this is necessary, but I'm going to blame mingw32 on being horrendous
 	loadSprite(filename);
 	state = STATE_IDLE;
 	timeToComplete = 1000;
