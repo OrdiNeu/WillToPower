@@ -16,6 +16,7 @@ class Unit : public Entity {
 private:
 	float speed = 40;
 	float timeToComplete;
+	void init(std::string uid, std::string filename, float x, float y);
 public:
 	std::vector<point*> curPath;
 	Unit();
@@ -23,6 +24,7 @@ public:
 	Unit(std::string uid, std::string filename, float x, float y);
 	void walkTo(std::vector<point*> path);
 	Unit* clone(std::string newUID);
+	void update(float dt);
 	int state;
 	int skills;
 };

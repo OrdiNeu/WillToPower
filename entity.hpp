@@ -7,20 +7,20 @@
 #include <iostream>
 
 class Entity {
-protected:
-	int halfWidth, height;
 public:
 	std::string filename;
 	sf::Sprite spr;
 	sf::Texture tex;
-	float realX, realY;
 	std::string uid;			// Should be unique
+	float realX, realY;
 	float dx, dy;
 
 	void loadSprite(std::string filename);
 	void moveToRealXY(float x, float y);
 	void render(sf::RenderTarget* screen);
 	virtual void update(float dt) {};
+protected:
+	int halfWidth, height;
 };
 
 #endif

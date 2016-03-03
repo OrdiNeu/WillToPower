@@ -2,25 +2,25 @@
 using namespace std;
 
 Unit::Unit() {
-	uid = "UNIT_UNDEFINED";
+	init("UNIT_UNDEFINED","EMPTY",0,0);
 }
 
-Unit::Unit(std::string uid, std::string filename) : filename(filename) {
-	Unit(uid, filename, 0, 0);
+Unit::Unit(std::string uid, std::string filename) {
+	init(uid, filename, 0, 0);
 }
 
-Unit::Unit(std::string uid, std::string filename, float x, float y) : filename(filename) {
-	this->uid = uid;	// No idea why this is necessary, but I'm going to blame mingw32 on being horrendous
+Unit::Unit(std::string uid, std::string filename, float x, float y) {
+	init(uid,filename,x,y);
+}
+
+void Unit::init(std::string uid, std::string filename, float x, float y) {
+	this->filename = filename;
+	this->uid = uid;
 	loadSprite(filename);
 	state = STATE_IDLE;
 	timeToComplete = 1000;
 	skills = 1;
 	moveToRealXY(x, y);
-}
-
-void Unit::render(sf::RenderTarget* screen) {
-	spr.setPosition(realX - halfWidth, realY - height);
-	screen->draw(spr);
 }
 
 void Unit::walkTo(std::vector<point*> path) {

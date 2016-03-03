@@ -136,7 +136,7 @@ void Map::setColor(int x, int y, sf::Color colorToAdd) {
 void Map::setColor(int x, int y, int colorToAdd) {
 	if (!inBounds(x,y))
 		return;
-	dirty = colorize[x][y] != colorToAdd;	// Only dirty if it's a change
+	dirty |= colorize[x][y] != colorToAdd;	// Only dirty if it's a change
 	colorize[x][y] = colorToAdd;
 }
 

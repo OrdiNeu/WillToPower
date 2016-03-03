@@ -15,7 +15,7 @@ Tile::Tile(string filename, int tags) : filename(filename), tags(tags) {
 }
 
 void Tile::render(sf::RenderTarget* screen, float x, float y) {
-	spr.setPosition(x, y);
+	spr.setPosition(x, y/*-tex.getSize().y*/);
 	screen->draw(spr);
 }
 

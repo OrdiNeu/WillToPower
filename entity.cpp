@@ -15,7 +15,6 @@ void Entity::loadSprite(std::string filename) {
 	height = (int) tex.getSize().y;
 	spr.setTexture(tex);
 	spr.setScale(X_SCALE, Y_SCALE);
-	this->filename = filename;
 }
 
 void Entity::render(sf::RenderTarget* screen) {
