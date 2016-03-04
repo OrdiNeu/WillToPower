@@ -25,6 +25,8 @@ private:
 	void moveToNextPoint();
 	bool isUnitCloseToCenterOfTile(point* unitLoc);
 	int jobState;
+	bool meetsJobRequirements(Job job);
+	bool pickUpJob();
 public:
 	AI(Unit* controlled, Map* curMap);
 	Unit* controlled;

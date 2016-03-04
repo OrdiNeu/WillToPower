@@ -25,6 +25,81 @@ void AI::moveToNextPoint() {
 	controlled->curPath.pop_back();
 }
 
+bool AI::meetsJobRequirements(Job job) {
+	// Can't pick up a suspended job
+	if (job.suspended) {
+		return false;
+	}
+
+	// Can't pick up jobs that are assigned to someone else
+	if (!(job.assigned == NULL || job.assigned == controlled)) {
+		return false;
+	}
+
+	// Can't pick up jobs we're not qualified for
+	if ((job.requirements & controlled->skills) == 0) {
+		return false;
+	}
+
+	return true;
+}
+
+bool AI::pickUpJob() {
+	// Check the job board for stuff to do
+	int jobPicked = -1;
+	for (unsigned int i = 0; i < JobQueue::jobQueue.size(); i++) {
+		Job job = JobQueue::jobQueue[i];
+
+		if (!meetsJobRequirements(job)) {
+			continue;
+		}
+
+		// Passed all checks: move to target
+		point* curPoint = Map::TexXYToTileXY(controlled->realX, controlled->realY);
+		lastKnownPos->tileX = curPoint->tileX;
+		lastKnownPos->tileY = curPoint->tileY;
+		std::vector<point*> route;
+		if (job.targetPoint != NULL) {
+			route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, job.targetPoint->tileX, job.targetPoint->tileY);
+		}
+		if (job.targetEnt != NULL) {
+			point* targetPoint = Map::TexXYToTileXY(job.targetEnt->realX, job.targetEnt->realY);
+			route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, targetPoint->tileX, targetPoint->tileY);
+			delete targetPoint;
+		}
+		if (route.size() != 0) {
+			// Remove the last point in the route, since it is the current position
+			point* last_point = route.back();
+			delete last_point;
+			route.pop_back();
+
+			// Walk to the target location
+			controlled->walkTo(route);
+
+			// Pick up the job
+			jobPicked = i;
+			job.assigned = controlled;
+			jobState = JOB_STAGE_WALKING_TO_DEST;
+			delete curPoint;
+			break;
+		} else {
+			// No path to the target
+			delete curPoint;
+			continue;
+		}
+
+		
+	}
+
+	// Is there a job that is now taken?
+	if (jobPicked >= 0) {
+		curJob = JobQueue::jobQueue[jobPicked];
+		JobQueue::jobQueue.erase(JobQueue::jobQueue.begin() + jobPicked);
+		return true;
+	}
+	return false;
+}
+
 // Dunno how much (if at all) I want to subclass AI, so it is non-virtual for now
 void AI::update(float dt) {
 	if (controlled->state == STATE_WALKING) {
@@ -76,69 +151,7 @@ void AI::update(float dt) {
 	} else {
 		timeSinceLastUpdate -= dt;
 		if (timeSinceLastUpdate <= 0) {
-			// Check the job board for stuff to do
-			int jobPicked = -1;
-			for (unsigned int i = 0; i < JobQueue::jobQueue.size(); i++) {
-				Job job = JobQueue::jobQueue[i];
-				
-				// Can't pick up a suspended job
-				if (job.suspended) {
-					continue;
-				}
-
-				// Can't pick up jobs that are assigned to someone else
-				if (!(job.assigned == NULL || job.assigned == controlled)) {
-					continue;
-				}
-
-				// Can't pick up jobs we're not qualified for
-				if ((job.requirements & controlled->skills) == 0) {
-					continue;
-				}
-
-				// Passed all checks: move to target
-				point* curPoint = Map::TexXYToTileXY(controlled->realX, controlled->realY);
-				lastKnownPos->tileX = curPoint->tileX;
-				lastKnownPos->tileY = curPoint->tileY;
-				std::vector<point*> route;
-				if (job.targetPoint != NULL) {
-					route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, job.targetPoint->tileX, job.targetPoint->tileY);
-				}
-				if (job.targetEnt != NULL) {
-					point* targetPoint = Map::TexXYToTileXY(job.targetEnt->realX, job.targetEnt->realY);
-					route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, targetPoint->tileX, targetPoint->tileY);
-					delete targetPoint;
-				}
-				if (route.size() != 0) {
-					// Remove the last point in the route, since it is the current position
-					point* last_point = route.back();
-					delete last_point;
-					route.pop_back();
-
-					// Walk to the target location
-					controlled->walkTo(route);
-
-					// Pick up the job
-					jobPicked = i;
-					job.assigned = controlled;
-					jobState = JOB_STAGE_WALKING_TO_DEST;
-					delete curPoint;
-					break;
-				} else {
-					// No path to the target
-					delete curPoint;
-					continue;
-				}
-
-				
-			}
-
-			// Is there a job that is now taken?
-			if (jobPicked >= 0) {
-				curJob = JobQueue::jobQueue[jobPicked];
-				JobQueue::jobQueue.erase(JobQueue::jobQueue.begin() + jobPicked);
-			} else {
-				// Otherwise, wait until a more opportune time
+			if (!pickUpJob()) {
 				timeSinceLastUpdate = UNIT_AI_UPDATE_TIME;
 			}
 		}
