@@ -1,17 +1,10 @@
 #include "tile.hpp"
 using namespace std;
 
-Tile::Tile() {
-	tags = 0;
+Tile::Tile() : Entity("0", "EMPTY", 0, 0), tags(0) {
 }
 
-Tile::Tile(string filename, int tags) : filename(filename), tags(tags) {
-	if (filename != "EMPTY" && !tex.loadFromFile(filename)) {
-		cout << "ERROR: Could not load " << filename << endl;
-		return;
-	};
-	spr.setTexture(tex);
-	spr.setScale(X_SCALE, Y_SCALE);
+Tile::Tile(string filename, int tags) : Entity("0", filename, 0, 0), tags(tags) {
 }
 
 void Tile::render(sf::RenderTarget* screen, float x, float y) {

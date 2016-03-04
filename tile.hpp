@@ -3,17 +3,15 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "constants.hpp"
+#include "entity.hpp"
 
 enum TILE_TAGS {
 	IS_WALKABLE = 1,
 	IS_MINABLE = 2
 };
 
-class Tile {
+class Tile : public Entity {
 public:
-	sf::Sprite spr;
-	sf::Texture tex;
-	std::string filename;
 	int tags;
 	int lastColor;
 	Tile();

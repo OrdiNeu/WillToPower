@@ -58,7 +58,7 @@ build/release/main.o: main.cpp game.hpp ../SFML/include/SFML/Graphics.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp map.hpp tile.hpp constants.hpp \
- room.hpp job_queue.hpp entity.hpp doodad.hpp mode.hpp entity_manager.hpp \
+ entity.hpp room.hpp job_queue.hpp doodad.hpp mode.hpp entity_manager.hpp \
  unit_manager.hpp unit.hpp unit_ai.hpp a_star.hpp doodad_manager.hpp \
  request_queue.hpp world_generator.hpp PerlinNoiseGenerator.hpp \
  mode_main_menu.hpp mode_map_edit.hpp mode_order.hpp
@@ -199,11 +199,11 @@ tile.hpp:
 
 constants.hpp:
 
+entity.hpp:
+
 room.hpp:
 
 job_queue.hpp:
-
-entity.hpp:
 
 doodad.hpp:
 

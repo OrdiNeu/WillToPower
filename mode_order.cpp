@@ -79,8 +79,6 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 					for (Doodad* thisDoodad : doodadsHere) {
 						if (thisDoodad->hasTag(IS_TREE)) {
 							if (doCreateJob) createJob(JOB_TYPE_WOODCUT, SKILL_WOODCUT, thisDoodad, NULL);
-							//if (colorize) curMap->setColor(x, y, COLOR_TASKED);
-							//if (uncolorize) curMap->setColor(x, y, COLOR_NONE);
 						}
 					}
 					break;
@@ -99,16 +97,7 @@ sf::Vector2i ModeOrder::getMousePos(sf::RenderWindow* screen) {
 	return sf::Mouse::getPosition(*screen) + sf::Vector2i(screenX,screenY);
 }
 
-void ModeOrder::update(float dt, sf::RenderWindow* screen) {
-	sf::Event e;
-	while(screen->pollEvent(e)){
-		if(e.type == sf::Event::Closed){
-			screen->close();
-		}
-	}
-	entManager->update(dt);
-
-	// Keyboard controls
+void ModeOrder::handleKeyboard(float dt) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 		screenX -= MAP_SCROLL_SPEED*dt;
 	}
@@ -128,15 +117,12 @@ void ModeOrder::update(float dt, sf::RenderWindow* screen) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
 		setOrderMode(ORDER_MODE_CUTTREE);
 	}
+};
 
-	// Mouse controls
-	//sf::Vector2i mouseScreenPos = getMousePos(screen);
-	sf::Vector2i mousePos =  getMousePos(screen);
-	//mousePos.x += screenX;
-	//mousePos.y += screenY;
+void ModeOrder::handleMouse(sf::RenderWindow* screen) {
+	sf::Vector2i mousePos = getMousePos(screen);
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-		//point mousePos;
 		if (!leftClicked && selectionActive == SELECT_TYPE_NONE) { // Initiate clicking
 			selectionActive = SELECT_TYPE_LEFT;
 			point* startPoint = Map::TexXYToTileXY(mousePos.x, mousePos.y);
@@ -195,6 +181,19 @@ void ModeOrder::update(float dt, sf::RenderWindow* screen) {
 			selectionActive = SELECT_TYPE_NONE;
 		rightClicked = false;
 	}
+};
+
+void ModeOrder::update(float dt, sf::RenderWindow* screen) {
+	sf::Event e;
+	while(screen->pollEvent(e)){
+		if(e.type == sf::Event::Closed){
+			screen->close();
+		}
+	}
+	entManager->update(dt);
+
+	handleKeyboard(dt);
+	handleMouse(screen);
 }
 
 void ModeOrder::render(sf::RenderTarget* screen) {
@@ -208,20 +207,6 @@ void ModeOrder::render(sf::RenderTarget* screen) {
 
 void ModeOrder::rerenderSelection(sf::RenderWindow* screen) {
 	selectionTex.clear();
-	if (selectionActive > 0) {
-		/*sf::Vector2i mousePos = getMousePos(screen);
-		point* point1 = Map::TexXYToTileXY(mousePos.x, mousePos.y);
-		int x0 = (point1->tileX < selectStartX) ? point1->tileX : selectStartX;
-		int x1 = (point1->tileX < selectStartX) ? selectStartX : point1->tileX;
-		int y0 = (point1->tileY < selectStartY) ? point1->tileY : selectStartY;
-		int y1 = (point1->tileY < selectStartY) ? selectStartY : point1->tileY;
-		for (int x = x0; x <= x1; x++) {
-			for (int y = y0; y <= y1; y++) {
-				// Draw the thingymobob
-
-			}
-		}*/
-	}
 	selectionTex.display();	// Update the texture
 	selectionSprite.setTexture(selectionTex.getTexture());
 }

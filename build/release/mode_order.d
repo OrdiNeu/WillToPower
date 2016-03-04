@@ -58,8 +58,8 @@ build/release/mode_order.o: mode_order.cpp mode_order.hpp mode.hpp \
  ../SFML/include/SFML/Graphics/RectangleShape.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
- ../SFML/include/SFML/Graphics/Text.hpp tile.hpp constants.hpp room.hpp \
- job_queue.hpp entity.hpp doodad.hpp entity_manager.hpp unit_manager.hpp \
+ ../SFML/include/SFML/Graphics/Text.hpp tile.hpp constants.hpp entity.hpp \
+ room.hpp job_queue.hpp doodad.hpp entity_manager.hpp unit_manager.hpp \
  unit.hpp unit_ai.hpp a_star.hpp doodad_manager.hpp request_queue.hpp \
  world_generator.hpp PerlinNoiseGenerator.hpp
 
@@ -201,11 +201,11 @@ tile.hpp:
 
 constants.hpp:
 
+entity.hpp:
+
 room.hpp:
 
 job_queue.hpp:
-
-entity.hpp:
 
 doodad.hpp:
 

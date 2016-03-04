@@ -39,6 +39,8 @@ private:
 	sf::Vector2i getMousePos(sf::RenderWindow* screen);
 	void rerenderSelection(sf::RenderWindow* screen);
 	void checkBounds(int* x0, int* x1);
+	void handleKeyboard(float dt);
+	void handleMouse(sf::RenderWindow* screen);
 public:
 	float screenX;
 	float screenY;
