@@ -8,7 +8,8 @@ Tile::Tile(string filename, int tags) : Entity("0", filename, 0, 0), tags(tags) 
 }
 
 void Tile::render(sf::RenderTarget* screen, float x, float y) {
-	spr.setPosition(x, y/*-tex.getSize().y*/);
+	int yoffset = hasTag(WALL)*(WALL_HEIGHT-TILE_HEIGHT);
+	spr.setPosition(x, y - yoffset/*-tex.getSize().y*/);
 	screen->draw(spr);
 }
 

@@ -7,7 +7,9 @@
 
 enum TILE_TAGS {
 	IS_WALKABLE = 1,
-	IS_MINABLE = 2
+	IS_MINABLE = 2,
+	FLOOR = 2 << 7,
+	WALL = 2 << 8
 };
 
 class Tile : public Entity {

@@ -25,12 +25,14 @@ void WorldGenerator::createGenerators() {
 void WorldGenerator::addDefaultTiles(Map* map) {
 	Tile* emptyTile = new Tile();
 	map->addTile(emptyTile);
-	Tile* grassTile = new Tile("./data/images/GrassTile1.png", IS_WALKABLE | IS_MINABLE);
+	Tile* grassTile = new Tile("./data/images/GrassTile1.png", IS_WALKABLE);
 	map->addTile(grassTile);
 	Tile* dirtTile = new Tile("./data/images/DirtTile1.png", IS_WALKABLE);
 	map->addTile(dirtTile);
 	Tile* dirtTile2 = new Tile("./data/images/DirtTile2.png", IS_WALKABLE);
 	map->addTile(dirtTile2);
+	Tile* dirtBlock = new Tile("./data/images/DirtBlock1.png", IS_MINABLE | WALL);
+	map->addTile(dirtBlock);
 	Doodad tree = Doodad("TREE", "./data/images/Tree.png", 0, 0, IS_TREE);
 	entManager->doodadManager->addNewDoodadType("Tree", tree);
 }
@@ -62,7 +64,7 @@ Map* WorldGenerator::generateMap(int map_x, int map_y) {
 				if (rand() % 2 == 1) {
 					retVal->setTile(x,y,2);
 				} else {
-					retVal->setTile(x,y,3);
+					retVal->setTile(x,y,4);
 				}
 			}
 		}

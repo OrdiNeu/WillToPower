@@ -79,6 +79,7 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 					for (Doodad* thisDoodad : doodadsHere) {
 						if (thisDoodad->hasTag(IS_TREE)) {
 							if (doCreateJob) createJob(JOB_TYPE_WOODCUT, SKILL_WOODCUT, thisDoodad, NULL);
+							if (colorize) thisDoodad->spr.setColor(DEFAULT_TILE_COLORS[COLOR_TASKED]);
 						}
 					}
 					break;
