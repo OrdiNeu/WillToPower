@@ -54,48 +54,51 @@ bool AI::pickUpJob() {
 			continue;
 		}
 
-		// Passed all checks: move to target
+		// Passed all checks: determine what to do depending on the type of job
 		point* curPoint = Map::TexXYToTileXY(controlled->realX, controlled->realY);
 		lastKnownPos->tileX = curPoint->tileX;
 		lastKnownPos->tileY = curPoint->tileY;
 		std::vector<point*> route;
-		if (job.targetPoint != NULL) {
-			route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, job.targetPoint->tileX, job.targetPoint->tileY);
+		switch(job.type) {
+			case JOB_TYPE_MINING: {
+				if (job.targetPoint == NULL) {
+					std::cerr << "Error: mining job created without a target point" << std::endl;
+				} else {
+					std::vector<point*> route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, job.targetPoint->tileX, job.targetPoint->tileY);
+					if (route.size() != 0) {
+						// Remove the last point in the route, since it is the current position
+						point* last_point = route.back();
+						delete last_point;
+						route.pop_back();
+
+						// Walk to the target location
+						controlled->walkTo(route);
+
+						// Pick up the job
+						jobPicked = i;
+						job.assigned = controlled;
+						jobState = JOB_STAGE_WALKING_TO_DEST;
+						delete curPoint;
+					}
+				}
+				break;
+			}
+			case JOB_TYPE_WOODCUT: {
+				if (job.targetEnt == NULL) {
+					std::cerr << "Error: woodcut job created without a target ent" << std::endl;
+					point* targetPoint = Map::TexXYToTileXY(job.targetEnt->realX, job.targetEnt->realY);
+					route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, targetPoint->tileX, targetPoint->tileY);
+					delete targetPoint;
+				}
+			}
 		}
-		if (job.targetEnt != NULL) {
-			point* targetPoint = Map::TexXYToTileXY(job.targetEnt->realX, job.targetEnt->realY);
-			route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, targetPoint->tileX, targetPoint->tileY);
-			delete targetPoint;
+		delete curPoint;
+		// Is there a job that is now taken?
+		if (jobPicked >= 0) {
+			curJob = JobQueue::jobQueue[jobPicked];
+			JobQueue::jobQueue.erase(JobQueue::jobQueue.begin() + jobPicked);
+			return true;
 		}
-		if (route.size() != 0) {
-			// Remove the last point in the route, since it is the current position
-			point* last_point = route.back();
-			delete last_point;
-			route.pop_back();
-
-			// Walk to the target location
-			controlled->walkTo(route);
-
-			// Pick up the job
-			jobPicked = i;
-			job.assigned = controlled;
-			jobState = JOB_STAGE_WALKING_TO_DEST;
-			delete curPoint;
-			break;
-		} else {
-			// No path to the target
-			delete curPoint;
-			continue;
-		}
-
-		
-	}
-
-	// Is there a job that is now taken?
-	if (jobPicked >= 0) {
-		curJob = JobQueue::jobQueue[jobPicked];
-		JobQueue::jobQueue.erase(JobQueue::jobQueue.begin() + jobPicked);
-		return true;
 	}
 	return false;
 }

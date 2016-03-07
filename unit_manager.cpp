@@ -11,8 +11,14 @@ void UnitManager::update(float dt) {
 		thisUnit->update(dt);
 
 		// Handle kinesthetics
-		thisUnit->realX += thisUnit->dx;
-		thisUnit->realY += thisUnit->dy;
+		float new_x = thisUnit->realX + thisUnit->dx;
+		float new_y = thisUnit->realY + thisUnit->dy;
+		point* new_point = Map::TexXYToTileXY(new_x, new_y);
+		if (curMap->isWalkable(new_point->tileX,new_point->tileY)) {
+			thisUnit->realX += thisUnit->dx;
+			thisUnit->realY += thisUnit->dy;
+		}
+		delete new_point;
 	}
 
 	for (AI* thisAI : ais) {
