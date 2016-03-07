@@ -79,6 +79,9 @@ bool AI::pickUpJob() {
 						job.assigned = controlled;
 						jobState = JOB_STAGE_WALKING_TO_DEST;
 						delete curPoint;
+					} else {
+						std::cout << "Job suspended: Could not reach target." << std::endl;
+						JobQueue::jobQueue[i].suspended = true;
 					}
 				}
 				break;
@@ -95,7 +98,7 @@ bool AI::pickUpJob() {
 		delete curPoint;
 		// Is there a job that is now taken?
 		if (jobPicked >= 0) {
-			curJob = JobQueue::jobQueue[jobPicked];
+			curJob = job;
 			JobQueue::jobQueue.erase(JobQueue::jobQueue.begin() + jobPicked);
 			return true;
 		}
