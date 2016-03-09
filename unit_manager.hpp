@@ -7,20 +7,15 @@
 #include "unit.hpp"
 #include "unit_ai.hpp"
 #include <sstream>
+#include "manager.hpp"
 
-class UnitManager {
+class UnitManager : public Manager<Unit> {
 public:
-	std::vector<Unit*> units;
-	std::unordered_map<std::string, Unit> unit_library;
-	std::unordered_map<std::string, int> num_units_created;
 	std::vector<AI*> ais;
-	Unit* lastCreatedUnit;
-	void render(sf::RenderTarget* screen);
 	void update(float dt);
-	Unit* addNewUnitByType(std::string type);
-	void addNewUnitType(std::string type, Unit newUnit);
-	void addUnit(AI* ai);
-	void removeUnit(std::string uid);
+	Unit* addNewEntByType(std::string type);
+	void addEnt(AI* ai);
+	void removeEnt(std::string uid);
 	Map* curMap;
 };
 

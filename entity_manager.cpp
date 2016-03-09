@@ -11,21 +11,21 @@ void EntityManager::flushRequests() {
 		entRequest request = RequestQueues::entityRequests.back();
 		if (request.entType == ENT_TYPE_UNIT) {
 			if (request.entRequestType == ENT_REQUEST_NEW_ENT) {
-				Unit* newUnit = unitManager->addNewUnitByType(request.entName);
+				Unit* newUnit = unitManager->addNewEntByType(request.entName);
 				newUnit->moveToRealXY( 	request.X,
 										request.Y);
 			} else if (request.entRequestType == ENT_REQUEST_DEL_ENT) {
-				unitManager->removeUnit(request.uid);
+				unitManager->removeEnt(request.uid);
 			} else {
 				std::cerr << "Unknown request found of type " << request.entRequestType << " for unit manager." << std::endl;
 			}
 		} else if (request.entType == ENT_TYPE_DOODAD) {
 			if (request.entRequestType == ENT_REQUEST_NEW_ENT) {
-				Doodad* newDoodad = doodadManager->addDoodadByType(request.entName);
+				Doodad* newDoodad = doodadManager->addNewEntByType(request.entName);
 				newDoodad->moveToRealXY( request.X,
 										 request.Y);
 			} else if (request.entRequestType == ENT_REQUEST_DEL_ENT) {
-				doodadManager->removeDoodad(request.uid);
+				doodadManager->removeEnt(request.uid);
 			} else {
 				std::cerr << "Unknown request found of type " << request.entRequestType << " for doodad manager." << std::endl;
 			}
@@ -46,9 +46,9 @@ void EntityManager::update(float dt) {
 
 void EntityManager::addEnt(Entity* ent, int type) {
 	if (type & ENTITY_UNIT) {
-		unitManager->addUnit((AI*) ent);
+		unitManager->addEnt((AI*) ent);
 	} else if (type & ENTITY_DOODAD) {
-		doodadManager->addDoodad((Doodad*) ent);
+		doodadManager->addEnt((Doodad*) ent);
 	}
 };
 
@@ -56,8 +56,8 @@ void EntityManager::addEnt(Entity* ent, int type) {
 // But then, there are always problems with removals during iteration
 void EntityManager::removeEnt(std::string uid, int type) {
 	if (type & ENTITY_UNIT) {
-		unitManager->removeUnit(uid);
+		unitManager->removeEnt(uid);
 	} else if (type & ENTITY_DOODAD) {
-		doodadManager->removeDoodad(uid);
+		doodadManager->removeEnt(uid);
 	}
 };

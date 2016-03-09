@@ -9,10 +9,10 @@ ModeOrder::ModeOrder() {
 void ModeOrder::init() {
 	Unit testUnit = Unit("test","./data/images/enemies/yellowBox.png",0,0);
 	testUnit.skills = SKILL_MINING | SKILL_WOODCUT;
-	entManager->unitManager->addNewUnitType("testUnit",testUnit);
+	entManager->unitManager->addNewEntType("testUnit",testUnit);
 	RequestQueues::entityRequests.push_back(entRequest::newEntRequest("testUnit", HALF_TILE_WIDTH, HALF_TILE_HEIGHT, ENT_TYPE_UNIT));
 	entManager->flushRequests();
-	test = entManager->unitManager->lastCreatedUnit;
+	test = entManager->unitManager->lastCreatedEnt;
 
 	leftClicked = true;
 	rightClicked = true;

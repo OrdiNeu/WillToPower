@@ -5,13 +5,13 @@
 #include <vector>
 
 enum entRequestTypes {
-	ENT_REQUEST_NEW_ENT,
-	ENT_REQUEST_DEL_ENT
+	ENT_REQUEST_NEW_ENT = 1,
+	ENT_REQUEST_DEL_ENT = 2
 };
 
 enum entTypes {
-	ENT_TYPE_UNIT,
-	ENT_TYPE_DOODAD
+	ENT_TYPE_UNIT = 1,
+	ENT_TYPE_DOODAD = 2
 };
 
 class entRequest {

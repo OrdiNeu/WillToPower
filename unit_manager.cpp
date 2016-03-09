@@ -1,13 +1,7 @@
 #include "unit_manager.hpp"
 
-void UnitManager::render(sf::RenderTarget* screen) {
-	for (Unit* thisUnit : units) {
-		thisUnit->render(screen);
-	}
-}
-
 void UnitManager::update(float dt) {
-	for (Unit* thisUnit : units) {
+	for (Unit* thisUnit : ents) {
 		thisUnit->update(dt);
 
 		// Handle kinesthetics
@@ -26,34 +20,30 @@ void UnitManager::update(float dt) {
 	}
 }
 
-Unit* UnitManager::addNewUnitByType(std::string type) {
+Unit* UnitManager::addNewEntByType(std::string type) {
 	// Ensure that the type exists
-	if (unit_library.find(type) == unit_library.end()) {
+	if (ent_library.find(type) == ent_library.end()) {
 		std::cerr << "ERROR: attempted to create unit of unknown type " << type << std::endl;
 		return NULL;
 	}
 	
 	// Construct a name for the unit
 	std::ostringstream stream;
-	stream << type << "_" << num_units_created[type]++;
+	stream << type << "_" << num_ents_created[type]++;
 
-	Unit* newUnit = unit_library[type].clone(stream.str());	// TODO: Lookup how to convert integers to string
+	Unit* newUnit = ent_library[type].clone(stream.str());
 	AI* newAI = new AI(newUnit, curMap);
-	addUnit(newAI);
-	lastCreatedUnit = newUnit;
+	addEnt(newAI);
+	lastCreatedEnt = newUnit;
 	return newUnit;
 }
 
-void UnitManager::addNewUnitType(std::string type, Unit newUnit) {
-	unit_library[type] = newUnit;
-}
-
-void UnitManager::addUnit(AI* ai) {
+void UnitManager::addEnt(AI* ai) {
 	ais.push_back(ai);
-	units.push_back(ai->controlled);
+	ents.push_back(ai->controlled);
 }
 
-void UnitManager::removeUnit(std::string uid) {
+void UnitManager::removeEnt(std::string uid) {
 	// Find the AI and do an in-place swap with the final element, then shrink
 	for (std::vector<AI*>::iterator it = ais.begin() ; it != ais.end(); ++it) {
 		if ((*it)->uid == uid) {
@@ -63,10 +53,10 @@ void UnitManager::removeUnit(std::string uid) {
 	}
 
 	// Do the same for the connected unit
-	for (std::vector<Unit*>::iterator it = units.begin() ; it != units.end(); ++it) {
+	for (std::vector<Unit*>::iterator it = ents.begin() ; it != ents.end(); ++it) {
 		if ((*it)->uid == uid) {
-			*it = units[units.size()-1];
-			units.pop_back();
+			*it = ents[ents.size()-1];
+			ents.pop_back();
 		}
 	}
 }

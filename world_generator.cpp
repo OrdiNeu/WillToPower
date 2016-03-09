@@ -34,7 +34,7 @@ void WorldGenerator::addDefaultTiles(Map* map) {
 	Tile* dirtBlock = new Tile("./data/images/DirtBlock1.png", IS_MINABLE | WALL);
 	map->addTile(dirtBlock);
 	Doodad tree = Doodad("TREE", "./data/images/Tree.png", 0, 0, IS_TREE);
-	entManager->doodadManager->addNewDoodadType("Tree", tree);
+	entManager->doodadManager->addNewEntType("Tree", tree);
 }
 
 Map* WorldGenerator::generateMap(int map_x, int map_y) {
