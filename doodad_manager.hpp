@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include "map.hpp"
 #include <sstream>
+#include "manager.hpp"
 
 class DoodadManager {
 public:
@@ -22,5 +23,9 @@ public:
 	std::vector<Doodad*> getDoodadsAtPoint(int x, int y);	// Expensive to use
 	Map* curMap;
 };
+
+/*class DoodadManager : Manager<Doodad> {
+	std::vector<Doodad*> getDoodadsAtPoint(int x, int y);	// Expensive to use
+};*/
 
 #endif

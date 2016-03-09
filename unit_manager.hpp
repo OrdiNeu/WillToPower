@@ -17,7 +17,6 @@ public:
 	Unit* lastCreatedUnit;
 	void render(sf::RenderTarget* screen);
 	void update(float dt);
-	void getNewUnitByType(std::string type);
 	Unit* addNewUnitByType(std::string type);
 	void addNewUnitType(std::string type, Unit newUnit);
 	void addUnit(AI* ai);

@@ -32,6 +32,7 @@ Unit* UnitManager::addNewUnitByType(std::string type) {
 		std::cerr << "ERROR: attempted to create unit of unknown type " << type << std::endl;
 		return NULL;
 	}
+	
 	// Construct a name for the unit
 	std::ostringstream stream;
 	stream << type << "_" << num_units_created[type]++;

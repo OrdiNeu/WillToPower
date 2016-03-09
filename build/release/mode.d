@@ -61,7 +61,7 @@ build/release/mode.o: mode.cpp mode.hpp map.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp tile.hpp constants.hpp entity.hpp \
  room.hpp job_queue.hpp doodad.hpp entity_manager.hpp unit_manager.hpp \
  unit.hpp unit_ai.hpp a_star.hpp request_queue.hpp doodad_manager.hpp \
- world_generator.hpp PerlinNoiseGenerator.hpp
+ manager.hpp world_generator.hpp PerlinNoiseGenerator.hpp
 
 mode.hpp:
 
@@ -220,6 +220,8 @@ a_star.hpp:
 request_queue.hpp:
 
 doodad_manager.hpp:
+
+manager.hpp:
 
 world_generator.hpp:
 
