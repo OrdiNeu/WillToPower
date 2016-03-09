@@ -9,14 +9,28 @@ void EntityManager::flushRequests() {
 	while (!RequestQueues::entityRequests.empty()) {
 		// parse this request
 		entRequest request = RequestQueues::entityRequests.back();
-		if (request.entRequestType == ENT_REQUEST_NEW_UNIT) {
-			Unit* newUnit = unitManager->addNewUnitByType(request.unitName);
-			newUnit->moveToRealXY( 	request.X,
-									request.Y);
-			//std::cout << "Adding ent to " << request.X << ", " << request.Y;
-		} else if (request.entRequestType == ENT_REQUEST_DEL_UNIT) {
-			//Doodad* newDoodad = doodadManager->addDoodadByType();
-			//newDoodad.pos = asjdfhakf
+		if (request.entType == ENT_TYPE_UNIT) {
+			if (request.entRequestType == ENT_REQUEST_NEW_ENT) {
+				Unit* newUnit = unitManager->addNewUnitByType(request.entName);
+				newUnit->moveToRealXY( 	request.X,
+										request.Y);
+			} else if (request.entRequestType == ENT_REQUEST_DEL_ENT) {
+				unitManager->removeUnit(request.uid);
+			} else {
+				std::cerr << "Unknown request found of type " << request.entRequestType << " for unit manager." << std::endl;
+			}
+		} else if (request.entType == ENT_TYPE_DOODAD) {
+			if (request.entRequestType == ENT_REQUEST_NEW_ENT) {
+				Doodad* newDoodad = doodadManager->addDoodadByType(request.entName);
+				newDoodad->moveToRealXY( request.X,
+										 request.Y);
+			} else if (request.entRequestType == ENT_REQUEST_DEL_ENT) {
+				doodadManager->removeDoodad(request.uid);
+			} else {
+				std::cerr << "Unknown request found of type " << request.entRequestType << " for doodad manager." << std::endl;
+			}
+		} else {
+			std::cerr << "Unknown request found of type " << request.entRequestType << " and ent type " << request.entType << std::endl;
 		}
 		RequestQueues::entityRequests.pop_back();
 	}

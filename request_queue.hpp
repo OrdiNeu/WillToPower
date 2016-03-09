@@ -5,29 +5,37 @@
 #include <vector>
 
 enum entRequestTypes {
-	ENT_REQUEST_NEW_UNIT,
-	ENT_REQUEST_DEL_UNIT
+	ENT_REQUEST_NEW_ENT,
+	ENT_REQUEST_DEL_ENT
+};
+
+enum entTypes {
+	ENT_TYPE_UNIT,
+	ENT_TYPE_DOODAD
 };
 
 class entRequest {
 public:
 	int entRequestType;
-	std::string unitName;
-	std::string unitID;
+	int entType;
+	std::string entName;
+	std::string uid;
 	int X;
 	int Y;
-	static entRequest newUnitRequest(std::string UnitName, int X, int Y) {
+	static entRequest newEntRequest(std::string ent_name, int X, int Y, int ent_type) {
 		entRequest thisRequest;
-		thisRequest.unitName = UnitName;
+		thisRequest.entName = ent_name;
 		thisRequest.X = X;
 		thisRequest.Y = Y;
-		thisRequest.entRequestType = ENT_REQUEST_NEW_UNIT;
+		thisRequest.entRequestType = ENT_REQUEST_NEW_ENT;
+		thisRequest.entType = ent_type;
 		return thisRequest;
 	};
-	static entRequest delUnitRequest(std::string UnitID) {
+	static entRequest delEntRequest(std::string uid, int ent_type) {
 		entRequest thisRequest;
-		thisRequest.unitID = UnitID;
-		thisRequest.entRequestType = ENT_REQUEST_DEL_UNIT;
+		thisRequest.uid = uid;
+		thisRequest.entRequestType = ENT_REQUEST_DEL_ENT;
+		thisRequest.entType = ent_type;
 		return thisRequest;
 	};
 private:

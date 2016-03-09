@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include "unit.hpp"
 #include "unit_ai.hpp"
+#include <sstream>
 
 class UnitManager {
 public:

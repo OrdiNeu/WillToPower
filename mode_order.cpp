@@ -8,9 +8,9 @@ ModeOrder::ModeOrder() {
 
 void ModeOrder::init() {
 	Unit testUnit = Unit("test","./data/images/enemies/yellowBox.png",0,0);
-	testUnit.skills = SKILL_MINING;
+	testUnit.skills = SKILL_MINING | SKILL_WOODCUT;
 	entManager->unitManager->addNewUnitType("testUnit",testUnit);
-	RequestQueues::entityRequests.push_back(entRequest::newUnitRequest("testUnit", HALF_TILE_WIDTH, HALF_TILE_HEIGHT));
+	RequestQueues::entityRequests.push_back(entRequest::newEntRequest("testUnit", HALF_TILE_WIDTH, HALF_TILE_HEIGHT, ENT_TYPE_UNIT));
 	entManager->flushRequests();
 	test = entManager->unitManager->lastCreatedUnit;
 
@@ -80,6 +80,7 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 						if (thisDoodad->hasTag(IS_TREE)) {
 							if (doCreateJob) createJob(JOB_TYPE_WOODCUT, SKILL_WOODCUT, thisDoodad, NULL);
 							if (colorize) thisDoodad->spr.setColor(DEFAULT_TILE_COLORS[COLOR_TASKED]);
+							if (uncolorize) thisDoodad->spr.setColor(DEFAULT_TILE_COLORS[COLOR_NONE]);
 						}
 					}
 					break;

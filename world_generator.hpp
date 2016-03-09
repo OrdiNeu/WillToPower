@@ -7,6 +7,7 @@
 #include "map.hpp"
 #include "entity_manager.hpp"
 #include "constants.hpp"
+#include "request_queue.hpp"
 
 class WorldGenerator {
 public:

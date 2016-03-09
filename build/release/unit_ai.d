@@ -59,7 +59,7 @@ build/release/unit_ai.o: unit_ai.cpp unit_ai.hpp unit.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp constants.hpp entity.hpp map.hpp \
- tile.hpp room.hpp job_queue.hpp doodad.hpp a_star.hpp
+ tile.hpp room.hpp job_queue.hpp doodad.hpp a_star.hpp request_queue.hpp
 
 unit_ai.hpp:
 
@@ -208,3 +208,5 @@ job_queue.hpp:
 doodad.hpp:
 
 a_star.hpp:
+
+request_queue.hpp:

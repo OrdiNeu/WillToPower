@@ -47,6 +47,8 @@ public:
 	void setColor(int x, int y, int colorToAdd);
 	void setRoom(int x, int y, Room* roomToAdd);
 	void setRoom(int x, int y, int roomToAdd);
+	void setRoom(int x0, int y0, int x1, int y1, int roomToAdd);
+	void setRoom(int x0, int y0, int x1, int y1, Room* roomToAdd);
 	void setTasked(int x, int y, bool tasked);
 	bool getTasked(int x, int y);
 	bool isWalkable(int x, int y);

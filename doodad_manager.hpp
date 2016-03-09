@@ -6,11 +6,13 @@
 #include "doodad.hpp"
 #include <unordered_map>
 #include "map.hpp"
+#include <sstream>
 
 class DoodadManager {
 public:
 	std::vector<Doodad*> doodads;
 	std::unordered_map<std::string, Doodad> doodad_library;
+	std::unordered_map<std::string, int> num_units_created;
 	void render(sf::RenderTarget* screen);
 	void update(float dt);
 	void addDoodad(Doodad* doodad);

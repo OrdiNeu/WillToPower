@@ -60,7 +60,7 @@ build/release/unit_manager.o: unit_manager.cpp unit_manager.hpp unit.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp constants.hpp entity.hpp \
  unit_ai.hpp map.hpp tile.hpp room.hpp job_queue.hpp doodad.hpp \
- a_star.hpp
+ a_star.hpp request_queue.hpp
 
 unit_manager.hpp:
 
@@ -211,3 +211,5 @@ job_queue.hpp:
 doodad.hpp:
 
 a_star.hpp:
+
+request_queue.hpp:

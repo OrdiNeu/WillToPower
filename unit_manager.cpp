@@ -32,7 +32,11 @@ Unit* UnitManager::addNewUnitByType(std::string type) {
 		std::cerr << "ERROR: attempted to create unit of unknown type " << type << std::endl;
 		return NULL;
 	}
-	Unit* newUnit = unit_library[type].clone(type /*+ itos(num_units_created[type]++)*/);	// TODO: Lookup how to convert integers to string
+	// Construct a name for the unit
+	std::ostringstream stream;
+	stream << type << "_" << num_units_created[type]++;
+
+	Unit* newUnit = unit_library[type].clone(stream.str());	// TODO: Lookup how to convert integers to string
 	AI* newAI = new AI(newUnit, curMap);
 	addUnit(newAI);
 	lastCreatedUnit = newUnit;

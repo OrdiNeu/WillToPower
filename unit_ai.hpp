@@ -5,6 +5,7 @@
 #include "map.hpp"
 #include "a_star.hpp"
 #include "job_queue.hpp"
+#include "request_queue.hpp"
 
 // Define some stuff to control unit movement behaviour
 #define AI_MOVE_CENTER_OF_TILE
@@ -27,6 +28,7 @@ private:
 	int jobState;
 	bool meetsJobRequirements(Job job);
 	bool pickUpJob();
+	void finishJob();
 public:
 	AI(Unit* controlled, Map* curMap);
 	Unit* controlled;

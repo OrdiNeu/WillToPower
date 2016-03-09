@@ -54,9 +54,10 @@ Map* WorldGenerator::generateMap(int map_x, int map_y) {
 				retVal->setTile(x,y,1);
 				// If the 6th digit is a 2, 1, or 0, put a tree here
 				if (rand() % 10 < 3) {
-					Doodad* thisTree = entManager->doodadManager->addDoodadByType("Tree");
+					//Doodad* thisTree = entManager->doodadManager->addDoodadByType("Tree");
 					point* thisPoint = Map::TileXYToTexXY(x,y);
-					thisTree->moveToRealXY(thisPoint->realX,thisPoint->realY);
+					//thisTree->moveToRealXY(thisPoint->realX,thisPoint->realY);
+					RequestQueues::entityRequests.push_back(entRequest::newEntRequest("Tree", thisPoint->realX, thisPoint->realY, ENT_TYPE_DOODAD));
 					delete thisPoint;
 				}
 			} else if (forestFactor < -0.5) {

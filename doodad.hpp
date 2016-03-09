@@ -18,7 +18,7 @@ public:
 	int tags;
 	Doodad();
 	Doodad(std::string uid, std::string filename, int x, int y, int tags);
-	Doodad* clone();
+	Doodad* clone(std::string newUID);
 	void update(float dt);
 	void render(sf::RenderTarget* screen);
 	bool hasTag(int tag);

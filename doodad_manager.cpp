@@ -26,7 +26,9 @@ Doodad* DoodadManager::addDoodadByType(std::string type) {
 		std::cerr << "ERROR: attempted to create doodad of unknown type " << type << std::endl;
 		return NULL;
 	}
-	Doodad* newDoodad = doodad_library[type].clone();
+	std::ostringstream stream;
+	stream << type << "_" << num_units_created[type]++;
+	Doodad* newDoodad = doodad_library[type].clone(stream.str());
 	addDoodad(newDoodad);
 	return newDoodad;
 }
@@ -37,6 +39,7 @@ void DoodadManager::removeDoodad(std::string uid) {
 		if ((*it)->uid == uid) {
 			*it = doodads[doodads.size()-1];
 			doodads.pop_back();
+			break;
 		}
 	}
 }

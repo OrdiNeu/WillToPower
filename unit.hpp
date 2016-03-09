@@ -9,7 +9,8 @@
 enum UNIT_STATES {
 	STATE_IDLE = 0,
 	STATE_FINISHED_JOB = 1,
-	STATE_WALKING = 2
+	STATE_WALKING = 2,
+	STATE_ACTING = 3
 };
 
 class Unit : public Entity {
@@ -25,6 +26,7 @@ public:
 	void walkTo(std::vector<point*> path);
 	Unit* clone(std::string newUID);
 	void update(float dt);
+	void startTask(float timeToComplete);
 	int state;
 	int skills;
 };

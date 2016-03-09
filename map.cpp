@@ -160,6 +160,30 @@ void Map::setRoom(int x, int y, int roomToAdd) {
 	rooms[x][y] = roomToAdd;
 }
 
+void Map::setRoom(int x0, int y0, int x1, int y1, int roomToAdd) {
+	int start_x = x0 < x1 ? x0 : x1;
+	int end_x = x0 < x1 ? x1 : x0;
+	int start_y = y0 < y1 ? y0 : y1;
+	int end_y = y0 < y1 ? y1 : y0;
+	for (int x = start_x; x <= end_x; x++) {
+		for (int y = start_y; y <= end_y; y++) {
+			setRoom(x,y,roomToAdd);
+		}
+	}
+}
+
+void Map::setRoom(int x0, int y0, int x1, int y1, Room* roomToAdd) {
+	int start_x = x0 < x1 ? x0 : x1;
+	int end_x = x0 < x1 ? x1 : x0;
+	int start_y = y0 < y1 ? y0 : y1;
+	int end_y = y0 < y1 ? y1 : y0;
+	for (int x = start_x; x <= end_x; x++) {
+		for (int y = start_y; y <= end_y; y++) {
+			setRoom(x,y,roomToAdd);
+		}
+	}
+}
+
 void Map::setTasked(int x, int y, bool tasked) {
 	if (!inBounds(x,y))
 		return;

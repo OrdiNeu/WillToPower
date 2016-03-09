@@ -26,6 +26,7 @@ void Unit::walkTo(std::vector<point*> path) {
 
 Unit* Unit::clone(std::string newUID) {
 	Unit* newUnit = new Unit(newUID, filename, realX, realY);
+	newUnit->skills = skills;
 	return newUnit;
 }
 
@@ -52,8 +53,20 @@ void Unit::update(float dt) {
 			}
 			break;
 		}
+		case STATE_ACTING: {
+			timeToComplete -= dt;
+			if (timeToComplete < 0) {
+				state = STATE_FINISHED_JOB;
+			}
+			break;
+		}
 		case STATE_IDLE:
 		default:
 		break;
 	}
+}
+
+void Unit::startTask(float timeToComplete) {
+	state = STATE_ACTING;
+	this->timeToComplete = timeToComplete;
 }
