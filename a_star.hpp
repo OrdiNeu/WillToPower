@@ -15,9 +15,11 @@ public:
 	void insert(AStarNode* node);
 	bool contains(int x, int y);
 	int x, y;
-	int g, h;
+	int g;
+	float h;
 };
 
-std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int endy);
+// TODO: look up how to insert default arguments
+std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int endy, float max_dist_to_accept = 0);
 
 #endif

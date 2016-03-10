@@ -6,7 +6,7 @@ AStarNode::AStarNode(int x, int y, int target_x, int target_y, int g, AStarNode*
 	this->g = g;
 	int dx = (x-target_x);
 	int dy = (y-target_y);
-	h = sqrt(dx*dx + dy*dy/4);
+	h = sqrt(dx*dx + float(dy*dy)/4);
 	this->parent = parent;
 	prev = NULL;
 	next = NULL;
@@ -66,7 +66,7 @@ bool AStarNode::contains(int x, int y) {
 
 // Please remember to delete the returned objects
 // Returns a vector with no points if no path found, and a vector of points otherwise
-std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int endy) {
+std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int endy, float max_dist_to_accept) {
 	AStarNode* OpenList = new AStarNode(startx, starty, endx, endy, 0, NULL);
 	AStarNode* ClosedList = new AStarNode(startx, starty, endx, endy, 0, NULL);
 	std::vector<point*> retVal;
@@ -79,7 +79,8 @@ std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int 
 			//cout << "Now evaluating (" << x << "," << y << ")" << endl;
 
 			// At the end?
-			if (x == endx && y == endy) {
+			if (thisNode->h <= max_dist_to_accept) {
+				//cout << x << "," << y << " to " << endx << "," << endy << " is " << thisNode->h << endl;
 				//cout << "Finished at (" << x << "," << y << ")" << endl;
 				// Populate the vector of points to nav through by looking through the parents
 				while (thisNode) {

@@ -29,6 +29,7 @@ private:
 	bool meetsJobRequirements(Job job);
 	bool pickUpJob();
 	void finishJob();
+	void continueWalking();
 public:
 	AI(Unit* controlled, Map* curMap);
 	Unit* controlled;

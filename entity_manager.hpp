@@ -6,11 +6,13 @@
 #include "entity.hpp"
 #include "unit_manager.hpp"
 #include "doodad_manager.hpp"
+#include "item_manager.hpp"
 #include "request_queue.hpp"
 
 enum ent_type {
 	ENTITY_UNIT,
-	ENTITY_DOODAD
+	ENTITY_DOODAD,
+	ENTITY_ITEM
 };
 
 class EntityManager {
@@ -22,6 +24,7 @@ public:
 	void flushRequests();
 	UnitManager* unitManager;
 	DoodadManager* doodadManager;
+	ItemManager* itemManager;
 };
 
 #endif

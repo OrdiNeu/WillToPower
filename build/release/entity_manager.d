@@ -60,7 +60,8 @@ build/release/entity_manager.o: entity_manager.cpp entity_manager.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp constants.hpp unit_manager.hpp \
  unit.hpp unit_ai.hpp map.hpp tile.hpp room.hpp job_queue.hpp doodad.hpp \
- a_star.hpp request_queue.hpp manager.hpp doodad_manager.hpp
+ a_star.hpp request_queue.hpp manager.hpp doodad_manager.hpp \
+ item_manager.hpp item.hpp
 
 entity_manager.hpp:
 
@@ -219,3 +220,7 @@ request_queue.hpp:
 manager.hpp:
 
 doodad_manager.hpp:
+
+item_manager.hpp:
+
+item.hpp:

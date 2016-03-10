@@ -25,6 +25,35 @@ void AI::moveToNextPoint() {
 	controlled->curPath.pop_back();
 }
 
+void AI::continueWalking() {
+	point* curPos = Map::TexXYToTileXY(controlled->realX, controlled->realY);
+	if (curPos->tileX != lastKnownPos->tileX || curPos->tileY != lastKnownPos->tileY) {
+		if (isUnitCloseToCenterOfTile(curPos)) {
+			// Are we at the target location?
+			point* nextLoc = controlled->curPath.back();
+			if (curPos->tileX != nextLoc->tileX || curPos->tileY != nextLoc->tileY) {
+				std::cout << "Unit ended up somewhere unexpected - need to recreate path" << std::endl;
+				std::cout << "(Expected " << nextLoc->tileX << "," << nextLoc->tileY << "), got (" << curPos->tileX << "," << curPos->tileY << "))" << std::endl;
+				std::cout << "Last known position:" << lastKnownPos->tileX << "," << lastKnownPos->tileY << std::endl;
+				// We meed to recreate the path
+				int targetX, targetY;
+				while (!controlled->curPath.empty()) {
+					point* pathPoint = controlled->curPath.back();
+					targetX = pathPoint->tileX;
+					targetY = pathPoint->tileY;
+					controlled->curPath.pop_back();
+					delete pathPoint;
+				}
+				controlled->curPath = AStarSearch(curMap, curPos->tileX, curPos->tileY, targetX, targetY);
+			}
+			moveToNextPoint();
+			lastKnownPos->tileX = curPos->tileX;
+			lastKnownPos->tileY = curPos->tileY;
+		}
+	}
+	delete curPos;
+}
+
 bool AI::meetsJobRequirements(Job job) {
 	// Can't pick up a suspended job
 	if (job.suspended) {
@@ -42,61 +71,6 @@ bool AI::meetsJobRequirements(Job job) {
 	}
 
 	return true;
-}
-
-// Dunno how much (if at all) I want to subclass AI, so it is non-virtual for now
-void AI::update(float dt) {
-	if (controlled->state == STATE_WALKING) {
-		point* curPos = Map::TexXYToTileXY(controlled->realX, controlled->realY);
-		if (curPos->tileX != lastKnownPos->tileX || curPos->tileY != lastKnownPos->tileY) {
-			if (isUnitCloseToCenterOfTile(curPos)) {
-				// Are we at the target location?
-				point* nextLoc = controlled->curPath.back();
-				if (curPos->tileX != nextLoc->tileX || curPos->tileY != nextLoc->tileY) {
-					std::cout << "Unit ended up somewhere unexpected - need to recreate path" << std::endl;
-					std::cout << "(Expected " << nextLoc->tileX << "," << nextLoc->tileY << "), got (" << curPos->tileX << "," << curPos->tileY << "))" << std::endl;
-					std::cout << "Last known position:" << lastKnownPos->tileX << "," << lastKnownPos->tileY << std::endl;
-					// We meed to recreate the path
-					int targetX, targetY;
-					while (!controlled->curPath.empty()) {
-						point* pathPoint = controlled->curPath.back();
-						targetX = pathPoint->tileX;
-						targetY = pathPoint->tileY;
-						controlled->curPath.pop_back();
-						delete pathPoint;
-					}
-					controlled->curPath = AStarSearch(curMap, curPos->tileX, curPos->tileY, targetX, targetY);
-				}
-				moveToNextPoint();
-				lastKnownPos->tileX = curPos->tileX;
-				lastKnownPos->tileY = curPos->tileY;
-			}
-		}
-		delete curPos;
-	} else if (controlled->state == STATE_FINISHED_JOB) {
-		switch(jobState) {
-			case JOB_STAGE_WALKING_TO_DEST: {
-				jobState = JOB_STAGE_ACTING;
-				controlled->startTask(0.5);
-				break;
-			}
-			case JOB_STAGE_ACTING: {
-				finishJob();
-				break;
-			}
-			default:
-			break;
-		}
-	} else {
-		timeSinceLastUpdate -= dt;
-		if (timeSinceLastUpdate <= 0) {
-			if (controlled->state == STATE_IDLE) {
-				if (!pickUpJob()) {
-					timeSinceLastUpdate = UNIT_AI_UPDATE_TIME;
-				}
-			}
-		}
-	}
 }
 
 bool AI::pickUpJob() {
@@ -119,7 +93,7 @@ bool AI::pickUpJob() {
 				if (job.targetPoint == NULL) {
 					std::cerr << "Error: mining job created without a target point" << std::endl;
 				} else {
-					std::vector<point*> route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, job.targetPoint->tileX, job.targetPoint->tileY);
+					std::vector<point*> route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, job.targetPoint->tileX, job.targetPoint->tileY, 1);
 					if (route.size() != 0) {
 						// Remove the last point in the route, since it is the current position
 						point* last_point = route.back();
@@ -146,7 +120,7 @@ bool AI::pickUpJob() {
 					std::cerr << "Error: woodcut job created without a target ent" << std::endl;
 				} else {
 					point* targetPoint = Map::TexXYToTileXY(job.targetEnt->realX, job.targetEnt->realY);
-					route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, targetPoint->tileX, targetPoint->tileY);
+					route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, targetPoint->tileX, targetPoint->tileY, 1);
 					delete targetPoint;
 					if (route.size() != 0) {
 						// Remove the last point in the route, since it is the current position
@@ -197,7 +171,38 @@ void AI::finishJob() {
 			if (curJob.targetEnt == NULL) {
 				std::cout << "Job cancelled: target tree disappeared." << std::endl;
 			}
+			RequestQueues::entityRequests.push_back(entRequest::newEntRequest("Wood", curJob.targetEnt->realX, curJob.targetEnt->realY, ENT_TYPE_ITEM));
 			RequestQueues::entityRequests.push_back(entRequest::delEntRequest(curJob.targetEnt->uid, ENT_TYPE_DOODAD));
+		}
+	}
+}
+
+// Dunno how much (if at all) I want to subclass AI, so it is non-virtual for now
+void AI::update(float dt) {
+	if (controlled->state == STATE_WALKING) {
+		continueWalking();
+	} else if (controlled->state == STATE_FINISHED_JOB) {
+		switch(jobState) {
+			case JOB_STAGE_WALKING_TO_DEST: {
+				jobState = JOB_STAGE_ACTING;
+				controlled->startTask(0.5);
+				break;
+			}
+			case JOB_STAGE_ACTING: {
+				finishJob();
+				break;
+			}
+			default:
+			break;
+		}
+	} else {
+		timeSinceLastUpdate -= dt;
+		if (timeSinceLastUpdate <= 0) {
+			if (controlled->state == STATE_IDLE) {
+				if (!pickUpJob()) {
+					timeSinceLastUpdate = UNIT_AI_UPDATE_TIME;
+				}
+			}
 		}
 	}
 }

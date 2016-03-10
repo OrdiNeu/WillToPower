@@ -11,7 +11,9 @@ enum entRequestTypes {
 
 enum entTypes {
 	ENT_TYPE_UNIT = 1,
-	ENT_TYPE_DOODAD = 2
+	ENT_TYPE_DOODAD = 2,
+	ENT_TYPE_ITEM = 3,
+	ENT_TYPE_COUNT = 3
 };
 
 class entRequest {
