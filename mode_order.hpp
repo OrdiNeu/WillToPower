@@ -20,27 +20,21 @@ enum SELECT_TYPE {
 
 class ModeOrder : public Mode {
 private:
-	bool rightClicked;
-	bool leftClicked;
+	bool rightClicked, leftClicked;
 	int selectionActive;
-	int selectStartX;
-	int selectStartY;
-	int selectLastX;
-	int selectLastY;
+	int selectStartX, selectStartY;
+	int selectLastX, selectLastY;
 	Unit* test;
 	AI* testai;
-	sf::Sprite selectionTile;
-	sf::Sprite selectionSprite;
-	sf::RenderTexture selectionTex;
+
 	sf::Vector2i getMousePos();
-	void rerenderSelection();
 	void findTasksInArea(int type, int x0, int x1, int y0, int y1, bool doCreateJob, bool colorize, bool uncolorize);
 	void createJob(int type, int requirements, Entity* targetEnt, point* targetPoint);
 	sf::Vector2i getMousePos(sf::RenderWindow* screen);
-	void rerenderSelection(sf::RenderWindow* screen);
 	void checkBounds(int* x0, int* x1);
 	void handleKeyboard(float dt);
 	void handleMouse(sf::RenderWindow* screen);
+	void drawUI();
 public:
 	float screenX;
 	float screenY;

@@ -28,13 +28,13 @@ void ModeOrder::setOrderMode(int orderType) {
 
 void ModeOrder::createJob(int type, int requirements, Entity* targetEnt, point* targetPoint) {
 	Job thisJob;
-	thisJob.requirements = requirements;//SKILL_MINING;
+	thisJob.requirements = requirements;
 	thisJob.suspended = false;
 	thisJob.repeating = false;
 	thisJob.assigned = NULL;
-	thisJob.targetEnt = targetEnt;//NULL;
-	thisJob.targetPoint = targetPoint;//clicked;
-	thisJob.type = type;//JOB_TYPE_MINING;
+	thisJob.targetEnt = targetEnt;
+	thisJob.targetPoint = targetPoint;
+	thisJob.type = type;
 	JobQueue::jobQueue.push_back(thisJob);
 }
 
@@ -205,10 +205,4 @@ void ModeOrder::render(sf::RenderTarget* screen) {
 	screen->setView(view);
 	curMap->render(screen);
 	entManager->render(screen);
-}
-
-void ModeOrder::rerenderSelection(sf::RenderWindow* screen) {
-	selectionTex.clear();
-	selectionTex.display();	// Update the texture
-	selectionSprite.setTexture(selectionTex.getTexture());
 }
