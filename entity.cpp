@@ -4,6 +4,9 @@ Entity::Entity(std::string uid, std::string filename, float realX, float realY) 
 	loadSprite(filename);
 }
 
+Entity::~Entity() {
+}
+
 void Entity::moveToRealXY(float x, float y) {
 	realX = x;
 	realY = y;

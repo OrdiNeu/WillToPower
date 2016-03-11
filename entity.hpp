@@ -9,6 +9,7 @@
 class Entity {
 public:
 	Entity(std::string uid, std::string filename, float realX, float realY);
+	virtual ~Entity();
 	std::string uid;			// Should be unique
 	std::string filename;
 	sf::Sprite spr;

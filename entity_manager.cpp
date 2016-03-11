@@ -27,60 +27,19 @@ void EntityManager::flushRequests() {
 				ents.push_back(newEnt);
 				newEnt->moveToRealXY( 	request.X,
 										request.Y);
-				std::cout << newEnt->uid << " Added OK" << std::endl;
 			}
 		} else if (request.entRequestType == ENT_REQUEST_DEL_ENT) {
 			removeEnt(request.uid, request.entType);
-			/*for (std::vector<Entity*>::iterator it = ents.begin() ; it != ents.end(); ++it) {
-				if ((*it)->uid == request.uid) {
-					*it = ents[ents.size()-1];
-					ents.pop_back();
-					std::cout << "Removed OK" << std::endl;
-				}
-			}*/
 			for (typename std::vector<Entity*>::iterator it = ents.begin() ; it != ents.end(); ++it) {
 				if ((*it)->uid == request.uid) {
+					delete *it;
 					*it = ents[ents.size()-1];
 					ents.pop_back();
-					std::cout << "Removed OK" << std::endl;
 				}
 			}
 		} else {
 			error = true;
 		}
-		/*if (request.entType == ENT_TYPE_UNIT) {
-			if (request.entRequestType == ENT_REQUEST_NEW_ENT) {
-				newEnt = unitManager->addNewEntByType(request.entName);
-				newEnt->moveToRealXY( 	request.X,
-										request.Y);
-			} else if (request.entRequestType == ENT_REQUEST_DEL_ENT) {
-				unitManager->removeEnt(request.uid);
-			} else {
-				error = true;
-			}
-		} else if (request.entType == ENT_TYPE_DOODAD) {
-			if (request.entRequestType == ENT_REQUEST_NEW_ENT) {
-				newEnt = doodadManager->addNewEntByType(request.entName);
-				newEnt->moveToRealXY( request.X,
-										 request.Y);
-			} else if (request.entRequestType == ENT_REQUEST_DEL_ENT) {
-				doodadManager->removeEnt(request.uid);
-			} else {
-				error = true;
-			}
-		} else if (request.entType == ENT_TYPE_ITEM) {
-			if (request.entRequestType == ENT_REQUEST_NEW_ENT) {
-				newEnt = itemManager->addNewEntByType(request.entName);
-				newEnt->moveToRealXY(	request.X,
-										request.Y);
-			} else if (request.entRequestType == ENT_REQUEST_DEL_ENT) {
-				itemManager->removeEnt(request.uid);
-			} else {
-				error = true;
-			}
-		} else {
-			error = true;
-		}*/
 
 		if (error) {
 			std::cerr << "Unknown request found of type " << request.entRequestType << " and ent type " << request.entType << std::endl;
