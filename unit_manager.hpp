@@ -9,13 +9,16 @@
 #include <sstream>
 #include "manager.hpp"
 
+class EntityManager;
+
 class UnitManager : public Manager<Unit> {
+friend EntityManager;
 public:
 	std::vector<AI*> ais;
 	void update(float dt);
 	Unit* addNewEntByType(std::string type);
 	void addEnt(AI* ai);
-	void removeEnt(std::string uid);
+	Unit* removeEnt(std::string uid);
 	Map* curMap;
 };
 

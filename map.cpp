@@ -70,7 +70,7 @@ void Map::init(int width, int height) {
 		}
 	}
 
-	mapTex.create(HALF_TILE_WIDTH*(2*width+1), HALF_TILE_HEIGHT*(height+1));
+	mapTex.create(HALF_TILE_WIDTH*(2*width+1), HALF_TILE_HEIGHT*(height)+WALL_HEIGHT);
 	mapSpr.setTexture(mapTex.getTexture());
 	for (int i = 0; i < NUM_DEFAULT_COLORS; i++) {
 		colorDict.push_back(DEFAULT_TILE_COLORS[i]);

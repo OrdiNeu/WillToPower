@@ -43,7 +43,7 @@ void UnitManager::addEnt(AI* ai) {
 	ents.push_back(ai->controlled);
 }
 
-void UnitManager::removeEnt(std::string uid) {
+Unit* UnitManager::removeEnt(std::string uid) {
 	// Find the AI and do an in-place swap with the final element, then shrink
 	for (std::vector<AI*>::iterator it = ais.begin() ; it != ais.end(); ++it) {
 		if ((*it)->uid == uid) {
@@ -55,8 +55,12 @@ void UnitManager::removeEnt(std::string uid) {
 	// Do the same for the connected unit
 	for (std::vector<Unit*>::iterator it = ents.begin() ; it != ents.end(); ++it) {
 		if ((*it)->uid == uid) {
+			Unit* deletedUnit = *it;
 			*it = ents[ents.size()-1];
 			ents.pop_back();
+			return deletedUnit;
 		}
 	}
+	
+	return NULL;
 }

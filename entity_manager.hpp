@@ -9,19 +9,16 @@
 #include "item_manager.hpp"
 #include "request_queue.hpp"
 
-enum ent_type {
-	ENTITY_UNIT,
-	ENTITY_DOODAD,
-	ENTITY_ITEM
-};
-
 class EntityManager {
+private:
+	std::vector<Entity*> ents;
 public:
 	void render(sf::RenderTarget* screen);
 	void update(float dt);
 	void addEnt(Entity* ent, int type);
 	void removeEnt(std::string uid, int type);
 	void flushRequests();
+	Entity* addNewEntByType(std::string name, int type);
 	UnitManager* unitManager;
 	DoodadManager* doodadManager;
 	ItemManager* itemManager;

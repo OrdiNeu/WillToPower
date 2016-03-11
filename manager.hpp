@@ -21,11 +21,13 @@ public:
 
 	virtual ~Manager() {}
 
+	/*
+	 * Moved to entity_manager
 	virtual void render(sf::RenderTarget* screen) {
 		for (T* thisEnt : ents) {
 			thisEnt->render(screen);
 		}
-	};
+	};*/
 
 	virtual void update(float dt) {
 		for (T* thisEnt : ents) {
@@ -36,7 +38,7 @@ public:
 	virtual T* addNewEntByType(std::string type) {
 		// Ensure that the type exists
 		if (ent_library.find(type) == ent_library.end()) {
-			std::cerr << "ERROR: attempted to create unit of unknown type " << type << std::endl;
+			std::cerr << "ERROR: attempted to create entity of unknown type " << type << std::endl;
 			return NULL;
 		}
 
@@ -49,19 +51,22 @@ public:
 		addEnt(newEnt);
 		return newEnt;
 	};
-	
+
 	virtual void addNewEntType(std::string type, T newEnt) {
 		ent_library[type] = newEnt;
 	};
 
-	virtual void removeEnt(std::string uid) {
+	virtual T* removeEnt(std::string uid) {
 		// Find the entity and do an in-place swap with the final element, then shrink
 		for (typename std::vector<T*>::iterator it = ents.begin() ; it != ents.end(); ++it) {
 			if ((*it)->uid == uid) {
+				T* removedUnit = *it;
 				*it = ents[ents.size()-1];
 				ents.pop_back();
+				return removedUnit;
 			}
 		}
+		return NULL;
 	};
 
 	virtual void addEnt(T* ent) {
