@@ -18,7 +18,7 @@ public:
 	void addEnt(Entity* ent, int type);
 	void removeEnt(std::string uid, int type);
 	void flushRequests();
-	Entity* addNewEntByType(std::string name, int type);
+	Entity* addNewEntByType(std::string name, int type, float x, float y);
 	UnitManager* unitManager;
 	DoodadManager* doodadManager;
 	ItemManager* itemManager;

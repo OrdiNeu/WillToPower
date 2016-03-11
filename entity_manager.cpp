@@ -20,14 +20,8 @@ void EntityManager::flushRequests() {
 		bool error = false;
 		// parse this request
 		entRequest request = RequestQueues::entityRequests.back();
-		Entity* newEnt;
 		if (request.entRequestType == ENT_REQUEST_NEW_ENT) {
-			newEnt = addNewEntByType(request.entName, request.entType);
-			if (newEnt) {
-				ents.push_back(newEnt);
-				newEnt->moveToRealXY( 	request.X,
-										request.Y);
-			}
+			addNewEntByType(request.entName, request.entType, request.X, request.Y);
 		} else if (request.entRequestType == ENT_REQUEST_DEL_ENT) {
 			removeEnt(request.uid, request.entType);
 			for (typename std::vector<Entity*>::iterator it = ents.begin() ; it != ents.end(); ++it) {
@@ -58,17 +52,32 @@ void EntityManager::update(float dt) {
 	flushRequests();
 }
 
-Entity* EntityManager::addNewEntByType(std::string name, int type) {
+Entity* EntityManager::addNewEntByType(std::string name, int type, float x, float y) {
+	Entity* newEnt;
 	if (type == ENT_TYPE_UNIT) {
-		return unitManager->addNewEntByType(name);
+		newEnt = unitManager->addNewEntByType(name);
 	} else if (type == ENT_TYPE_DOODAD) {
-		return doodadManager->addNewEntByType(name);
+		newEnt = doodadManager->addNewEntByType(name);
 	} else if (type == ENT_TYPE_ITEM) {
-		return itemManager->addNewEntByType(name);
-	} else {
-		std::cerr << "addNewEntByType called on unknown entity" << std::endl;
+		newEnt = itemManager->addNewEntByType(name);
 	}
-	return NULL;
+
+	if (newEnt != NULL) {
+		newEnt->moveToRealXY(x, y);
+		bool entered = false;
+		for (typename std::vector<Entity*>::iterator it = ents.begin() ; it != ents.end(); ++it) {
+			if ((*it)->realY >= newEnt->realY) {
+				ents.insert(it, newEnt);
+				entered = true;
+				break;
+			}
+		}
+
+		if (!entered) {
+			ents.push_back(newEnt);
+		}
+	}
+	return newEnt;
 };
 
 void EntityManager::addEnt(Entity* ent, int type) {
