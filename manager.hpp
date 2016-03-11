@@ -18,16 +18,21 @@ public:
 	std::unordered_map<std::string, int> num_ents_created;
 	T* lastCreatedEnt;
 	Map* curMap;
+
+	virtual ~Manager() {}
+
 	virtual void render(sf::RenderTarget* screen) {
 		for (T* thisEnt : ents) {
 			thisEnt->render(screen);
 		}
 	};
+
 	virtual void update(float dt) {
 		for (T* thisEnt : ents) {
 			thisEnt->update(dt);
 		}
 	};
+
 	virtual T* addNewEntByType(std::string type) {
 		// Ensure that the type exists
 		if (ent_library.find(type) == ent_library.end()) {
@@ -44,9 +49,11 @@ public:
 		addEnt(newEnt);
 		return newEnt;
 	};
+	
 	virtual void addNewEntType(std::string type, T newEnt) {
 		ent_library[type] = newEnt;
 	};
+
 	virtual void removeEnt(std::string uid) {
 		// Find the entity and do an in-place swap with the final element, then shrink
 		for (typename std::vector<T*>::iterator it = ents.begin() ; it != ents.end(); ++it) {
@@ -56,6 +63,7 @@ public:
 			}
 		}
 	};
+
 	virtual void addEnt(T* ent) {
 		ents.push_back(ent);
 	};

@@ -7,13 +7,16 @@ const float PerlinWeightFactor1 = 2;
 const float PerlinWeightFactor2 = 2;
 const float PerlinWeightFactor3 = 2;
 
-WorldGenerator::WorldGenerator(int seed, EntityManager* entManager) : seed(seed), entManager(entManager) {
+WorldGenerator::WorldGenerator(EntityManager* entManager, int seed) : seed(seed), entManager(entManager) {
 	srand(seed);
 	createGenerators();
-}
-
-WorldGenerator::WorldGenerator(EntityManager* entManager) : entManager(entManager) {
-	createGenerators();
+	maps = new Map**[WORLD_LENGTH_IN_MAPS];
+	for (int x = 0; x < WORLD_LENGTH_IN_MAPS; x++) {
+		maps[x] = new Map*[WORLD_WIDTH_IN_MAPS];
+		for (int y = 0; y < WORLD_WIDTH_IN_MAPS; y++) {
+			maps[x][y] = NULL;
+		}
+	}
 }
 
 void WorldGenerator::createGenerators() {
@@ -22,6 +25,15 @@ void WorldGenerator::createGenerators() {
 	forestryGen3 = new PerlinNoiseGenerator(rand());
 }
 
+
+WorldGenerator::~WorldGenerator() {
+	delete forestryGen1;
+	delete forestryGen2;
+	delete forestryGen3;
+	for (int x = 0; x < WORLD_LENGTH_IN_MAPS; x++) {
+		delete maps[x];
+	}	
+}
 void WorldGenerator::addDefaultTiles(Map* map) {
 	Tile* emptyTile = new Tile();
 	map->addTile(emptyTile);
@@ -46,8 +58,8 @@ Map* WorldGenerator::generateMap(int map_x, int map_y) {
 	addDefaultTiles(retVal);
 
 	// Get the forest layer
-	for (int x = 0; x < retVal->width; x++) {
-		for (int y = 0; y < retVal->height; y++) {
+	for (int x = map_x; x < retVal->width+map_x; x++) {
+		for (int y = map_y; y < retVal->height+map_y; y++) {
 			double forestFactor = forestryGen3->get(float(x)/PerlinScalingFactor3, float(y)/PerlinScalingFactor3)*PerlinWeightFactor3;
 			forestFactor +=  forestryGen2->get(float(x)/PerlinScalingFactor2, float(y)/PerlinScalingFactor2)*PerlinWeightFactor2;
 			forestFactor +=  forestryGen1->get(float(x)/PerlinScalingFactor1, float(y)/PerlinScalingFactor1)*PerlinWeightFactor1;
@@ -73,4 +85,11 @@ Map* WorldGenerator::generateMap(int map_x, int map_y) {
 		}
 	}
 	return retVal;
+}
+
+Map* WorldGenerator::getMap(int map_x, int map_y) {
+	if (maps[map_x][map_y] == NULL) {
+		maps[map_x][map_y] = generateMap(map_x,map_y);
+	}
+	return maps[map_x][map_y];
 }

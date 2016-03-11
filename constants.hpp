@@ -23,5 +23,7 @@ const int TILE_HEIGHT = 2*HALF_TILE_HEIGHT;
 const int WALL_HEIGHT = 29*Y_SCALE;
 
 const int MAX_FPS=30;
+const int WORLD_WIDTH_IN_MAPS = 20;
+const int WORLD_LENGTH_IN_MAPS = 20;
 
 #endif

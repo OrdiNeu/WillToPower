@@ -11,17 +11,21 @@
 
 class WorldGenerator {
 public:
-	WorldGenerator(EntityManager* entManager);
-	WorldGenerator(int seed, EntityManager* entManager);
-	Map* generateMap(int map_x, int map_y);
 	int seed;
-	void addDefaultTiles(Map* map);
+
+	WorldGenerator(EntityManager* entManager, int seed = 0);
+	~WorldGenerator();
+	Map* getMap(int map_x, int map_y);
 private:
 	PerlinNoiseGenerator* forestryGen1;
 	PerlinNoiseGenerator* forestryGen2;
 	PerlinNoiseGenerator* forestryGen3;
 	EntityManager* entManager;
+	Map*** maps;
+
 	void createGenerators();
+	void addDefaultTiles(Map* map);
+	Map* generateMap(int map_x, int map_y);
 };
 
 #endif
