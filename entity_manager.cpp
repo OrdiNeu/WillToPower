@@ -1,7 +1,7 @@
 #include "entity_manager.hpp"
 
 void EntityManager::render(sf::RenderTarget* screen) {
-	// Single run of a bubble sort while we go through the array
+	// Single run of a bubble sort while we go through and render
 	for (std::vector<Entity*>::iterator it = ents.begin() ; it != ents.end(); ++it) {
 		Entity* ent = *it;
 		Entity* nextEnt = *(it+1);
@@ -24,13 +24,6 @@ void EntityManager::flushRequests() {
 			addNewEntByType(request.entName, request.entType, request.X, request.Y);
 		} else if (request.entRequestType == ENT_REQUEST_DEL_ENT) {
 			removeEnt(request.uid, request.entType);
-			for (typename std::vector<Entity*>::iterator it = ents.begin() ; it != ents.end(); ++it) {
-				if ((*it)->uid == request.uid) {
-					delete *it;
-					*it = ents[ents.size()-1];
-					ents.pop_back();
-				}
-			}
 		} else {
 			error = true;
 		}
@@ -52,6 +45,21 @@ void EntityManager::update(float dt) {
 	flushRequests();
 }
 
+void EntityManager::addToEntList(Entity* newEnt) {
+	bool entered = false;
+	for (typename std::vector<Entity*>::iterator it = ents.begin() ; it != ents.end(); ++it) {
+		if ((*it)->realY >= newEnt->realY) {
+			ents.insert(it, newEnt);
+			entered = true;
+			break;
+		}
+	}
+
+	if (!entered) {
+		ents.push_back(newEnt);
+	}
+}
+
 Entity* EntityManager::addNewEntByType(std::string name, int type, float x, float y) {
 	Entity* newEnt;
 	if (type == ENT_TYPE_UNIT) {
@@ -64,18 +72,7 @@ Entity* EntityManager::addNewEntByType(std::string name, int type, float x, floa
 
 	if (newEnt != NULL) {
 		newEnt->moveToRealXY(x, y);
-		bool entered = false;
-		for (typename std::vector<Entity*>::iterator it = ents.begin() ; it != ents.end(); ++it) {
-			if ((*it)->realY >= newEnt->realY) {
-				ents.insert(it, newEnt);
-				entered = true;
-				break;
-			}
-		}
-
-		if (!entered) {
-			ents.push_back(newEnt);
-		}
+		addToEntList(newEnt);
 	}
 	return newEnt;
 };
@@ -89,7 +86,9 @@ void EntityManager::addEnt(Entity* ent, int type) {
 		itemManager->addEnt((Item*) ent);
 	} else {
 		std::cerr << "addEnt called on unknown entity" << std::endl;
+		return;
 	}
+	addToEntList(ent);
 };
 
 // The in-place swap children do may mess up for loops that are iterating over ents
@@ -103,5 +102,13 @@ void EntityManager::removeEnt(std::string uid, int type) {
 		itemManager->removeEnt(uid);
 	} else {
 		std::cerr << "removeEnt called on unknown entity" << std::endl;
+	}
+
+	for (typename std::vector<Entity*>::iterator it = ents.begin() ; it != ents.end(); ++it) {
+		if ((*it)->uid == uid) {
+			delete *it;
+			*it = ents[ents.size()-1];
+			ents.pop_back();
+		}
 	}
 };

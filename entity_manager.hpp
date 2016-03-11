@@ -12,6 +12,7 @@
 class EntityManager {
 private:
 	std::vector<Entity*> ents;
+	void addToEntList(Entity* ent);
 public:
 	void render(sf::RenderTarget* screen);
 	void update(float dt);
