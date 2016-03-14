@@ -1,4 +1,6 @@
-<unitDB>
-	<unit id="test" image="./data/images/enemies/yellowBox.png">
-	</unit>
+<units>
+	<unit>
+    <id>testUnit</id>
+    <filename>./data/images/enemies/yellowBox.png</filename>
+  </unit>
 </unitDB>

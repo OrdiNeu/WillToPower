@@ -2,7 +2,6 @@
 #define GAME_HPP
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "map.hpp"
 #include "mode.hpp"
 #include "mode_main_menu.hpp"
 #include "mode_map_edit.hpp"
@@ -10,6 +9,7 @@
 #include "entity_manager.hpp"
 #include "world_generator.hpp"
 #include "PerlinNoiseGenerator.hpp"
+#include "xml_loader.hpp"
 
 class Game {
 	private:

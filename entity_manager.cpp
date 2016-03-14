@@ -15,9 +15,7 @@ void EntityManager::render(sf::RenderTarget* screen) {
 }
 
 void EntityManager::flushRequests() {
-	// Needs a refactor
 	while (!RequestQueues::entityRequests.empty()) {
-		bool error = false;
 		// parse this request
 		entRequest request = RequestQueues::entityRequests.back();
 		if (request.entRequestType == ENT_REQUEST_NEW_ENT) {
@@ -25,10 +23,6 @@ void EntityManager::flushRequests() {
 		} else if (request.entRequestType == ENT_REQUEST_DEL_ENT) {
 			removeEnt(request.uid, request.entType);
 		} else {
-			error = true;
-		}
-
-		if (error) {
 			std::cerr << "Unknown request found of type " << request.entRequestType << " and ent type " << request.entType << std::endl;
 		}
 
@@ -41,7 +35,6 @@ void EntityManager::update(float dt) {
 	doodadManager->update(dt);
 	itemManager->update(dt);
 
-	// Handle entity requests
 	flushRequests();
 }
 

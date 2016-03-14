@@ -7,12 +7,13 @@ ModeOrder::ModeOrder() {
 }
 
 void ModeOrder::init() {
-	Unit testUnit = Unit("test","./data/images/enemies/yellowBox.png",0,0);
-	testUnit.skills = SKILL_MINING | SKILL_WOODCUT;
-	entManager->unitManager->addNewEntType("testUnit",testUnit);
+	//Unit testUnit = Unit("test","./data/images/enemies/yellowBox.png",0,0);
+	//testUnit.skills = SKILL_MINING | SKILL_WOODCUT;
+	//entManager->unitManager->addNewEntType("testUnit",testUnit);
 	RequestQueues::entityRequests.push_back(entRequest::newEntRequest("testUnit", HALF_TILE_WIDTH, HALF_TILE_HEIGHT, ENT_TYPE_UNIT));
 	entManager->flushRequests();
 	test = entManager->unitManager->lastCreatedEnt;
+	test->skills = SKILL_MINING | SKILL_WOODCUT;
 
 	leftClicked = true;
 	rightClicked = true;
@@ -36,15 +37,6 @@ void ModeOrder::createJob(int type, int requirements, Entity* targetEnt, point* 
 	thisJob.targetPoint = targetPoint;
 	thisJob.type = type;
 	JobQueue::jobQueue.push_back(thisJob);
-}
-
-// Rearranges x0 and x1, if necessary
-void ModeOrder::checkBounds(int* x0, int* x1) {
-	if (*x0 > *x1) {
-		int xtemp = *x0;
-		*x0 = *x1;
-		*x1 = xtemp;
-	}
 }
 
 void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool doCreateJob, bool colorize, bool uncolorize) {

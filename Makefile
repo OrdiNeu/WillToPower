@@ -14,7 +14,7 @@ RCOMPILE_FLAGS = -D NDEBUG
 # Additional debug-specific flags
 DCOMPILE_FLAGS = -D DEBUG
 # Add additional include paths
-INCLUDES = -I $(SRC_PATH)/ -I"../SFML/include"
+INCLUDES = -I $(SRC_PATH)/ -I"../SFML/include" -I"../boost_1_60_0"
 # General linker settings
 LINK_FLAGS = -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -L"../SFML/lib"
 # Additional release-specific linker settings
@@ -61,8 +61,8 @@ install: export BIN_PATH := bin/release
 
 # Find all source files in the source directory, sorted by most
 # recently modified
-SOURCES = $(shell find $(SRC_PATH)/ -name '*.$(SRC_EXT)' -printf '%T@\t%p\n' \
-					| sort -k 1nr | cut -f2-)
+#SOURCES = $(shell find $(SRC_PATH)/ -name '*.$(SRC_EXT)' -printf '%T@\t%p\n' \
+#					| sort -k 1nr | cut -f2-)
 # fallback in case the above fails
 rwildcard = $(foreach d, $(wildcard $1*), $(call rwildcard,$d/,$2) \
 						$(filter $(subst *,%,$2), $d))
@@ -77,12 +77,12 @@ OBJECTS = $(SOURCES:$(SRC_PATH)/%.$(SRC_EXT)=$(BUILD_PATH)/%.o)
 DEPS = $(OBJECTS:.o=.d)
 
 # Macros for timing compilation
-TIME_FILE = $(dir $@).$(notdir $@)_time
-START_TIME = date '+%s' > $(TIME_FILE)
-END_TIME = read st < $(TIME_FILE) ; \
-	$(RM) $(TIME_FILE) ; \
-	st=$$((`date '+%s'` - $$st)) ; \
-	echo `date -u -d $$st '+%S:%M:%H'` 
+#TIME_FILE = $(dir $@).$(notdir $@)_time
+#START_TIME = date '+%s' > $(TIME_FILE)
+#END_TIME = read st < $(TIME_FILE) ; \
+#	$(RM) $(TIME_FILE) ; \
+#	st=$$((`date '+%s'` - $$st)) ; \
+#	echo `date -u -d $$st '+%S:%M:%H'` 
 
 # Version macros
 # Comment/remove this section to remove versioning
@@ -115,10 +115,10 @@ ifeq ($(USE_VERSION), true)
 else
 	@echo "Beginning release build"
 endif
-	@$(START_TIME)
+#	@$(START_TIME)
 	@$(MAKE) all --no-print-directory
-	@echo -n "Total build time: "
-	@$(END_TIME)
+#	@echo -n "Total build time: "
+#	@$(END_TIME)
 
 # Debug build for gdb debugging
 .PHONY: debug
@@ -128,10 +128,10 @@ ifeq ($(USE_VERSION), true)
 else
 	@echo "Beginning debug build"
 endif
-	@$(START_TIME)
+#	@$(START_TIME)
 	@$(MAKE) all --no-print-directory
-	@echo -n "Total build time: "
-	@$(END_TIME)
+#	@echo -n "Total build time: "
+#	@$(END_TIME)
 
 # Create the directories used in the build
 .PHONY: dirs
@@ -170,10 +170,10 @@ all: $(BIN_PATH)/$(BIN_NAME)
 # Link the executable
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 	@echo "Linking: $@"
-	@$(START_TIME)
+#	@$(START_TIME)
 	$(CMD_PREFIX)$(CXX) $(OBJECTS) $(LDFLAGS) -o $@
-	@echo -en "\t Link time: "
-	@$(END_TIME)
+#	@echo -en "\t Link time: "
+#	@$(END_TIME)
 
 # Add dependency files, if they exist
 -include $(DEPS)

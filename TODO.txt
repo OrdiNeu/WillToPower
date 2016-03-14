@@ -5,4 +5,7 @@ Major Milestones:
 x Random Terrain Generation
 x	Doodad generation
 - "Room" building
-	
+X XML reading
+
+Minor TODOs:
+Better error handling from the top level

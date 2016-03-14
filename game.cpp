@@ -14,6 +14,7 @@ bool Game::init(){
 	Mode::entManager->unitManager = new UnitManager();
 	Mode::entManager->doodadManager = new DoodadManager();
 	Mode::entManager->itemManager = new ItemManager();
+	XmlLoader::loadUnits(Mode::entManager->unitManager,"./data/units.xml");
 	Mode::worldGen = new WorldGenerator(Mode::entManager,0);
 	Mode::curMap = Mode::worldGen->getMap(0,0);
 	Mode::entManager->unitManager->curMap = Mode::curMap;
@@ -23,6 +24,13 @@ bool Game::init(){
 }
 
 int Game::run(){
+	/*try {
+		init();
+	}
+	catch (exception e) {
+		std::cout << e.id << std::endl;
+		return EXIT_FAILURE;
+	}*/
 	if(init() == false)
 		return EXIT_FAILURE;
 	sf::Clock dtTimer;

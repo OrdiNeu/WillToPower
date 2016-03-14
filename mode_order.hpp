@@ -1,6 +1,7 @@
 #ifndef MODE_ORDER
 #define MODE_ORDER
 #include "mode.hpp"
+#include "bounds_check.hpp"
 #include "constants.hpp"
 #include "unit_manager.hpp"
 #include <SFML/Graphics.hpp>
@@ -31,7 +32,6 @@ private:
 	void findTasksInArea(int type, int x0, int x1, int y0, int y1, bool doCreateJob, bool colorize, bool uncolorize);
 	void createJob(int type, int requirements, Entity* targetEnt, point* targetPoint);
 	sf::Vector2i getMousePos(sf::RenderWindow* screen);
-	void checkBounds(int* x0, int* x1);
 	void handleKeyboard(float dt);
 	void handleMouse(sf::RenderWindow* screen);
 	void drawUI();

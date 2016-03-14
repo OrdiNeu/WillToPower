@@ -59,7 +59,7 @@ build/release/doodad_manager.o: doodad_manager.cpp doodad_manager.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp constants.hpp entity.hpp map.hpp \
- tile.hpp room.hpp job_queue.hpp manager.hpp
+ tile.hpp room.hpp job_queue.hpp bounds_check.hpp manager.hpp
 
 doodad_manager.hpp:
 
@@ -204,5 +204,7 @@ tile.hpp:
 room.hpp:
 
 job_queue.hpp:
+
+bounds_check.hpp:
 
 manager.hpp:
