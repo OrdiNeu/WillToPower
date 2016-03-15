@@ -59,7 +59,7 @@ build/release/a_star.o: a_star.cpp a_star.hpp map.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp tile.hpp constants.hpp entity.hpp \
- room.hpp job_queue.hpp doodad.hpp bounds_check.hpp
+ room.hpp doodad.hpp bounds_check.hpp
 
 a_star.hpp:
 
@@ -200,8 +200,6 @@ constants.hpp:
 entity.hpp:
 
 room.hpp:
-
-job_queue.hpp:
 
 doodad.hpp:
 

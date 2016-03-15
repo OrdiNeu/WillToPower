@@ -111,6 +111,9 @@ void ModeOrder::handleKeyboard(float dt) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
 		setOrderMode(ORDER_MODE_CUTTREE);
 	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
+		setOrderMode(ORDER_MODE_BUILD);
+	}
 };
 
 void ModeOrder::handleMouse(sf::RenderWindow* screen) {

@@ -1,6 +1,5 @@
 #ifndef ROOM_HPP
 #define ROOM_HPP
-#include "job_queue.hpp"
 #include "doodad.hpp"
 
 class Room {

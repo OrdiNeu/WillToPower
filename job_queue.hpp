@@ -16,9 +16,11 @@ enum SKILLS {
 enum JOB_TYPES {
 	JOB_TYPE_RESERVED,
 	JOB_TYPE_MINING,
-	JOB_TYPE_WOODCUT
+	JOB_TYPE_WOODCUT,
+	JOB_TYPE_BUILD
 };
 
+// This is becoming a mess
 struct Job {
 	int requirements;
 	int type;
@@ -27,6 +29,7 @@ struct Job {
 	Entity* targetEnt;
 	point*  targetPoint;
 	Entity* assigned;
+	int roomIDToBuild;
 };
 
 // The job queue is like a billboard of jobs that units can pick up and complete when their AI runs out of things to do

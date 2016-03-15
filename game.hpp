@@ -16,7 +16,7 @@ class Game {
 		sf::RenderWindow screen;
 		Mode* curMode;
 	public:
-		bool init();
+		void init();
 		int run();
 		void update(float dt);
 		void render();

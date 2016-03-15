@@ -58,7 +58,7 @@ build/release/map.o: map.cpp map.hpp ../SFML/include/SFML/Graphics.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp tile.hpp constants.hpp entity.hpp \
- room.hpp job_queue.hpp doodad.hpp bounds_check.hpp
+ room.hpp doodad.hpp bounds_check.hpp
 
 map.hpp:
 
@@ -197,8 +197,6 @@ constants.hpp:
 entity.hpp:
 
 room.hpp:
-
-job_queue.hpp:
 
 doodad.hpp:
 
