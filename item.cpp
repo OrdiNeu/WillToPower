@@ -1,9 +1,9 @@
 #include "item.hpp"
 
-Item::Item() : Entity("UNIT_UNDEFINED","EMPTY",0,0) , tags(0) {
+Item::Item() : Entity("UNIT_UNDEFINED","EMPTY",0,0,0), tasked(false), inInventory(false) {
 }
 
-Item::Item(std::string uid, std::string filename, float x, float y, int tags) : Entity(uid, filename, x, y), tags(tags) {
+Item::Item(std::string uid, std::string filename, float x, float y, int tags) : Entity(uid, filename, x, y, tags), tasked(false), inInventory(false) {
 }
 
 Item* Item::clone(std::string newUID) {
@@ -14,6 +14,9 @@ Item* Item::clone(std::string newUID) {
 void Item::update(float dt) {
 }
 
-bool Item::hasTag(int tag) {
-	return (tags & tag) > 0;
+void Item::render(sf::RenderTarget* screen) {
+	if (!inInventory) {
+		spr.setPosition(realX - halfWidth, realY - height);
+		screen->draw(spr);
+	}
 }

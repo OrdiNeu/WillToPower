@@ -59,9 +59,9 @@ build/release/entity_manager.o: entity_manager.cpp entity_manager.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp constants.hpp unit_manager.hpp \
- unit.hpp unit_ai.hpp map.hpp tile.hpp room.hpp doodad.hpp \
+ unit.hpp item.hpp unit_ai.hpp map.hpp tile.hpp room.hpp doodad.hpp \
  bounds_check.hpp a_star.hpp job_queue.hpp request_queue.hpp manager.hpp \
- doodad_manager.hpp item_manager.hpp item.hpp
+ doodad_manager.hpp item_manager.hpp
 
 entity_manager.hpp:
 
@@ -201,6 +201,8 @@ unit_manager.hpp:
 
 unit.hpp:
 
+item.hpp:
+
 unit_ai.hpp:
 
 map.hpp:
@@ -224,5 +226,3 @@ manager.hpp:
 doodad_manager.hpp:
 
 item_manager.hpp:
-
-item.hpp:

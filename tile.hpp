@@ -8,13 +8,12 @@
 enum TILE_TAGS {
 	IS_WALKABLE = 1,
 	IS_MINABLE = 2,
-	FLOOR = 2 << 7,
-	WALL = 2 << 8
+	FLOOR = 1 << 6,
+	WALL = 1 << 7
 };
 
 class Tile : public Entity {
 public:
-	int tags;
 	int lastColor;
 	Tile();
 	Tile(std::string filename, int tags = 0);

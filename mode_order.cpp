@@ -7,9 +7,6 @@ ModeOrder::ModeOrder() {
 }
 
 void ModeOrder::init() {
-	//Unit testUnit = Unit("test","./data/images/enemies/yellowBox.png",0,0);
-	//testUnit.skills = SKILL_MINING | SKILL_WOODCUT;
-	//entManager->unitManager->addNewEntType("testUnit",testUnit);
 	RequestQueues::entityRequests.push_back(entRequest::newEntRequest("testUnit", HALF_TILE_WIDTH, HALF_TILE_HEIGHT, ENT_TYPE_UNIT));
 	entManager->flushRequests();
 	test = entManager->unitManager->lastCreatedEnt;
@@ -39,6 +36,7 @@ void ModeOrder::createJob(int type, int requirements, Entity* targetEnt, point* 
 	JobQueue::jobQueue.push_back(thisJob);
 }
 
+// Both this function and createJob should probably be moved to a new job factory class
 void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool doCreateJob, bool colorize, bool uncolorize) {
 	checkBounds(&x0, &x1);
 	checkBounds(&y0, &y1);
@@ -69,11 +67,31 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 					// Woodcutting jobs: any doodad with the IS_TREE tag is assigned a mining job
 					std::vector<Doodad*> doodadsHere = entManager->doodadManager->getDoodadsAtPoint(x,y);
 					for (Doodad* thisDoodad : doodadsHere) {
-						if (thisDoodad->hasTag(IS_TREE)) {
+						if (thisDoodad->hasTags(IS_TREE)) {
 							if (doCreateJob) createJob(JOB_TYPE_WOODCUT, SKILL_WOODCUT, thisDoodad, NULL);
 							if (colorize) thisDoodad->spr.setColor(DEFAULT_TILE_COLORS[COLOR_TASKED]);
 							if (uncolorize) thisDoodad->spr.setColor(DEFAULT_TILE_COLORS[COLOR_NONE]);
 						}
+					}
+					break;
+				}
+				case JOB_TYPE_BUILD:
+				{
+					// Mining jobs: any tile with the IS_WALKABLE tag is currently able to be turned into a room
+					if (curMap->inBounds(x,y) && curMap->isWalkable(x,y)) {
+						if (doCreateJob) {
+							point* thisSpot = Map::TileXYToTexXY(x, y);
+							Item* item = entManager->itemManager->getItemWithTags(IS_WOOD);
+							if (item != NULL) {
+								item->tasked = true;
+								createJob(JOB_TYPE_BUILD, SKILL_MINING, item, thisSpot);
+								curMap->setTasked(x,y,true);
+							}
+						}
+
+						// need to rethink this: where should the color for a tile actually be determined? In map?
+						if (colorize) curMap->setColor(x, y, COLOR_TASKED);
+						if (uncolorize && !curMap->getTasked(x,y)) curMap->setColor(x, y, COLOR_NONE);
 					}
 					break;
 				}

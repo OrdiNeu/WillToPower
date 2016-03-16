@@ -6,6 +6,8 @@
 #include "manager.hpp"
 
 class ItemManager : public Manager<Item> {
+public:
+	Item* getItemWithTags(int tag);
 };
 
 #endif

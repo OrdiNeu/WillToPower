@@ -1,16 +1,24 @@
 #include "unit.hpp"
 using namespace std;
 
-Unit::Unit() : Entity("UNIT_UNDEFINED","EMPTY",0,0) {
+Unit::Unit() : Entity("UNIT_UNDEFINED","EMPTY",0,0,0) {
 	init();
 }
 
-Unit::Unit(std::string uid, std::string filename) : Entity(uid, filename, 0, 0) {
+Unit::Unit(std::string uid, std::string filename) : Entity(uid, filename, 0, 0, 0) {
 	init();
 }
 
-Unit::Unit(std::string uid, std::string filename, float x, float y) : Entity(uid, filename, x, y){
+Unit::Unit(std::string uid, std::string filename, float x, float y, int tags) : Entity(uid, filename, x, y, tags){
 	init();
+}
+
+Unit::~Unit() {
+	for (typename std::vector<Item*>::iterator it = inv.begin() ; it != inv.end(); ++it) {
+		(*it)->realX = realX;
+		(*it)->realY = realY;
+		
+	}
 }
 
 void Unit::init(){
@@ -25,7 +33,7 @@ void Unit::walkTo(std::vector<point*> path) {
 }
 
 Unit* Unit::clone(std::string newUID) {
-	Unit* newUnit = new Unit(newUID, filename, realX, realY);
+	Unit* newUnit = new Unit(newUID, filename, realX, realY, tags);
 	newUnit->skills = skills;
 	return newUnit;
 }

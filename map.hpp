@@ -50,6 +50,7 @@ public:
 	void setRoom(int x, int y, int roomToAdd);
 	void setRoom(int x0, int y0, int x1, int y1, int roomToAdd);
 	void setRoom(int x0, int y0, int x1, int y1, Room* roomToAdd);
+	int getRoomID(Room* room);
 	void setTasked(int x, int y, bool tasked);
 	bool getTasked(int x, int y);
 	bool isWalkable(int x, int y);

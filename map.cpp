@@ -141,15 +141,12 @@ void Map::setColor(int x, int y, int colorToAdd) {
 }
 
 void Map::setRoom(int x, int y, Room* roomToAdd) {
-	// Look for this color in the colorDict
-	for (unsigned int i = 0; i < roomDict.size(); i++) {
-		if (roomDict.at(i) == roomToAdd) {
-			setRoom(x,y,i-1);
-			return;
-		}
-	}
+	int roomID = getRoomID(roomToAdd);
+	if (roomID > -2)
+		setRoom(x, y, roomID);
 
 	// Not in the dict, add it and go
+	cerr << "Room set without being in the dictionary" << endl;
 	addRoom(roomToAdd);
 	setRoom(x,y,roomDict.size()-1);
 }
@@ -173,15 +170,16 @@ void Map::setRoom(int x0, int y0, int x1, int y1, int roomToAdd) {
 }
 
 void Map::setRoom(int x0, int y0, int x1, int y1, Room* roomToAdd) {
-	int start_x = x0 < x1 ? x0 : x1;
-	int end_x = x0 < x1 ? x1 : x0;
-	int start_y = y0 < y1 ? y0 : y1;
-	int end_y = y0 < y1 ? y1 : y0;
-	for (int x = start_x; x <= end_x; x++) {
-		for (int y = start_y; y <= end_y; y++) {
-			setRoom(x,y,roomToAdd);
+	setRoom(x0, y0, x1, y1, getRoomID(roomToAdd));
+}
+
+int Map::getRoomID(Room* room) {
+	for (unsigned int i = 0; i < roomDict.size(); i++) {
+		if (roomDict.at(i) == room) {
+			return i-1;
 		}
 	}
+	return -2;
 }
 
 void Map::setTasked(int x, int y, bool tasked) {

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "entity.hpp"
 
 enum entRequestTypes {
 	ENT_REQUEST_NEW_ENT = 1,

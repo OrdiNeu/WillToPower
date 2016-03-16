@@ -1,6 +1,7 @@
 #include "Entity.hpp"
 
-Entity::Entity(std::string uid, std::string filename, float realX, float realY) : uid(uid), filename(filename), realX(realX), realY(realY) {
+Entity::Entity(std::string uid, std::string filename, float realX, float realY, int tags) : uid(uid), filename(filename), realX(realX), realY(realY), tags(tags) {
+	this->tags = tags;
 	loadSprite(filename);
 }
 
@@ -27,4 +28,8 @@ void Entity::loadSprite(std::string filename) {
 void Entity::render(sf::RenderTarget* screen) {
 	spr.setPosition(realX - halfWidth, realY - height);
 	screen->draw(spr);
+}
+
+bool Entity::hasTags(int tags) {
+	return (this->tags & tags) == tags;
 }

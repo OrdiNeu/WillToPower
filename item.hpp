@@ -13,12 +13,13 @@ enum ITEM_TAGS {
 // Items: things that units may pick up
 class Item : public Entity {
 public:
-	int tags;
+	bool tasked;
+	bool inInventory;
 	Item();
 	Item(std::string uid, std::string filename, float x, float y, int tags);
 	Item* clone(std::string newUID);
 	void update(float dt);
-	bool hasTag(int tag);
+	virtual void render(sf::RenderTarget* screen);
 };
 
 #endif

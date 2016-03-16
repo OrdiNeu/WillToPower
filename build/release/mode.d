@@ -60,9 +60,9 @@ build/release/mode.o: mode.cpp mode.hpp map.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp tile.hpp constants.hpp entity.hpp \
  room.hpp doodad.hpp bounds_check.hpp entity_manager.hpp unit_manager.hpp \
- unit.hpp unit_ai.hpp a_star.hpp job_queue.hpp request_queue.hpp \
- manager.hpp doodad_manager.hpp item_manager.hpp item.hpp \
- world_generator.hpp PerlinNoiseGenerator.hpp
+ unit.hpp item.hpp unit_ai.hpp a_star.hpp job_queue.hpp request_queue.hpp \
+ manager.hpp doodad_manager.hpp item_manager.hpp world_generator.hpp \
+ PerlinNoiseGenerator.hpp
 
 mode.hpp:
 
@@ -214,6 +214,8 @@ unit_manager.hpp:
 
 unit.hpp:
 
+item.hpp:
+
 unit_ai.hpp:
 
 a_star.hpp:
@@ -227,8 +229,6 @@ manager.hpp:
 doodad_manager.hpp:
 
 item_manager.hpp:
-
-item.hpp:
 
 world_generator.hpp:
 

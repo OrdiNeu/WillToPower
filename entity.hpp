@@ -8,7 +8,7 @@
 
 class Entity {
 public:
-	Entity(std::string uid, std::string filename, float realX, float realY);
+	Entity(std::string uid, std::string filename, float realX, float realY, int tags);
 	virtual ~Entity();
 	std::string uid;			// Should be unique
 	std::string filename;
@@ -21,6 +21,8 @@ public:
 	void moveToRealXY(float x, float y);
 	virtual void render(sf::RenderTarget* screen);
 	virtual void update(float dt) {};
+	bool hasTags(int tags);
+	int tags;
 protected:
 	int halfWidth, height;
 };

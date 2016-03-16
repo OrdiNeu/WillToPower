@@ -15,13 +15,11 @@ enum DOODAD_TAGS {
 // They may still have HP, but they definitely have no kinematics
 class Doodad : public Entity {
 public:
-	int tags;
 	Doodad();
 	Doodad(std::string uid, std::string filename, int x, int y, int tags);
 	Doodad* clone(std::string newUID);
 	void update(float dt);
 	void render(sf::RenderTarget* screen);
-	bool hasTag(int tag);
 };
 
 #endif

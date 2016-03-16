@@ -1,8 +1,8 @@
 #include "doodad.hpp"
 
-Doodad::Doodad() : Entity("DOODAD_UNDEFINED","EMPTY",0,0) {}
+Doodad::Doodad() : Entity("DOODAD_UNDEFINED","EMPTY",0,0,0) {}
 
-Doodad::Doodad(std::string uid, std::string filename, int x, int y, int tags) : Entity(uid,filename,x,y), tags(tags) {
+Doodad::Doodad(std::string uid, std::string filename, int x, int y, int tags) : Entity(uid,filename,x,y,tags) {
 }
 
 Doodad* Doodad::clone(std::string newUID) {
@@ -12,10 +12,6 @@ Doodad* Doodad::clone(std::string newUID) {
 
 void Doodad::update(float dt) {
 	// Empty for now
-}
-
-bool Doodad::hasTag(int tag) {
-	return (tags & tag) > 0;
 }
 
 void Doodad::render(sf::RenderTarget* screen) {
