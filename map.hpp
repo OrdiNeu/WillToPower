@@ -26,6 +26,7 @@ private:
 	std::vector<Tile*> tileDict;
 	std::vector<sf::Color> colorDict;
 	std::vector<Room*> roomDict;
+	std::vector<Material*> matDict;
 	sf::RenderTexture mapTex;
 	sf::Sprite mapSpr;
 	bool dirty;
@@ -34,6 +35,7 @@ protected:
 	void addTile(Tile* tileToAdd);
 	void addColor(sf::Color colorToAdd);
 	void addRoom(Room* roomToAdd);
+	void addMaterial(Material* matToAdd);
 public:
 	Map();
 	~Map();
@@ -51,6 +53,7 @@ public:
 	void setRoom(int x0, int y0, int x1, int y1, int roomToAdd);
 	void setRoom(int x0, int y0, int x1, int y1, Room* roomToAdd);
 	int getRoomID(Room* room);
+	int getTileID(Tile* tile);
 	void setTasked(int x, int y, bool tasked);
 	bool getTasked(int x, int y);
 	bool isWalkable(int x, int y);

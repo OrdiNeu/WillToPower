@@ -4,6 +4,7 @@
 #include <iostream>
 #include "constants.hpp"
 #include "entity.hpp"
+#include "material.hpp"
 
 enum TILE_TAGS {
 	IS_WALKABLE = 1,
@@ -20,6 +21,7 @@ public:
 	void render(sf::RenderTarget* screen, float x, float y);
 	void update(float dt, int x, int y);
 	bool hasTag(int tag);
+	Material* madeOf;
 };
 
 #endif

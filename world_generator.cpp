@@ -35,16 +35,22 @@ WorldGenerator::~WorldGenerator() {
 	}	
 }
 void WorldGenerator::addDefaultTiles(Map* map) {
+	Material* dirt = new Material();
+	map->addMaterial(dirt);
 	Tile* emptyTile = new Tile();
 	map->addTile(emptyTile);
 	Tile* grassTile = new Tile("./data/images/GrassTile1.png", IS_WALKABLE);
 	map->addTile(grassTile);
 	Tile* dirtTile = new Tile("./data/images/DirtTile1.png", IS_WALKABLE);
 	map->addTile(dirtTile);
+	dirt->tileID = map->getTileID(dirtTile);
+	dirtTile->madeOf = dirt;
 	Tile* dirtTile2 = new Tile("./data/images/DirtTile2.png", IS_WALKABLE);
 	map->addTile(dirtTile2);
 	Tile* dirtBlock = new Tile("./data/images/DirtBlock1.png", IS_MINABLE | WALL);
 	map->addTile(dirtBlock);
+	dirt->wallID = map->getTileID(dirtBlock);
+	dirtBlock->madeOf = dirt;
 	Doodad tree = Doodad("TREE", "./data/images/Tree.png", 0, 0, IS_TREE);
 	entManager->doodadManager->addNewEntType("Tree", tree);
 	Item item = Item("WOOD", "./data/images/skills/HealIcon.png", 0, 0, IS_WOOD);

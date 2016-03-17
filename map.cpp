@@ -11,6 +11,9 @@ Map::~Map() {
 	while (!roomDict.empty()) {
 		roomDict.pop_back();
 	}
+	while (!matDict.empty()) {
+		matDict.pop_back();
+	}
 	delete[] tiles;
 	delete[] rooms;
 	delete[] tasked;
@@ -92,6 +95,10 @@ void Map::addColor(sf::Color colorToAdd) {
 
 void Map::addRoom(Room* roomToAdd) {
 	roomDict.push_back(roomToAdd);
+}
+
+void Map::addMaterial(Material* matToAdd) {
+	matDict.push_back(matToAdd);
 }
 
 bool Map::inBounds(int x, int y) {
@@ -180,6 +187,15 @@ int Map::getRoomID(Room* room) {
 		}
 	}
 	return -2;
+}
+
+int Map::getTileID(Tile* tile) {
+	for (unsigned int i = 0; i < tileDict.size(); i++) {
+		if (tileDict.at(i) == tile) {
+			return i;
+		}
+	}
+	return -1;
 }
 
 void Map::setTasked(int x, int y, bool tasked) {

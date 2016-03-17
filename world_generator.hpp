@@ -8,6 +8,7 @@
 #include "entity_manager.hpp"
 #include "constants.hpp"
 #include "request_queue.hpp"
+#include "material.hpp"
 
 class WorldGenerator {
 public:

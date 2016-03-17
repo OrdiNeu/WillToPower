@@ -173,8 +173,13 @@ void AI::finishJob() {
 	switch(curJob.type) {
 		case JOB_TYPE_MINING: {
 			if (curJob.targetPoint != NULL) {
+				Material* tileMaterial;
+
 				curMap->setTasked(curJob.targetPoint->tileX,curJob.targetPoint->tileY, false);
 				curMap->setColor(curJob.targetPoint->tileX,curJob.targetPoint->tileY, COLOR_NONE);
+				tileMaterial = curMap->getTile(curJob.targetPoint->tileX, curJob.targetPoint->tileY)->madeOf;
+				//std::cout << tileMaterial->tileID << " " << dirt->wallID << std::endl;
+				curMap->setTile(curJob.targetPoint->tileX,curJob.targetPoint->tileY, tileMaterial->tileID);
 			}
 			break;
 		}
@@ -211,6 +216,7 @@ void AI::progressJobStage() {
 				case JOB_TYPE_BUILD: {
 					if (curJob.targetEnt == NULL) {
 						cancelJob(&(curJob), "item destroyed or missing");
+						return;
 					}
 
 					Item* targetItem = ((Item*) curJob.targetEnt);
@@ -226,6 +232,7 @@ void AI::progressJobStage() {
 						}
 					} else if (targetItem->inInventory) {
 						cancelJob(&(curJob), "item destroyed or missing");
+						return;
 					} else {
 						float dx = curJob.targetEnt->realX - controlled->realX;
 						float dy = curJob.targetEnt->realY - controlled->realY;

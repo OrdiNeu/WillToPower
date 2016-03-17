@@ -5,6 +5,7 @@
 #include <iostream>
 #include "constants.hpp"
 #include "entity.hpp"
+#include "material.hpp"
 
 enum ITEM_TAGS {
 	IS_WOOD = 1
@@ -20,6 +21,7 @@ public:
 	Item* clone(std::string newUID);
 	void update(float dt);
 	virtual void render(sf::RenderTarget* screen);
+	Material* madeOf;
 };
 
 #endif
