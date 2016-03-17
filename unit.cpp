@@ -14,10 +14,11 @@ Unit::Unit(std::string uid, std::string filename, float x, float y, int tags) : 
 }
 
 Unit::~Unit() {
+	// Drop all items
 	for (typename std::vector<Item*>::iterator it = inv.begin() ; it != inv.end(); ++it) {
 		(*it)->realX = realX;
 		(*it)->realY = realY;
-		
+		(*it)->inInventory = false;
 	}
 }
 

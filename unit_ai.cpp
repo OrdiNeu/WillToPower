@@ -18,6 +18,31 @@ bool AI::isUnitCloseToCenterOfTile(point* unitLoc) {
 #endif
 }
 
+bool AI::walkToPoint(point* targetPoint, point* curPoint, int distance_allowed) {
+	if (targetPoint == NULL) {
+		// Can't do anything with this
+		return false;
+	}
+
+	if (curPoint == NULL) {
+		curPoint = Map::TexXYToTileXY(controlled->realX, controlled->realY);
+	}
+
+	std::vector<point*> route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, targetPoint->tileX, targetPoint->tileY, 1);
+	if (route.size() != 0) {
+		// Remove the last point in the route, since it is the current position
+		point* last_point = route.back();
+		delete last_point;
+		route.pop_back();
+
+		// Walk to the target location
+		controlled->walkTo(route);
+		return true;
+	}
+
+	return false;
+}
+
 // Cause the controlled unit to move to the next point on its list
 void AI::moveToNextPoint() {
 	point* last_point = controlled->curPath.back();
@@ -73,7 +98,7 @@ bool AI::meetsJobRequirements(Job job) {
 	return true;
 }
 
-bool AI::pickUpJob() {
+bool AI::checkJobBoard() {
 	// Check the job board for stuff to do
 	int jobPicked = -1;
 	for (unsigned int i = 0; i < JobQueue::jobQueue.size(); i++) {
@@ -88,77 +113,59 @@ bool AI::pickUpJob() {
 		lastKnownPos->tileX = curPoint->tileX;
 		lastKnownPos->tileY = curPoint->tileY;
 		std::vector<point*> route;
+		point* targetPoint;
 		switch(job.type) {
 			case JOB_TYPE_MINING: {
 				if (job.targetPoint == NULL) {
 					std::cerr << "Error: mining job created without a target point" << std::endl;
-				} else {
-					std::vector<point*> route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, job.targetPoint->tileX, job.targetPoint->tileY, 1);
-					if (route.size() != 0) {
-						// Remove the last point in the route, since it is the current position
-						point* last_point = route.back();
-						delete last_point;
-						route.pop_back();
-
-						// Walk to the target location
-						controlled->walkTo(route);
-
-						// Pick up the job
-						jobPicked = i;
-						job.assigned = controlled;
-						jobState = JOB_STAGE_WALKING_TO_DEST;
-						delete curPoint;
-					} else {
-						std::cout << "Job suspended: Could not reach target." << std::endl;
-						JobQueue::jobQueue[i].suspended = true;
-					}
+					continue;
 				}
+				targetPoint = job.targetPoint;
 				break;
 			}
 			case JOB_TYPE_WOODCUT: {
 				if (job.targetEnt == NULL) {
 					std::cerr << "Error: woodcut job created without a target ent" << std::endl;
-				} else {
-					point* targetPoint = Map::TexXYToTileXY(job.targetEnt->realX, job.targetEnt->realY);
-					route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, targetPoint->tileX, targetPoint->tileY, 1);
-					delete targetPoint;
-					if (route.size() != 0) {
-						// Remove the last point in the route, since it is the current position
-						point* last_point = route.back();
-						delete last_point;
-						route.pop_back();
-
-						// Walk to the target location
-						controlled->walkTo(route);
-
-						// Pick up the job
-						jobPicked = i;
-						job.assigned = controlled;
-						jobState = JOB_STAGE_WALKING_TO_DEST;
-						delete curPoint;
-					} else {
-						std::cout << "Job suspended: Could not reach target." << std::endl;
-						JobQueue::jobQueue[i].suspended = true;
-					}
+					continue;
 				}
+				targetPoint = Map::TexXYToTileXY(job.targetEnt->realX, job.targetEnt->realY);
+				break;
+			}
+			case JOB_TYPE_BUILD: {
+				if (job.targetEnt == NULL || ((Item*) job.targetEnt)->inInventory == true) {
+					std::cerr << "Job suspended: item dissappeared or missing." << std::endl;
+					continue;
+				} else if (job.targetPoint == NULL) {
+					std::cerr << "Error: building job created without a target point" << std::endl;
+					continue;
+				} 
+				targetPoint = Map::TexXYToTileXY(job.targetEnt->realX, job.targetEnt->realY);
+				break;
 			}
 		}
-		delete curPoint;
-		// Is there a job that is now taken?
-		if (jobPicked >= 0) {
+
+		// Pathfind to the job and pick it up
+		if (walkToPoint(targetPoint, curPoint, 1)) {
 			curJob = job;
 			JobQueue::jobQueue.erase(JobQueue::jobQueue.begin() + jobPicked);
+			job.assigned = controlled;
+			jobState = JOB_STAGE_WALKING_TO_DEST;
+			delete curPoint;
 			return true;
+		} else {
+			std::cout << "Job suspended: Could not reach target." << std::endl;
+			JobQueue::jobQueue[i].suspended = true;
 		}
+		delete curPoint;
 	}
 	return false;
 }
 
 void AI::finishJob() {
+	jobState = 0;
+	controlled->state = STATE_IDLE;
 	switch(curJob.type) {
 		case JOB_TYPE_MINING: {
-			jobState = 0;
-			controlled->state = STATE_IDLE;
 			if (curJob.targetPoint != NULL) {
 				curMap->setTasked(curJob.targetPoint->tileX,curJob.targetPoint->tileY, false);
 				curMap->setColor(curJob.targetPoint->tileX,curJob.targetPoint->tileY, COLOR_NONE);
@@ -166,14 +173,65 @@ void AI::finishJob() {
 			break;
 		}
 		case JOB_TYPE_WOODCUT: {
-			jobState = 0;
-			controlled->state = STATE_IDLE;
 			if (curJob.targetEnt == NULL) {
 				std::cout << "Job cancelled: target tree disappeared." << std::endl;
+				return;
 			}
 			RequestQueues::entityRequests.push_back(entRequest::newEntRequest("Wood", curJob.targetEnt->realX, curJob.targetEnt->realY, ENT_TYPE_ITEM));
 			RequestQueues::entityRequests.push_back(entRequest::delEntRequest(curJob.targetEnt->uid, ENT_TYPE_DOODAD));
+			break;
 		}
+		case JOB_TYPE_BUILD: {
+			if (curJob.targetEnt == NULL) {
+				std::cout << "Job cancelled: item disappeared." << std::endl;
+				return;
+			}
+			RequestQueues::entityRequests.push_back(entRequest::delEntRequest(curJob.targetEnt->uid, ENT_TYPE_ITEM));
+			curMap->setTasked(curJob.targetPoint->tileX, curJob.targetPoint->tileY, false);
+			curMap->setColor(curJob.targetPoint->tileX, curJob.targetPoint->tileY, COLOR_NONE);
+			curMap->setRoom(curJob.targetPoint->tileX, curJob.targetPoint->tileY, curJob.roomIDToBuild);
+			// DEBUG:
+			curMap->setTile(curJob.targetPoint->tileX, curJob.targetPoint->tileY, 0);
+			break;
+		}
+	}
+}
+
+void AI::progressJobStage() {
+	switch(jobState) {
+		case JOB_STAGE_WALKING_TO_DEST: {
+			switch(curJob.type) {
+				case JOB_TYPE_BUILD: {
+					if (curJob.targetEnt == NULL || ((Item*) curJob.targetEnt)->inInventory == true) {
+						std::cerr << "Job suspended: item dissappeared or missing." << std::endl;
+						jobState = 0;
+						controlled->state = STATE_IDLE;
+						return;
+					}
+
+					float dx = curJob.targetEnt->realX - controlled->realX;
+					float dy = curJob.targetEnt->realY - controlled->realY;
+					if (dx*dx + dy*dy > UNIT_PICKUP_DISTANCE) {
+						point* targetPoint = Map::TexXYToTileXY(curJob.targetEnt->realX, curJob.targetEnt->realY);
+						walkToPoint(targetPoint);
+					}
+					break;
+				}
+				case JOB_TYPE_MINING:
+				case JOB_TYPE_WOODCUT: {
+					jobState = JOB_STAGE_ACTING;
+					controlled->startTask(0.5);
+					break;
+				}
+			}
+			break;
+		}
+		case JOB_STAGE_ACTING: {
+			finishJob();
+			break;
+		}
+		default:
+		break;
 	}
 }
 
@@ -182,24 +240,12 @@ void AI::update(float dt) {
 	if (controlled->state == STATE_WALKING) {
 		continueWalking();
 	} else if (controlled->state == STATE_FINISHED_JOB) {
-		switch(jobState) {
-			case JOB_STAGE_WALKING_TO_DEST: {
-				jobState = JOB_STAGE_ACTING;
-				controlled->startTask(0.5);
-				break;
-			}
-			case JOB_STAGE_ACTING: {
-				finishJob();
-				break;
-			}
-			default:
-			break;
-		}
+		progressJobStage();
 	} else {
 		timeSinceLastUpdate -= dt;
 		if (timeSinceLastUpdate <= 0) {
 			if (controlled->state == STATE_IDLE) {
-				if (!pickUpJob()) {
+				if (!checkJobBoard()) {
 					timeSinceLastUpdate = UNIT_AI_UPDATE_TIME;
 				}
 			}

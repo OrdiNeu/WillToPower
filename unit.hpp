@@ -7,6 +7,8 @@
 #include "entity.hpp"
 #include "item.hpp"
 
+const float UNIT_PICKUP_DISTANCE = HALF_TILE_WIDTH*HALF_TILE_WIDTH+HALF_TILE_HEIGHT*HALF_TILE_HEIGHT;
+
 enum UNIT_STATES {
 	STATE_IDLE = 0,
 	STATE_FINISHED_JOB = 1,

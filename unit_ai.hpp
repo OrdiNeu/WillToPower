@@ -16,6 +16,7 @@ const float UNIT_AI_UPDATE_TIME = 0.5;
 enum JOB_STAGES {
 	JOB_STAGE_NONE,
 	JOB_STAGE_WALKING_TO_DEST,
+	JOB_STAGE_PICKING_UP_ITEM,
 	JOB_STAGE_ACTING
 };
 
@@ -27,9 +28,11 @@ private:
 	bool isUnitCloseToCenterOfTile(point* unitLoc);
 	int jobState;
 	bool meetsJobRequirements(Job job);
-	bool pickUpJob();
+	bool checkJobBoard();
+	void progressJobStage();
 	void finishJob();
 	void continueWalking();
+	bool walkToPoint(point* targetPoint, point* curPoint = NULL, int distance_allowed = 0);
 public:
 	AI(Unit* controlled, Map* curMap);
 	Unit* controlled;
