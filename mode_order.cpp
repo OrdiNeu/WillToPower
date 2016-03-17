@@ -79,6 +79,10 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 				{
 					// Mining jobs: any tile with the IS_WALKABLE tag is currently able to be turned into a room
 					if (curMap->inBounds(x,y) && curMap->isWalkable(x,y)) {
+						bool mustUncolorize = false;
+						// need to rethink this: where should the color for a tile actually be determined? In map?
+						if (colorize) curMap->setColor(x, y, COLOR_TASKED);
+					
 						if (doCreateJob) {
 							point* thisSpot = Map::TileXYToTexXY(x, y);
 							Item* item = entManager->itemManager->getItemWithTags(IS_WOOD);
@@ -86,12 +90,12 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 								item->tasked = true;
 								createJob(JOB_TYPE_BUILD, SKILL_MINING, item, thisSpot);
 								curMap->setTasked(x,y,true);
+							} else {
+								mustUncolorize = true;
 							}
 						}
 
-						// need to rethink this: where should the color for a tile actually be determined? In map?
-						if (colorize) curMap->setColor(x, y, COLOR_TASKED);
-						if (uncolorize && !curMap->getTasked(x,y)) curMap->setColor(x, y, COLOR_NONE);
+						if ((uncolorize || mustUncolorize) && !curMap->getTasked(x,y)) curMap->setColor(x, y, COLOR_NONE);
 					}
 					break;
 				}
@@ -149,13 +153,16 @@ void ModeOrder::handleMouse(sf::RenderWindow* screen) {
 			point* thisPoint = Map::TexXYToTileXY(mousePos.x, mousePos.y);
 			if (thisPoint->tileX != selectLastX || thisPoint->tileY != selectLastY) {
 				// redraw
+				int jobType;
 				if (curOrderType == ORDER_MODE_DIG) {
-					findTasksInArea(JOB_TYPE_MINING, selectStartX, selectLastX, selectStartY, selectLastY, false, false, true);
-					findTasksInArea(JOB_TYPE_MINING, selectStartX, thisPoint->tileX, selectStartY, thisPoint->tileY, false, true, false);
+					jobType = JOB_TYPE_MINING;
 				} else if (curOrderType == ORDER_MODE_CUTTREE) {
-					findTasksInArea(JOB_TYPE_WOODCUT, selectStartX, selectLastX, selectStartY, selectLastY, false, false, true);
-					findTasksInArea(JOB_TYPE_WOODCUT, selectStartX, thisPoint->tileX, selectStartY, thisPoint->tileY, false, true, false);
+					jobType = JOB_TYPE_WOODCUT;
+				} else if (curOrderType == ORDER_MODE_BUILD) {
+					jobType = JOB_TYPE_BUILD;
 				}
+				findTasksInArea(jobType, selectStartX, selectLastX, selectStartY, selectLastY, false, false, true);
+				findTasksInArea(jobType, selectStartX, thisPoint->tileX, selectStartY, thisPoint->tileY, false, true, false);
 				selectLastX = thisPoint->tileX;
 				selectLastY = thisPoint->tileY;
 			}
@@ -165,11 +172,15 @@ void ModeOrder::handleMouse(sf::RenderWindow* screen) {
 		if (leftClicked && selectionActive == SELECT_TYPE_LEFT) {
 			selectionActive = SELECT_TYPE_NONE;
 			point* endPoint = Map::TexXYToTileXY(mousePos.x, mousePos.y);
+			int jobType;
 			if (curOrderType == ORDER_MODE_DIG) {
-				findTasksInArea(JOB_TYPE_MINING, selectStartX, endPoint->tileX, selectStartY, endPoint->tileY, true, true, false);
+				jobType = JOB_TYPE_MINING;
 			} else if (curOrderType == ORDER_MODE_CUTTREE) {
-				findTasksInArea(JOB_TYPE_WOODCUT, selectStartX, endPoint->tileX, selectStartY, endPoint->tileY, true, true, false);
+				jobType = JOB_TYPE_WOODCUT;
+			} else if (curOrderType == ORDER_MODE_BUILD) {
+				jobType = JOB_TYPE_BUILD;
 			}
+			findTasksInArea(jobType, selectStartX, endPoint->tileX, selectStartY, endPoint->tileY, true, true, false);
 		}
 		leftClicked = false;
 	}

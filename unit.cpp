@@ -79,3 +79,17 @@ void Unit::startTask(float timeToComplete) {
 	state = STATE_ACTING;
 	this->timeToComplete = timeToComplete;
 }
+
+bool Unit::hasItem(Item* item) {
+	for (typename std::vector<Item*>::iterator it = inv.begin() ; it != inv.end(); ++it) {
+		if ((*it) == item) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void Unit::pickupItem(Item* item) {
+	inv.push_back(item);
+	item->inInventory = true;
+}

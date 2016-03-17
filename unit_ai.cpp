@@ -43,6 +43,13 @@ bool AI::walkToPoint(point* targetPoint, point* curPoint, int distance_allowed) 
 	return false;
 }
 
+void AI::cancelJob(Job* job, std::string reason) {
+	std::cerr << "Job suspended: " << reason << std::endl;
+	jobState = 0;
+	controlled->state = STATE_IDLE;
+	job->suspended = true;
+}
+
 // Cause the controlled unit to move to the next point on its list
 void AI::moveToNextPoint() {
 	point* last_point = controlled->curPath.back();
@@ -133,7 +140,7 @@ bool AI::checkJobBoard() {
 			}
 			case JOB_TYPE_BUILD: {
 				if (job.targetEnt == NULL || ((Item*) job.targetEnt)->inInventory == true) {
-					std::cerr << "Job suspended: item dissappeared or missing." << std::endl;
+					cancelJob(&(job), "item destroyed or missing");
 					continue;
 				} else if (job.targetPoint == NULL) {
 					std::cerr << "Error: building job created without a target point" << std::endl;
@@ -153,8 +160,7 @@ bool AI::checkJobBoard() {
 			delete curPoint;
 			return true;
 		} else {
-			std::cout << "Job suspended: Could not reach target." << std::endl;
-			JobQueue::jobQueue[i].suspended = true;
+			cancelJob(&(job), "could not reach target");
 		}
 		delete curPoint;
 	}
@@ -174,7 +180,7 @@ void AI::finishJob() {
 		}
 		case JOB_TYPE_WOODCUT: {
 			if (curJob.targetEnt == NULL) {
-				std::cout << "Job cancelled: target tree disappeared." << std::endl;
+				cancelJob(&(curJob), "target destroyed or missing");
 				return;
 			}
 			RequestQueues::entityRequests.push_back(entRequest::newEntRequest("Wood", curJob.targetEnt->realX, curJob.targetEnt->realY, ENT_TYPE_ITEM));
@@ -183,7 +189,7 @@ void AI::finishJob() {
 		}
 		case JOB_TYPE_BUILD: {
 			if (curJob.targetEnt == NULL) {
-				std::cout << "Job cancelled: item disappeared." << std::endl;
+				cancelJob(&(curJob), "item destroyed or missing");
 				return;
 			}
 			RequestQueues::entityRequests.push_back(entRequest::delEntRequest(curJob.targetEnt->uid, ENT_TYPE_ITEM));
@@ -197,23 +203,39 @@ void AI::finishJob() {
 	}
 }
 
+// Like so many other things, this has become a mess
 void AI::progressJobStage() {
 	switch(jobState) {
 		case JOB_STAGE_WALKING_TO_DEST: {
 			switch(curJob.type) {
 				case JOB_TYPE_BUILD: {
-					if (curJob.targetEnt == NULL || ((Item*) curJob.targetEnt)->inInventory == true) {
-						std::cerr << "Job suspended: item dissappeared or missing." << std::endl;
-						jobState = 0;
-						controlled->state = STATE_IDLE;
-						return;
+					if (curJob.targetEnt == NULL) {
+						cancelJob(&(curJob), "item destroyed or missing");
 					}
 
-					float dx = curJob.targetEnt->realX - controlled->realX;
-					float dy = curJob.targetEnt->realY - controlled->realY;
-					if (dx*dx + dy*dy > UNIT_PICKUP_DISTANCE) {
-						point* targetPoint = Map::TexXYToTileXY(curJob.targetEnt->realX, curJob.targetEnt->realY);
-						walkToPoint(targetPoint);
+					Item* targetItem = ((Item*) curJob.targetEnt);
+					if (controlled->hasItem(targetItem)) {
+						float dx = curJob.targetPoint->realX - controlled->realX;
+						float dy = curJob.targetPoint->realY - controlled->realY;
+						if (dx*dx + dy*dy > UNIT_PICKUP_DISTANCE) {
+							walkToPoint(curJob.targetPoint);
+						} else {
+							// Job success
+							jobState = JOB_STAGE_ACTING;
+							controlled->startTask(0.5);
+						}
+					} else if (targetItem->inInventory) {
+						cancelJob(&(curJob), "item destroyed or missing");
+					} else {
+						float dx = curJob.targetEnt->realX - controlled->realX;
+						float dy = curJob.targetEnt->realY - controlled->realY;
+						if (dx*dx + dy*dy > UNIT_PICKUP_DISTANCE) {
+							point* targetPoint = Map::TexXYToTileXY(curJob.targetEnt->realX, curJob.targetEnt->realY);
+							walkToPoint(targetPoint);
+						} else {
+							Item* targetItem = (Item*)curJob.targetEnt;
+							controlled->pickupItem(targetItem);
+						}
 					}
 					break;
 				}

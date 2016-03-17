@@ -35,6 +35,8 @@ public:
 	Unit* clone(std::string newUID);
 	void update(float dt);
 	void startTask(float timeToComplete);
+	bool hasItem(Item* item);
+	void pickupItem(Item* item);
 };
 
 #endif

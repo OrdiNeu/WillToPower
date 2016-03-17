@@ -32,6 +32,7 @@ private:
 	void progressJobStage();
 	void finishJob();
 	void continueWalking();
+	void cancelJob(Job* job, std::string reason);
 	bool walkToPoint(point* targetPoint, point* curPoint = NULL, int distance_allowed = 0);
 public:
 	AI(Unit* controlled, Map* curMap);
