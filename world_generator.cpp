@@ -35,22 +35,7 @@ WorldGenerator::~WorldGenerator() {
 	}	
 }
 void WorldGenerator::addDefaultTiles(Map* map) {
-	Material* dirt = new Material();
-	map->addMaterial(dirt);
-	Tile* emptyTile = new Tile();
-	map->addTile(emptyTile);
-	Tile* grassTile = new Tile("./data/images/GrassTile1.png", IS_WALKABLE);
-	map->addTile(grassTile);
-	Tile* dirtTile = new Tile("./data/images/DirtTile1.png", IS_WALKABLE);
-	map->addTile(dirtTile);
-	dirt->tileID = map->getTileID(dirtTile);
-	dirtTile->madeOf = dirt;
-	Tile* dirtTile2 = new Tile("./data/images/DirtTile2.png", IS_WALKABLE);
-	map->addTile(dirtTile2);
-	Tile* dirtBlock = new Tile("./data/images/DirtBlock1.png", IS_MINABLE | WALL);
-	map->addTile(dirtBlock);
-	dirt->wallID = map->getTileID(dirtBlock);
-	dirtBlock->madeOf = dirt;
+	XmlLoader::loadMaterials(map, "./data/materials.xml");
 	Doodad tree = Doodad("TREE", "./data/images/Tree.png", 0, 0, IS_TREE);
 	entManager->doodadManager->addNewEntType("Tree", tree);
 	Item item = Item("WOOD", "./data/images/skills/HealIcon.png", 0, 0, IS_WOOD);
@@ -71,7 +56,7 @@ Map* WorldGenerator::generateMap(int map_x, int map_y) {
 			forestFactor +=  forestryGen1->get(float(x)/PerlinScalingFactor1, float(y)/PerlinScalingFactor1)*PerlinWeightFactor1;
 			if (forestFactor > 0) {
 				// This is a forest-y region
-				retVal->setTile(x,y,1);
+				retVal->setTile(x,y,0);
 				// If the 6th digit is a 2, 1, or 0, put a tree here
 				if (rand() % 10 < 3) {
 					//Doodad* thisTree = entManager->doodadManager->addDoodadByType("Tree");
@@ -83,10 +68,12 @@ Map* WorldGenerator::generateMap(int map_x, int map_y) {
 			} else if (forestFactor < -0.5) {
 				// This is a dry region
 				if (rand() % 2 == 1) {
-					retVal->setTile(x,y,2);
-				} else {
 					retVal->setTile(x,y,4);
+				} else {
+					retVal->setTile(x,y,7);
 				}
+			} else {
+				retVal->setTile(x,y,0);
 			}
 		}
 	}

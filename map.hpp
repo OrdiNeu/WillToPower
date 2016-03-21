@@ -18,6 +18,7 @@ enum defaultColors {
 
 class Map {
 	friend class WorldGenerator;
+	friend class XmlLoader;
 private:
 	int** tiles;
 	int** colorize;	// Flag that tells if the tile is supposed to be colorized prior to rendering

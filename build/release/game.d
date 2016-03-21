@@ -62,8 +62,7 @@ build/release/game.o: game.cpp game.hpp ../SFML/include/SFML/Graphics.hpp \
  bounds_check.hpp entity_manager.hpp unit_manager.hpp unit.hpp item.hpp \
  unit_ai.hpp a_star.hpp job_queue.hpp request_queue.hpp manager.hpp \
  doodad_manager.hpp item_manager.hpp world_generator.hpp \
- PerlinNoiseGenerator.hpp mode_main_menu.hpp mode_map_edit.hpp \
- mode_order.hpp xml_loader.hpp \
+ PerlinNoiseGenerator.hpp xml_loader.hpp \
  ../boost_1_60_0/boost/property_tree/ptree.hpp \
  ../boost_1_60_0/boost/property_tree/ptree_fwd.hpp \
  ../boost_1_60_0/boost/config.hpp ../boost_1_60_0/boost/config/user.hpp \
@@ -638,7 +637,8 @@ build/release/game.o: game.cpp game.hpp ../SFML/include/SFML/Graphics.hpp \
  ../boost_1_60_0/boost/range/begin.hpp \
  ../boost_1_60_0/boost/range/rend.hpp \
  ../boost_1_60_0/boost/range/reverse_iterator.hpp \
- ../boost_1_60_0/boost/range/rbegin.hpp
+ ../boost_1_60_0/boost/range/rbegin.hpp mode_main_menu.hpp \
+ mode_map_edit.hpp mode_order.hpp
 
 game.hpp:
 
@@ -813,12 +813,6 @@ item_manager.hpp:
 world_generator.hpp:
 
 PerlinNoiseGenerator.hpp:
-
-mode_main_menu.hpp:
-
-mode_map_edit.hpp:
-
-mode_order.hpp:
 
 xml_loader.hpp:
 
@@ -2005,3 +1999,9 @@ xml_loader.hpp:
 ../boost_1_60_0/boost/range/reverse_iterator.hpp:
 
 ../boost_1_60_0/boost/range/rbegin.hpp:
+
+mode_main_menu.hpp:
+
+mode_map_edit.hpp:
+
+mode_order.hpp:

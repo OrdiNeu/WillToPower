@@ -16,7 +16,7 @@ DCOMPILE_FLAGS = -D DEBUG
 # Add additional include paths
 INCLUDES = -I $(SRC_PATH)/ -I"../SFML/include" -I"../boost_1_60_0"
 # General linker settings
-LINK_FLAGS = -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -L"../SFML/lib"
+LINK_FLAGS = -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -L"../SFML/lib" -OBOOST_REGEX_NO_LIB
 # Additional release-specific linker settings
 RLINK_FLAGS = 
 # Additional debug-specific linker settings

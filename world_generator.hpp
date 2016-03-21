@@ -9,6 +9,7 @@
 #include "constants.hpp"
 #include "request_queue.hpp"
 #include "material.hpp"
+#include "xml_loader.hpp"
 
 class WorldGenerator {
 public:
