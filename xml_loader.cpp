@@ -16,25 +16,17 @@ void XmlLoader::loadUnits(UnitManager* unit_manager, std::string filename) {
 
 int XmlLoader::parseTags(std::string tags) {
     int retVal = 0;
-    /* Boost::regex is bugging out on me, prolly related to my version of mingw
-    boost::regex expression(
-       "(IS_WALKABLE)?"
-       "(IS_MINABLE)?"
-       "(TILE)?"
-       "(WALL)?");
-    boost::match_results<std::string::const_iterator> what;
 
-    if (regex_search(tags, what, expression)) {
-        std::cout << what[0] << std::endl << what[1] << std::endl;
-    };*/
-
-    // Temp workaround for boost::regex
-    if (tags == "IS_WALKABLE") {
+    if (tags.find("IS_WALKABLE") != std::string::npos) {
         retVal |= IS_WALKABLE;
     }
-    if (tags == "IS_MINABLE|IS_WALL") {
-        retVal |= IS_MINABLE | WALL;
+    if (tags.find("IS_MINABLE") != std::string::npos) {
+        retVal |= IS_MINABLE;
     }
+    if (tags.find("IS_WALL") != std::string::npos) {
+        retVal |= WALL;
+    }
+    
     return retVal;
 }
 
