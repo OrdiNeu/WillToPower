@@ -230,7 +230,7 @@ point Map::TexXYToTileXY(float texX, float texY) {
 	bool oddY = (int(floor(realY + realX - 0.5) + floor(realY - realX - 0.5))) % 2 == 0;
 	retVal.realX = texX;
 	retVal.realY = texY;
-	retVal.tileX = (int) (realX - 0.5*oddY);
+	retVal.tileX = (int) floor(realX - 0.5*oddY);
 	retVal.tileY = (int) (floor(realY - 0.5*oddY)*2 + oddY);	// There is likely a more elegant way of stating this, but I just spent 5 hours getting the math right
 	return retVal;
 }
