@@ -31,11 +31,12 @@ private:
 
 	sf::Vector2i getMousePos();
 	void findTasksInArea(int type, int x0, int x1, int y0, int y1, bool doCreateJob, bool colorize, bool uncolorize);
-	void createJob(int type, int requirements, Entity* targetEnt, point* targetPoint);
+	void createJob(int type, int requirements, Entity* targetEnt, point targetPoint);
 	sf::Vector2i getMousePos(sf::RenderWindow* screen);
 	void handleKeyboard(float dt);
 	void handleMouse(sf::RenderWindow* screen);
 	void drawUI();
+	int orderTypeToJobType(int order_type);
 public:
 	float screenX;
 	float screenY;

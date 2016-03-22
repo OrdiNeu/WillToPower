@@ -43,20 +43,19 @@ void ModeMapEdit::update(float dt, sf::RenderWindow* screen) {
 		// Otherwise, we're in the map area
 		// Check for clicks and swap the selected tile with the currently selected tile
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			point* clicked = Map::TexXYToTileXY(mousePos.x, mousePos.y);
-			cout << "X: " << clicked->tileX << " Y: " << clicked->tileY << endl;
-			curMap->setTile(clicked->tileX, clicked->tileY, curSelectedTile);
+			point clicked = Map::TexXYToTileXY(mousePos.x, mousePos.y);
+			cout << "X: " << clicked.tileX << " Y: " << clicked.tileY << endl;
+			curMap->setTile(clicked.tileX, clicked.tileY, curSelectedTile);
 		}
 
 		if (!rightClicked && sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 			rightClicked = true;
-			std::vector<point*> route = AStarSearch(curMap, 0, 0, curMap->width-1, curMap->height-1);
+			std::vector<point> route = AStarSearch(curMap, 0, 0, curMap->width-1, curMap->height-1);
 			while (!route.empty()) {
-				point* thisPoint = route.back();
+				point thisPoint = route.back();
 				route.pop_back();
-				curMap->setTile(thisPoint->tileX, thisPoint->tileY, 2);
-				cout << thisPoint->tileX << "," << thisPoint->tileY << endl;
-				delete thisPoint;
+				curMap->setTile(thisPoint.tileX, thisPoint.tileY, 2);
+				cout << thisPoint.tileX << "," << thisPoint.tileY << endl;
 			}
 		} else if (!sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 			rightClicked = false;

@@ -6,36 +6,23 @@ AI::AI(Unit* controlled, Map* curMap) : controlled(controlled), curMap(curMap) {
 	lastKnownPos = Map::TexXYToTileXY(controlled->realX, controlled->realY);
 }
 
-bool AI::isUnitCloseToCenterOfTile(point* unitLoc) {
+bool AI::isUnitCloseToCenterOfTile(point unitLoc) {
 #ifdef AI_MOVE_CENTER_OF_TILE
-	point* centerPoint = Map::TileXYToTexXY(unitLoc->tileX, unitLoc->tileY);
-	float dx = controlled->realX - centerPoint->realX;
-	float dy = controlled->realY - centerPoint->realY;
-	delete centerPoint;
+	point centerPoint = Map::TileXYToTexXY(unitLoc.tileX, unitLoc.tileY);
+	float dx = controlled->realX - centerPoint.realX;
+	float dy = controlled->realY - centerPoint.realY;
 	return dx * dx + dy * dy < DISTANCE_FROM_CENTER_SQ;
 #else
 	return true;
 #endif
 }
 
-bool AI::walkToPoint(point* targetPoint, point* curPoint, int distance_allowed) {
-	if (targetPoint == NULL) {
-		// Can't do anything with this
-		return false;
-	}
-
-	if (curPoint == NULL) {
-		curPoint = Map::TexXYToTileXY(controlled->realX, controlled->realY);
-	}
-
-	std::vector<point*> route = AStarSearch(curMap, curPoint->tileX, curPoint->tileY, targetPoint->tileX, targetPoint->tileY, 1);
+bool AI::walkToPoint(point targetPoint, point curPoint, int distance_allowed) {
+	std::vector<point> route = AStarSearch(curMap, curPoint.tileX, curPoint.tileY, targetPoint.tileX, targetPoint.tileY, 1);
 	if (route.size() != 0) {
 		// Remove the last point in the route, since it is the current position
-		point* last_point = route.back();
-		delete last_point;
 		route.pop_back();
 
-		// Walk to the target location
 		controlled->walkTo(route);
 		return true;
 	}
@@ -52,38 +39,34 @@ void AI::cancelJob(Job* job, std::string reason) {
 
 // Cause the controlled unit to move to the next point on its list
 void AI::moveToNextPoint() {
-	point* last_point = controlled->curPath.back();
-	delete last_point;
 	controlled->curPath.pop_back();
 }
 
 void AI::continueWalking() {
-	point* curPos = Map::TexXYToTileXY(controlled->realX, controlled->realY);
-	if (curPos->tileX != lastKnownPos->tileX || curPos->tileY != lastKnownPos->tileY) {
+	point curPos = Map::TexXYToTileXY(controlled->realX, controlled->realY);
+	if (curPos.tileX != lastKnownPos.tileX || curPos.tileY != lastKnownPos.tileY) {
 		if (isUnitCloseToCenterOfTile(curPos)) {
 			// Are we at the target location?
-			point* nextLoc = controlled->curPath.back();
-			if (curPos->tileX != nextLoc->tileX || curPos->tileY != nextLoc->tileY) {
+			point nextLoc = controlled->curPath.back();
+			if (curPos.tileX != nextLoc.tileX || curPos.tileY != nextLoc.tileY) {
 				std::cout << "Unit ended up somewhere unexpected - need to recreate path" << std::endl;
-				std::cout << "(Expected " << nextLoc->tileX << "," << nextLoc->tileY << "), got (" << curPos->tileX << "," << curPos->tileY << "))" << std::endl;
-				std::cout << "Last known position:" << lastKnownPos->tileX << "," << lastKnownPos->tileY << std::endl;
+				std::cout << "(Expected " << nextLoc.tileX << "," << nextLoc.tileY << "), got (" << curPos.tileX << "," << curPos.tileY << "))" << std::endl;
+				std::cout << "Last known position:" << lastKnownPos.tileX << "," << lastKnownPos.tileY << std::endl;
 				// We meed to recreate the path
 				int targetX, targetY;
 				while (!controlled->curPath.empty()) {
-					point* pathPoint = controlled->curPath.back();
-					targetX = pathPoint->tileX;
-					targetY = pathPoint->tileY;
+					point pathPoint = controlled->curPath.back();
+					targetX = pathPoint.tileX;
+					targetY = pathPoint.tileY;
 					controlled->curPath.pop_back();
-					delete pathPoint;
 				}
-				controlled->curPath = AStarSearch(curMap, curPos->tileX, curPos->tileY, targetX, targetY);
+				controlled->curPath = AStarSearch(curMap, curPos.tileX, curPos.tileY, targetX, targetY);
 			}
 			moveToNextPoint();
-			lastKnownPos->tileX = curPos->tileX;
-			lastKnownPos->tileY = curPos->tileY;
+			lastKnownPos.tileX = curPos.tileX;
+			lastKnownPos.tileY = curPos.tileY;
 		}
 	}
-	delete curPos;
 }
 
 bool AI::meetsJobRequirements(Job job) {
@@ -116,18 +99,18 @@ bool AI::checkJobBoard() {
 		}
 
 		// Passed all checks: determine what to do depending on the type of job
-		point* curPoint = Map::TexXYToTileXY(controlled->realX, controlled->realY);
-		lastKnownPos->tileX = curPoint->tileX;
-		lastKnownPos->tileY = curPoint->tileY;
-		std::vector<point*> route;
-		point* targetPoint;
+		point curPoint = Map::TexXYToTileXY(controlled->realX, controlled->realY);
+		lastKnownPos.tileX = curPoint.tileX;
+		lastKnownPos.tileY = curPoint.tileY;
+		std::vector<point> route;
+		point targetPoint;
 		switch(job.type) {
 			case JOB_TYPE_MINING: {
 				if (job.targetPoint == NULL) {
 					std::cerr << "Error: mining job created without a target point" << std::endl;
 					continue;
 				}
-				targetPoint = job.targetPoint;
+				targetPoint = *(job.targetPoint);
 				break;
 			}
 			case JOB_TYPE_WOODCUT: {
@@ -157,12 +140,10 @@ bool AI::checkJobBoard() {
 			JobQueue::jobQueue.erase(JobQueue::jobQueue.begin() + jobPicked);
 			job.assigned = controlled;
 			jobState = JOB_STAGE_WALKING_TO_DEST;
-			delete curPoint;
 			return true;
 		} else {
 			cancelJob(&(job), "could not reach target");
 		}
-		delete curPoint;
 	}
 	return false;
 }
@@ -224,7 +205,7 @@ void AI::progressJobStage() {
 						float dx = curJob.targetPoint->realX - controlled->realX;
 						float dy = curJob.targetPoint->realY - controlled->realY;
 						if (dx*dx + dy*dy > UNIT_PICKUP_DISTANCE) {
-							walkToPoint(curJob.targetPoint);
+							walkToPoint(*(curJob.targetPoint), Map::TexXYToTileXY(controlled->realX, controlled->realY));
 						} else {
 							// Job success
 							jobState = JOB_STAGE_ACTING;
@@ -237,8 +218,7 @@ void AI::progressJobStage() {
 						float dx = curJob.targetEnt->realX - controlled->realX;
 						float dy = curJob.targetEnt->realY - controlled->realY;
 						if (dx*dx + dy*dy > UNIT_PICKUP_DISTANCE) {
-							point* targetPoint = Map::TexXYToTileXY(curJob.targetEnt->realX, curJob.targetEnt->realY);
-							walkToPoint(targetPoint);
+							walkToPoint(Map::TexXYToTileXY(curJob.targetEnt->realX, curJob.targetEnt->realY), Map::TexXYToTileXY(controlled->realX, controlled->realY));
 						} else {
 							Item* targetItem = (Item*)curJob.targetEnt;
 							controlled->pickupItem(targetItem);

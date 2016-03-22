@@ -28,7 +28,7 @@ void Unit::init(){
 	skills = 1;
 }
 
-void Unit::walkTo(std::vector<point*> path) {
+void Unit::walkTo(std::vector<point> path) {
 	curPath = path;
 	state = STATE_WALKING;
 }
@@ -49,15 +49,15 @@ void Unit::update(float dt) {
 				dy = 0;
 				break;
 			}
-			point* nextLoc = curPath.back();
-			if (realX < nextLoc->realX) {
+			point nextLoc = curPath.back();
+			if (realX < nextLoc.realX) {
 				dx = 2*speed*dt;
-			} else if (realX > nextLoc->realX) {
+			} else if (realX > nextLoc.realX) {
 				dx = -2*speed*dt;
 			}
-			if (realY < nextLoc->realY) {
+			if (realY < nextLoc.realY) {
 				dy = speed*dt;
-			} else if (realY > nextLoc->realY) {
+			} else if (realY > nextLoc.realY) {
 				dy = -speed*dt;
 			}
 			break;

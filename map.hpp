@@ -66,8 +66,8 @@ public:
 	std::vector<Tile*> getTileDict(){ return tileDict; };
 	int width, height;
 
-	static point* TexXYToTileXY(float texX, float texY);
-	static point* TileXYToTexXY(int x, int y);
+	static point TexXYToTileXY(float texX, float texY);
+	static point TileXYToTexXY(int x, int y);
 };
 
 #endif

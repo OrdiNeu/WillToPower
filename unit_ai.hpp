@@ -25,7 +25,7 @@ class AI {
 private:
 	float timeSinceLastUpdate;
 	void moveToNextPoint();
-	bool isUnitCloseToCenterOfTile(point* unitLoc);
+	bool isUnitCloseToCenterOfTile(point unitLoc);
 	int jobState;
 	bool meetsJobRequirements(Job job);
 	bool checkJobBoard();
@@ -33,13 +33,13 @@ private:
 	void finishJob();
 	void continueWalking();
 	void cancelJob(Job* job, std::string reason);
-	bool walkToPoint(point* targetPoint, point* curPoint = NULL, int distance_allowed = 0);
+	bool walkToPoint(point targetPoint, point curPoint, int distance_allowed = 0);
 public:
 	AI(Unit* controlled, Map* curMap);
 	Unit* controlled;
 	Map* curMap;
 	Job curJob;
-	point* lastKnownPos;
+	point lastKnownPos;
 	std::string uid;
 	void update(float dt);
 };

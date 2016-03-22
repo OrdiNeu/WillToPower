@@ -20,6 +20,6 @@ public:
 };
 
 // TODO: look up how to insert default arguments
-std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int endy, float max_dist_to_accept = 0);
+std::vector<point> AStarSearch(Map* map, int startx, int starty, int endx, int endy, float max_dist_to_accept = 0);
 
 #endif

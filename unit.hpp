@@ -22,7 +22,7 @@ private:
 	float timeToComplete;
 	void init();
 public:
-	std::vector<point*> curPath;
+	std::vector<point> curPath;
 	int state;
 	int skills;
 	std::vector<Item*> inv;
@@ -31,7 +31,7 @@ public:
 	Unit(std::string uid, std::string filename);
 	Unit(std::string uid, std::string filename, float x, float y, int tags);
 	~Unit();
-	void walkTo(std::vector<point*> path);
+	void walkTo(std::vector<point> path);
 	Unit* clone(std::string newUID);
 	void update(float dt);
 	void startTask(float timeToComplete);

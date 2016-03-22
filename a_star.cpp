@@ -66,10 +66,10 @@ bool AStarNode::contains(int x, int y) {
 
 // Please remember to delete the returned objects
 // Returns a vector with no points if no path found, and a vector of points otherwise
-std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int endy, float max_dist_to_accept) {
+std::vector<point> AStarSearch(Map* map, int startx, int starty, int endx, int endy, float max_dist_to_accept) {
 	AStarNode* OpenList = new AStarNode(startx, starty, endx, endy, 0, NULL);
 	AStarNode* ClosedList = new AStarNode(startx, starty, endx, endy, 0, NULL);
-	std::vector<point*> retVal;
+	std::vector<point> retVal;
 	AStarNode* thisNode;
 	if (map->inBounds(endx, endy) && map->inBounds(startx, starty)) {
 		while (OpenList) {
@@ -84,8 +84,7 @@ std::vector<point*> AStarSearch(Map* map, int startx, int starty, int endx, int 
 				//cout << "Finished at (" << x << "," << y << ")" << endl;
 				// Populate the vector of points to nav through by looking through the parents
 				while (thisNode) {
-					point* thisPoint = Map::TileXYToTexXY(thisNode->x, thisNode->y);
-					retVal.push_back(thisPoint);
+					retVal.push_back(Map::TileXYToTexXY(thisNode->x, thisNode->y));
 					thisNode = thisNode->parent;
 				}
 

@@ -24,14 +24,19 @@ void ModeOrder::setOrderMode(int orderType) {
 	curOrderType = orderType;
 }
 
-void ModeOrder::createJob(int type, int requirements, Entity* targetEnt, point* targetPoint) {
+void ModeOrder::createJob(int type, int requirements, Entity* targetEnt, point targetPoint) {
 	Job thisJob;
+	point* Point = new point();
+	Point->realX = targetPoint.realX;
+	Point->realY = targetPoint.realY;
+	Point->tileX = targetPoint.tileX;
+	Point->tileY = targetPoint.tileY;
 	thisJob.requirements = requirements;
 	thisJob.suspended = false;
 	thisJob.repeating = false;
 	thisJob.assigned = NULL;
 	thisJob.targetEnt = targetEnt;
-	thisJob.targetPoint = targetPoint;
+	thisJob.targetPoint = Point;
 	thisJob.type = type;
 	JobQueue::jobQueue.push_back(thisJob);
 }
@@ -50,10 +55,9 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 					// Mining jobs: any tile with the IS_MINABLE tag is assigned a mining job
 					if (curMap->inBounds(x,y) && curMap->getTile(x,y)->hasTag(IS_MINABLE)) {
 						if (doCreateJob) {
-							point* thisSpot = Map::TileXYToTexXY(x, y);
+							point thisSpot = Map::TileXYToTexXY(x, y);
 							createJob(JOB_TYPE_MINING, SKILL_MINING, NULL, thisSpot);
 							curMap->setTasked(x,y,true);
-							// Don't delete this point
 						}
 
 						// need to rethink this: where should the color for a tile actually be determined? In map?
@@ -68,7 +72,7 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 					std::vector<Doodad*> doodadsHere = entManager->doodadManager->getDoodadsAtPoint(x,y);
 					for (Doodad* thisDoodad : doodadsHere) {
 						if (thisDoodad->hasTags(IS_TREE)) {
-							if (doCreateJob) createJob(JOB_TYPE_WOODCUT, SKILL_WOODCUT, thisDoodad, NULL);
+							if (doCreateJob) createJob(JOB_TYPE_WOODCUT, SKILL_WOODCUT, thisDoodad, point());
 							if (colorize) thisDoodad->spr.setColor(DEFAULT_TILE_COLORS[COLOR_TASKED]);
 							if (uncolorize) thisDoodad->spr.setColor(DEFAULT_TILE_COLORS[COLOR_NONE]);
 						}
@@ -84,7 +88,7 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 						if (colorize) curMap->setColor(x, y, COLOR_TASKED);
 					
 						if (doCreateJob) {
-							point* thisSpot = Map::TileXYToTexXY(x, y);
+							point thisSpot = Map::TileXYToTexXY(x, y);
 							Item* item = entManager->itemManager->getItemWithTags(IS_WOOD);
 							if (item != NULL) {
 								item->tasked = true;
@@ -144,14 +148,13 @@ void ModeOrder::handleMouse(sf::RenderWindow* screen) {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		if (!leftClicked && selectionActive == SELECT_TYPE_NONE) { // Initiate clicking
 			selectionActive = SELECT_TYPE_LEFT;
-			point* startPoint = Map::TexXYToTileXY(mousePos.x, mousePos.y);
-			selectStartX = startPoint->tileX;
-			selectStartY = startPoint->tileY;
+			point startPoint = Map::TexXYToTileXY(mousePos.x, mousePos.y);
+			selectStartX = startPoint.tileX;
+			selectStartY = startPoint.tileY;
 			leftClicked = true;
-			delete startPoint;
 		} else if (selectionActive == SELECT_TYPE_LEFT) {
-			point* thisPoint = Map::TexXYToTileXY(mousePos.x, mousePos.y);
-			if (thisPoint->tileX != selectLastX || thisPoint->tileY != selectLastY) {
+			point thisPoint = Map::TexXYToTileXY(mousePos.x, mousePos.y);
+			if (thisPoint.tileX != selectLastX || thisPoint.tileY != selectLastY) {
 				// redraw
 				int jobType;
 				if (curOrderType == ORDER_MODE_DIG) {
@@ -162,16 +165,15 @@ void ModeOrder::handleMouse(sf::RenderWindow* screen) {
 					jobType = JOB_TYPE_BUILD;
 				}
 				findTasksInArea(jobType, selectStartX, selectLastX, selectStartY, selectLastY, false, false, true);
-				findTasksInArea(jobType, selectStartX, thisPoint->tileX, selectStartY, thisPoint->tileY, false, true, false);
-				selectLastX = thisPoint->tileX;
-				selectLastY = thisPoint->tileY;
+				findTasksInArea(jobType, selectStartX, thisPoint.tileX, selectStartY, thisPoint.tileY, false, true, false);
+				selectLastX = thisPoint.tileX;
+				selectLastY = thisPoint.tileY;
 			}
-			delete thisPoint;
 		}
 	} else {
 		if (leftClicked && selectionActive == SELECT_TYPE_LEFT) {
 			selectionActive = SELECT_TYPE_NONE;
-			point* endPoint = Map::TexXYToTileXY(mousePos.x, mousePos.y);
+			point endPoint = Map::TexXYToTileXY(mousePos.x, mousePos.y);
 			int jobType;
 			if (curOrderType == ORDER_MODE_DIG) {
 				jobType = JOB_TYPE_MINING;
@@ -180,7 +182,7 @@ void ModeOrder::handleMouse(sf::RenderWindow* screen) {
 			} else if (curOrderType == ORDER_MODE_BUILD) {
 				jobType = JOB_TYPE_BUILD;
 			}
-			findTasksInArea(jobType, selectStartX, endPoint->tileX, selectStartY, endPoint->tileY, true, true, false);
+			findTasksInArea(jobType, selectStartX, endPoint.tileX, selectStartY, endPoint.tileY, true, true, false);
 		}
 		leftClicked = false;
 	}
@@ -188,15 +190,12 @@ void ModeOrder::handleMouse(sf::RenderWindow* screen) {
 	if (!rightClicked && sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 		selectionActive = SELECT_TYPE_RIGHT;
 		rightClicked = true;
-		point* clicked = Map::TexXYToTileXY(mousePos.x, mousePos.y);
-		point* unitPoint = Map::TexXYToTileXY(test->realX, test->realY);
-		std::vector<point*> route = AStarSearch(curMap, unitPoint->tileX, unitPoint->tileY, clicked->tileX, clicked->tileY);
-		delete clicked;
+		point clicked = Map::TexXYToTileXY(mousePos.x, mousePos.y);
+		point unitPoint = Map::TexXYToTileXY(test->realX, test->realY);
+		std::vector<point> route = AStarSearch(curMap, unitPoint.tileX, unitPoint.tileY, clicked.tileX, clicked.tileY);
 
 		if (route.size() != 0) {
 			// Remove the last point in the route, since it is the current position
-			point* last_point = route.back();
-			delete last_point;
 			route.pop_back();
 
 			// Walk to the target location
