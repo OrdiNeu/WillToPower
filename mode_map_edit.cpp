@@ -43,7 +43,7 @@ void ModeMapEdit::update(float dt, sf::RenderWindow* screen) {
 		// Otherwise, we're in the map area
 		// Check for clicks and swap the selected tile with the currently selected tile
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			point clicked = Map::TexXYToTileXY(mousePos.x, mousePos.y);
+			point clicked = TexXYToTileXY(mousePos.x, mousePos.y);
 			cout << "X: " << clicked.tileX << " Y: " << clicked.tileY << endl;
 			curMap->setTile(clicked.tileX, clicked.tileY, curSelectedTile);
 		}

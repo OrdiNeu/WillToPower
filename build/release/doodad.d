@@ -58,7 +58,8 @@ build/release/doodad.o: doodad.cpp doodad.hpp \
  ../SFML/include/SFML/Graphics/RectangleShape.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
- ../SFML/include/SFML/Graphics/Text.hpp constants.hpp entity.hpp
+ ../SFML/include/SFML/Graphics/Text.hpp constants.hpp entity.hpp \
+ point.hpp
 
 doodad.hpp:
 
@@ -193,3 +194,5 @@ doodad.hpp:
 constants.hpp:
 
 entity.hpp:
+
+point.hpp:

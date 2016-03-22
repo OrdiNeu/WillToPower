@@ -84,7 +84,7 @@ std::vector<point> AStarSearch(Map* map, int startx, int starty, int endx, int e
 				//cout << "Finished at (" << x << "," << y << ")" << endl;
 				// Populate the vector of points to nav through by looking through the parents
 				while (thisNode) {
-					retVal.push_back(Map::TileXYToTexXY(thisNode->x, thisNode->y));
+					retVal.push_back(TileXYToTexXY(thisNode->x, thisNode->y));
 					thisNode = thisNode->parent;
 				}
 

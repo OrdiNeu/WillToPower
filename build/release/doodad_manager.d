@@ -58,8 +58,9 @@ build/release/doodad_manager.o: doodad_manager.cpp doodad_manager.hpp \
  ../SFML/include/SFML/Graphics/RectangleShape.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
- ../SFML/include/SFML/Graphics/Text.hpp constants.hpp entity.hpp map.hpp \
- tile.hpp material.hpp room.hpp bounds_check.hpp manager.hpp
+ ../SFML/include/SFML/Graphics/Text.hpp constants.hpp entity.hpp \
+ point.hpp map.hpp tile.hpp material.hpp room.hpp bounds_check.hpp \
+ manager.hpp
 
 doodad_manager.hpp:
 
@@ -196,6 +197,8 @@ doodad.hpp:
 constants.hpp:
 
 entity.hpp:
+
+point.hpp:
 
 map.hpp:
 

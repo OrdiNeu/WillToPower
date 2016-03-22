@@ -58,9 +58,10 @@ build/release/unit_manager.o: unit_manager.cpp unit_manager.hpp unit.hpp \
  ../SFML/include/SFML/Graphics/RectangleShape.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
- ../SFML/include/SFML/Graphics/Text.hpp constants.hpp entity.hpp item.hpp \
- material.hpp unit_ai.hpp map.hpp tile.hpp room.hpp doodad.hpp \
- bounds_check.hpp a_star.hpp job_queue.hpp request_queue.hpp manager.hpp
+ ../SFML/include/SFML/Graphics/Text.hpp constants.hpp entity.hpp \
+ point.hpp item.hpp material.hpp unit_ai.hpp map.hpp tile.hpp room.hpp \
+ doodad.hpp bounds_check.hpp a_star.hpp job_queue.hpp request_queue.hpp \
+ manager.hpp
 
 unit_manager.hpp:
 
@@ -197,6 +198,8 @@ unit.hpp:
 constants.hpp:
 
 entity.hpp:
+
+point.hpp:
 
 item.hpp:
 

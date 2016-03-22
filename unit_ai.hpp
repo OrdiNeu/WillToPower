@@ -6,6 +6,7 @@
 #include "a_star.hpp"
 #include "job_queue.hpp"
 #include "request_queue.hpp"
+#include "point.hpp"
 
 // Define some stuff to control unit movement behaviour
 #define AI_MOVE_CENTER_OF_TILE

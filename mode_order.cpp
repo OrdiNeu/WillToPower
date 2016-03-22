@@ -55,7 +55,7 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 					// Mining jobs: any tile with the IS_MINABLE tag is assigned a mining job
 					if (curMap->inBounds(x,y) && curMap->getTile(x,y)->hasTag(IS_MINABLE)) {
 						if (doCreateJob) {
-							point thisSpot = Map::TileXYToTexXY(x, y);
+							point thisSpot = TileXYToTexXY(x, y);
 							createJob(JOB_TYPE_MINING, SKILL_MINING, NULL, thisSpot);
 							curMap->setTasked(x,y,true);
 						}
@@ -88,7 +88,7 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 						if (colorize) curMap->setColor(x, y, COLOR_TASKED);
 					
 						if (doCreateJob) {
-							point thisSpot = Map::TileXYToTexXY(x, y);
+							point thisSpot = TileXYToTexXY(x, y);
 							Item* item = entManager->itemManager->getItemWithTags(IS_WOOD);
 							if (item != NULL) {
 								item->tasked = true;
@@ -148,12 +148,12 @@ void ModeOrder::handleMouse(sf::RenderWindow* screen) {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		if (!leftClicked && selectionActive == SELECT_TYPE_NONE) { // Initiate clicking
 			selectionActive = SELECT_TYPE_LEFT;
-			point startPoint = Map::TexXYToTileXY(mousePos.x, mousePos.y);
+			point startPoint = TexXYToTileXY(mousePos.x, mousePos.y);
 			selectStartX = startPoint.tileX;
 			selectStartY = startPoint.tileY;
 			leftClicked = true;
 		} else if (selectionActive == SELECT_TYPE_LEFT) {
-			point thisPoint = Map::TexXYToTileXY(mousePos.x, mousePos.y);
+			point thisPoint = TexXYToTileXY(mousePos.x, mousePos.y);
 			if (thisPoint.tileX != selectLastX || thisPoint.tileY != selectLastY) {
 				// redraw
 				int jobType;
@@ -173,7 +173,7 @@ void ModeOrder::handleMouse(sf::RenderWindow* screen) {
 	} else {
 		if (leftClicked && selectionActive == SELECT_TYPE_LEFT) {
 			selectionActive = SELECT_TYPE_NONE;
-			point endPoint = Map::TexXYToTileXY(mousePos.x, mousePos.y);
+			point endPoint = TexXYToTileXY(mousePos.x, mousePos.y);
 			int jobType;
 			if (curOrderType == ORDER_MODE_DIG) {
 				jobType = JOB_TYPE_MINING;
@@ -190,8 +190,8 @@ void ModeOrder::handleMouse(sf::RenderWindow* screen) {
 	if (!rightClicked && sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 		selectionActive = SELECT_TYPE_RIGHT;
 		rightClicked = true;
-		point clicked = Map::TexXYToTileXY(mousePos.x, mousePos.y);
-		point unitPoint = Map::TexXYToTileXY(test->realX, test->realY);
+		point clicked = TexXYToTileXY(mousePos.x, mousePos.y);
+		point unitPoint = TexXYToTileXY(test->realX, test->realY);
 		std::vector<point> route = AStarSearch(curMap, unitPoint.tileX, unitPoint.tileY, clicked.tileX, clicked.tileY);
 
 		if (route.size() != 0) {

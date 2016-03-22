@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include "constants.hpp"
 #include <iostream>
+#include "point.hpp"
 
 class Entity {
 public:

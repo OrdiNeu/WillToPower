@@ -3,12 +3,12 @@
 
 AI::AI(Unit* controlled, Map* curMap) : controlled(controlled), curMap(curMap) {
 	timeSinceLastUpdate = UNIT_AI_UPDATE_TIME;
-	lastKnownPos = Map::TexXYToTileXY(controlled->realX, controlled->realY);
+	lastKnownPos = TexXYToTileXY(controlled->realX, controlled->realY);
 }
 
 bool AI::isUnitCloseToCenterOfTile(point unitLoc) {
 #ifdef AI_MOVE_CENTER_OF_TILE
-	point centerPoint = Map::TileXYToTexXY(unitLoc.tileX, unitLoc.tileY);
+	point centerPoint = TileXYToTexXY(unitLoc.tileX, unitLoc.tileY);
 	float dx = controlled->realX - centerPoint.realX;
 	float dy = controlled->realY - centerPoint.realY;
 	return dx * dx + dy * dy < DISTANCE_FROM_CENTER_SQ;
@@ -43,7 +43,7 @@ void AI::moveToNextPoint() {
 }
 
 void AI::continueWalking() {
-	point curPos = Map::TexXYToTileXY(controlled->realX, controlled->realY);
+	point curPos = TexXYToTileXY(controlled->realX, controlled->realY);
 	if (curPos.tileX != lastKnownPos.tileX || curPos.tileY != lastKnownPos.tileY) {
 		if (isUnitCloseToCenterOfTile(curPos)) {
 			// Are we at the target location?
@@ -99,7 +99,7 @@ bool AI::checkJobBoard() {
 		}
 
 		// Passed all checks: determine what to do depending on the type of job
-		point curPoint = Map::TexXYToTileXY(controlled->realX, controlled->realY);
+		point curPoint = TexXYToTileXY(controlled->realX, controlled->realY);
 		lastKnownPos.tileX = curPoint.tileX;
 		lastKnownPos.tileY = curPoint.tileY;
 		std::vector<point> route;
@@ -118,7 +118,7 @@ bool AI::checkJobBoard() {
 					std::cerr << "Error: woodcut job created without a target ent" << std::endl;
 					continue;
 				}
-				targetPoint = Map::TexXYToTileXY(job.targetEnt->realX, job.targetEnt->realY);
+				targetPoint = TexXYToTileXY(job.targetEnt->realX, job.targetEnt->realY);
 				break;
 			}
 			case JOB_TYPE_BUILD: {
@@ -129,7 +129,7 @@ bool AI::checkJobBoard() {
 					std::cerr << "Error: building job created without a target point" << std::endl;
 					continue;
 				} 
-				targetPoint = Map::TexXYToTileXY(job.targetEnt->realX, job.targetEnt->realY);
+				targetPoint = TexXYToTileXY(job.targetEnt->realX, job.targetEnt->realY);
 				break;
 			}
 		}
@@ -205,7 +205,7 @@ void AI::progressJobStage() {
 						float dx = curJob.targetPoint->realX - controlled->realX;
 						float dy = curJob.targetPoint->realY - controlled->realY;
 						if (dx*dx + dy*dy > UNIT_PICKUP_DISTANCE) {
-							walkToPoint(*(curJob.targetPoint), Map::TexXYToTileXY(controlled->realX, controlled->realY));
+							walkToPoint(*(curJob.targetPoint), TexXYToTileXY(controlled->realX, controlled->realY));
 						} else {
 							// Job success
 							jobState = JOB_STAGE_ACTING;
@@ -218,7 +218,7 @@ void AI::progressJobStage() {
 						float dx = curJob.targetEnt->realX - controlled->realX;
 						float dy = curJob.targetEnt->realY - controlled->realY;
 						if (dx*dx + dy*dy > UNIT_PICKUP_DISTANCE) {
-							walkToPoint(Map::TexXYToTileXY(curJob.targetEnt->realX, curJob.targetEnt->realY), Map::TexXYToTileXY(controlled->realX, controlled->realY));
+							walkToPoint(TexXYToTileXY(curJob.targetEnt->realX, curJob.targetEnt->realY), TexXYToTileXY(controlled->realX, controlled->realY));
 						} else {
 							Item* targetItem = (Item*)curJob.targetEnt;
 							controlled->pickupItem(targetItem);

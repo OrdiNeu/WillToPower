@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include "job_queue.hpp"
 #include "request_queue.hpp"
+#include "point.hpp"
 
 enum ORDER_MODE {
 	ORDER_MODE_DIG,

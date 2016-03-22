@@ -8,6 +8,7 @@
 #include "unit_ai.hpp"
 #include <sstream>
 #include "manager.hpp"
+#include "point.hpp"
 
 class EntityManager;
 

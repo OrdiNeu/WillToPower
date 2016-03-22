@@ -58,7 +58,7 @@ build/release/entity.o: entity.cpp Entity.hpp \
  ../SFML/include/SFML/Graphics/RectangleShape.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
- ../SFML/include/SFML/Graphics/Text.hpp constants.hpp
+ ../SFML/include/SFML/Graphics/Text.hpp constants.hpp point.hpp
 
 Entity.hpp:
 
@@ -191,3 +191,5 @@ Entity.hpp:
 ../SFML/include/SFML/Graphics/Text.hpp:
 
 constants.hpp:
+
+point.hpp:

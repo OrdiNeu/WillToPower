@@ -8,6 +8,7 @@
 #include "room.hpp"
 #include "entity.hpp"
 #include "bounds_check.hpp"
+#include "point.hpp"
 
 const int NUM_DEFAULT_COLORS = 2;
 const sf::Color DEFAULT_TILE_COLORS[] = {sf::Color(255,255,255), sf::Color(255,0,0)};

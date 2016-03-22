@@ -4,8 +4,8 @@ Jobs have been implemented. Now the only thing left to do is to MAKE MORE OF THE
 Major Milestones:
 x Random Terrain Generation
 x	Doodad generation
-- "Room" building
+x "Room" building
 X XML reading
 
 Minor TODOs:
-Better error handling from the top level
+x Better error handling from the top level

@@ -59,7 +59,7 @@ Map* WorldGenerator::generateMap(int map_x, int map_y) {
 				retVal->setTile(x,y,0);
 				// If the 6th digit is a 2, 1, or 0, put a tree here
 				if (rand() % 10 < 3) {
-					point thisPoint = Map::TileXYToTexXY(x,y);
+					point thisPoint = TileXYToTexXY(x,y);
 					RequestQueues::entityRequests.push_back(entRequest::newEntRequest("Tree", thisPoint.realX, thisPoint.realY, ENT_TYPE_DOODAD));
 				}
 			} else if (forestFactor < -0.5) {

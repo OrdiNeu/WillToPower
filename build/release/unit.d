@@ -57,8 +57,8 @@ build/release/unit.o: unit.cpp unit.hpp ../SFML/include/SFML/Graphics.hpp \
  ../SFML/include/SFML/Graphics/RectangleShape.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
- ../SFML/include/SFML/Graphics/Text.hpp constants.hpp entity.hpp item.hpp \
- material.hpp
+ ../SFML/include/SFML/Graphics/Text.hpp constants.hpp entity.hpp \
+ point.hpp item.hpp material.hpp
 
 unit.hpp:
 
@@ -193,6 +193,8 @@ unit.hpp:
 constants.hpp:
 
 entity.hpp:
+
+point.hpp:
 
 item.hpp:
 

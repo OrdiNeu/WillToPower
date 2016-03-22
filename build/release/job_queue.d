@@ -58,7 +58,7 @@ build/release/job_queue.o: job_queue.cpp job_queue.hpp constants.hpp \
  ../SFML/include/SFML/Graphics/RectangleShape.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
- ../SFML/include/SFML/Graphics/Text.hpp
+ ../SFML/include/SFML/Graphics/Text.hpp point.hpp
 
 job_queue.hpp:
 
@@ -193,3 +193,5 @@ entity.hpp:
 ../SFML/include/SFML/Graphics/Sprite.hpp:
 
 ../SFML/include/SFML/Graphics/Text.hpp:
+
+point.hpp:

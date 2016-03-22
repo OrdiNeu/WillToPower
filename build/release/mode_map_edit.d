@@ -59,7 +59,7 @@ build/release/mode_map_edit.o: mode_map_edit.cpp mode_map_edit.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp mode.hpp map.hpp tile.hpp \
- constants.hpp entity.hpp material.hpp room.hpp doodad.hpp \
+ constants.hpp entity.hpp point.hpp material.hpp room.hpp doodad.hpp \
  bounds_check.hpp entity_manager.hpp unit_manager.hpp unit.hpp item.hpp \
  unit_ai.hpp a_star.hpp job_queue.hpp request_queue.hpp manager.hpp \
  doodad_manager.hpp item_manager.hpp world_generator.hpp \
@@ -779,6 +779,8 @@ tile.hpp:
 constants.hpp:
 
 entity.hpp:
+
+point.hpp:
 
 material.hpp:
 

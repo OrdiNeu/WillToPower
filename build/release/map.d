@@ -58,7 +58,7 @@ build/release/map.o: map.cpp map.hpp ../SFML/include/SFML/Graphics.hpp \
  ../SFML/include/SFML/Graphics/ConvexShape.hpp \
  ../SFML/include/SFML/Graphics/Sprite.hpp \
  ../SFML/include/SFML/Graphics/Text.hpp tile.hpp constants.hpp entity.hpp \
- material.hpp room.hpp doodad.hpp bounds_check.hpp
+ point.hpp material.hpp room.hpp doodad.hpp bounds_check.hpp
 
 map.hpp:
 
@@ -195,6 +195,8 @@ tile.hpp:
 constants.hpp:
 
 entity.hpp:
+
+point.hpp:
 
 material.hpp:
 
