@@ -17,7 +17,7 @@ friend EntityManager;
 public:
 	std::vector<AI*> ais;
 	void update(float dt);
-	Unit* addNewEntByType(std::string type);
+	Unit* addNewEntByType(std::string type, float x, float y);
 	void addEnt(AI* ai);
 	Unit* removeEnt(std::string uid);
 	Map* curMap;

@@ -35,7 +35,7 @@ public:
 		}
 	};
 
-	virtual T* addNewEntByType(std::string type) {
+	virtual T* addNewEntByType(std::string type, float x, float y) {
 		// Ensure that the type exists
 		if (ent_library.find(type) == ent_library.end()) {
 			std::cerr << "ERROR: attempted to create entity of unknown type " << type << std::endl;
@@ -47,6 +47,7 @@ public:
 		stream << type << "_" << num_ents_created[type]++;
 
 		T* newEnt = ent_library[type].clone(stream.str());
+		newEnt->moveToRealXY(x,y);
 		lastCreatedEnt = newEnt;
 		addEnt(newEnt);
 		return newEnt;

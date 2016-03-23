@@ -8,6 +8,7 @@
 
 enum DOODAD_TAGS {
 	NONE,
+	PATHING_BLOCK,
 	IS_TREE
 };
 

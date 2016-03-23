@@ -56,15 +56,14 @@ void EntityManager::addToEntList(Entity* newEnt) {
 Entity* EntityManager::addNewEntByType(std::string name, int type, float x, float y) {
 	Entity* newEnt;
 	if (type == ENT_TYPE_UNIT) {
-		newEnt = unitManager->addNewEntByType(name);
+		newEnt = unitManager->addNewEntByType(name, x, y);
 	} else if (type == ENT_TYPE_DOODAD) {
-		newEnt = doodadManager->addNewEntByType(name);
+		newEnt = doodadManager->addNewEntByType(name, x, y);
 	} else if (type == ENT_TYPE_ITEM) {
-		newEnt = itemManager->addNewEntByType(name);
+		newEnt = itemManager->addNewEntByType(name, x, y);
 	}
 
 	if (newEnt != NULL) {
-		newEnt->moveToRealXY(x, y);
 		addToEntList(newEnt);
 	}
 	return newEnt;

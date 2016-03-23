@@ -25,6 +25,7 @@ private:
 	int** colorize;	// Flag that tells if the tile is supposed to be colorized prior to rendering
 	int** rooms;
 	bool** tasked; // Flag that tells if the tile has an associated task
+	bool** walkable;
 	std::vector<Tile*> tileDict;
 	std::vector<sf::Color> colorDict;
 	std::vector<Room*> roomDict;
@@ -59,6 +60,8 @@ public:
 	void setTasked(int x, int y, bool tasked);
 	bool getTasked(int x, int y);
 	bool isWalkable(int x, int y);
+	void resetWalkableStatus(int x, int y);
+	void setWalkableStatus(int x, int y, bool status);
 	//void moveEnt(int oldX, int oldY)
 	//Entity* getEnts(int x, int y);
 	Tile* getRoom(int x, int y);

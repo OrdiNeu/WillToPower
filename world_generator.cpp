@@ -36,7 +36,7 @@ WorldGenerator::~WorldGenerator() {
 }
 void WorldGenerator::addDefaultTiles(Map* map) {
 	XmlLoader::loadMaterials(map, "./data/materials.xml");
-	Doodad tree = Doodad("TREE", "./data/images/Tree.png", 0, 0, IS_TREE);
+	Doodad tree = Doodad("TREE", "./data/images/Tree.png", 0, 0, IS_TREE | PATHING_BLOCK);
 	entManager->doodadManager->addNewEntType("Tree", tree);
 	Item item = Item("WOOD", "./data/images/skills/HealIcon.png", 0, 0, IS_WOOD);
 	entManager->itemManager->addNewEntType("Wood", item);
@@ -58,7 +58,7 @@ Map* WorldGenerator::generateMap(int map_x, int map_y) {
 				// This is a forest-y region
 				retVal->setTile(x,y,0);
 				// If the 6th digit is a 2, 1, or 0, put a tree here
-				if (rand() % 10 < 3) {
+				if (rand() % 10 < 2) {
 					point thisPoint = TileXYToTexXY(x,y);
 					RequestQueues::entityRequests.push_back(entRequest::newEntRequest("Tree", thisPoint.realX, thisPoint.realY, ENT_TYPE_DOODAD));
 				}

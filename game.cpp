@@ -18,6 +18,7 @@ void Game::init(){
 	Mode::worldGen = new WorldGenerator(Mode::entManager,0);
 	Mode::curMap = Mode::worldGen->getMap(0,0);
 	Mode::entManager->unitManager->curMap = Mode::curMap;
+	Mode::entManager->doodadManager->curMap = Mode::curMap;
 	curMode = new ModeOrder();
 	curMode->init();
 }

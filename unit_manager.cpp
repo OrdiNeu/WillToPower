@@ -19,7 +19,7 @@ void UnitManager::update(float dt) {
 	}
 }
 
-Unit* UnitManager::addNewEntByType(std::string type) {
+Unit* UnitManager::addNewEntByType(std::string type, float x, float y) {
 	// Ensure that the type exists
 	if (ent_library.find(type) == ent_library.end()) {
 		std::cerr << "ERROR: attempted to create unit of unknown type " << type << std::endl;
@@ -32,6 +32,7 @@ Unit* UnitManager::addNewEntByType(std::string type) {
 
 	Unit* newUnit = ent_library[type].clone(stream.str());
 	AI* newAI = new AI(newUnit, curMap);
+	newUnit->moveToRealXY(x, y);
 	addEnt(newAI);
 	lastCreatedEnt = newUnit;
 	return newUnit;

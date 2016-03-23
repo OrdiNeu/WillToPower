@@ -18,6 +18,7 @@ Map::~Map() {
 	delete[] rooms;
 	delete[] tasked;
 	delete[] colorize;
+	delete[] walkable;
 }
 
 void Map::update(float dt) {
@@ -60,16 +61,19 @@ void Map::init(int width, int height) {
 	colorize = new int*[width];
 	rooms = new int*[width];
 	tasked = new bool*[width];
+	walkable = new bool*[width];
 	for (int x = 0; x < width; x++) {
 		tiles[x] = new int[height];
 		colorize[x] = new int[height];
 		rooms[x] = new int[height];
 		tasked[x] = new bool[height];
+		walkable[x] = new bool[height];
 		for (int y = 0; y < height; y++) {
 			tiles[x][y] = 1;
 			colorize[x][y] = 0;
 			rooms[x][y] = 0;
 			tasked[x][y] = false;
+			walkable[x][y] = false;
 		}
 	}
 
@@ -124,6 +128,7 @@ void Map::setTile(int x, int y, int tileToAdd) {
 		return;
 	dirty = true;
 	tiles[x][y] = tileToAdd;
+	walkable[x][y] = tileDict.at(tileToAdd)->hasTag(IS_WALKABLE);
 }
 
 void Map::setColor(int x, int y, sf::Color colorToAdd) {
@@ -214,5 +219,19 @@ void Map::clearColor(int x, int y) {
 }
 
 bool Map::isWalkable(int x, int y) {
-	return (inBounds(x, y) && (getTile(x, y)->tags & IS_WALKABLE));
+	return (inBounds(x, y) && walkable[x][y]);
+}
+
+void Map::resetWalkableStatus(int x, int y) {
+	if (!inBounds(x,y)) {
+		return;
+	}
+	walkable[x][y] = tileDict.at(tiles[x][y])->hasTag(IS_WALKABLE);
+}
+
+void Map::setWalkableStatus(int x, int y, bool status) {
+	if (!inBounds(x,y)) {
+		return;
+	}
+	walkable[x][y] = status;
 }

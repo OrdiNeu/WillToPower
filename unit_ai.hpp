@@ -28,7 +28,7 @@ private:
 	void moveToNextPoint();
 	bool isUnitCloseToCenterOfTile(point unitLoc);
 	int jobState;
-	bool meetsJobRequirements(Job job);
+	bool meetsJobRequirements(Job* job);
 	bool checkJobBoard();
 	void progressJobStage();
 	void finishJob();
@@ -39,7 +39,7 @@ public:
 	AI(Unit* controlled, Map* curMap);
 	Unit* controlled;
 	Map* curMap;
-	Job curJob;
+	Job* curJob;
 	point lastKnownPos;
 	std::string uid;
 	void update(float dt);

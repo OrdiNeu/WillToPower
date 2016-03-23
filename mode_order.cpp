@@ -25,19 +25,19 @@ void ModeOrder::setOrderMode(int orderType) {
 }
 
 void ModeOrder::createJob(int type, int requirements, Entity* targetEnt, point targetPoint) {
-	Job thisJob;
+	Job* thisJob = new Job();
 	point* Point = new point();
 	Point->realX = targetPoint.realX;
 	Point->realY = targetPoint.realY;
 	Point->tileX = targetPoint.tileX;
 	Point->tileY = targetPoint.tileY;
-	thisJob.requirements = requirements;
-	thisJob.suspended = false;
-	thisJob.repeating = false;
-	thisJob.assigned = NULL;
-	thisJob.targetEnt = targetEnt;
-	thisJob.targetPoint = Point;
-	thisJob.type = type;
+	thisJob->requirements = requirements;
+	thisJob->suspended = false;
+	thisJob->repeating = false;
+	thisJob->assigned = NULL;
+	thisJob->targetEnt = targetEnt;
+	thisJob->targetPoint = Point;
+	thisJob->type = type;
 	JobQueue::jobQueue.push_back(thisJob);
 }
 

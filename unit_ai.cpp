@@ -69,19 +69,19 @@ void AI::continueWalking() {
 	}
 }
 
-bool AI::meetsJobRequirements(Job job) {
+bool AI::meetsJobRequirements(Job* job) {
 	// Can't pick up a suspended job
-	if (job.suspended) {
+	if (job->suspended) {
 		return false;
 	}
 
 	// Can't pick up jobs that are assigned to someone else
-	if (!(job.assigned == NULL || job.assigned == controlled)) {
+	if (!(job->assigned == NULL || job->assigned == controlled)) {
 		return false;
 	}
 
 	// Can't pick up jobs we're not qualified for
-	if ((job.requirements & controlled->skills) != job.requirements) {
+	if ((job->requirements & controlled->skills) != job->requirements) {
 		return false;
 	}
 
@@ -90,9 +90,9 @@ bool AI::meetsJobRequirements(Job job) {
 
 bool AI::checkJobBoard() {
 	// Check the job board for stuff to do
-	int jobPicked = -1;
+	//int jobPicked = -1;
 	for (unsigned int i = 0; i < JobQueue::jobQueue.size(); i++) {
-		Job job = JobQueue::jobQueue[i];
+		Job* job = JobQueue::jobQueue[i];
 
 		if (!meetsJobRequirements(job)) {
 			continue;
@@ -104,32 +104,32 @@ bool AI::checkJobBoard() {
 		lastKnownPos.tileY = curPoint.tileY;
 		std::vector<point> route;
 		point targetPoint;
-		switch(job.type) {
+		switch(job->type) {
 			case JOB_TYPE_MINING: {
-				if (job.targetPoint == NULL) {
+				if (job->targetPoint == NULL) {
 					std::cerr << "Error: mining job created without a target point" << std::endl;
 					continue;
 				}
-				targetPoint = *(job.targetPoint);
+				targetPoint = *(job->targetPoint);
 				break;
 			}
 			case JOB_TYPE_WOODCUT: {
-				if (job.targetEnt == NULL) {
+				if (job->targetEnt == NULL) {
 					std::cerr << "Error: woodcut job created without a target ent" << std::endl;
 					continue;
 				}
-				targetPoint = TexXYToTileXY(job.targetEnt->realX, job.targetEnt->realY);
+				targetPoint = TexXYToTileXY(job->targetEnt->realX, job->targetEnt->realY);
 				break;
 			}
 			case JOB_TYPE_BUILD: {
-				if (job.targetEnt == NULL || ((Item*) job.targetEnt)->inInventory == true) {
-					cancelJob(&(job), "item destroyed or missing");
+				if (job->targetEnt == NULL || ((Item*) job->targetEnt)->inInventory == true) {
+					cancelJob(job, "item destroyed or missing");
 					continue;
-				} else if (job.targetPoint == NULL) {
+				} else if (job->targetPoint == NULL) {
 					std::cerr << "Error: building job created without a target point" << std::endl;
 					continue;
 				} 
-				targetPoint = TexXYToTileXY(job.targetEnt->realX, job.targetEnt->realY);
+				targetPoint = TexXYToTileXY(job->targetEnt->realX, job->targetEnt->realY);
 				break;
 			}
 		}
@@ -137,12 +137,11 @@ bool AI::checkJobBoard() {
 		// Pathfind to the job and pick it up
 		if (walkToPoint(targetPoint, curPoint, 1)) {
 			curJob = job;
-			JobQueue::jobQueue.erase(JobQueue::jobQueue.begin() + jobPicked);
-			job.assigned = controlled;
+			job->assigned = controlled;
 			jobState = JOB_STAGE_WALKING_TO_DEST;
 			return true;
 		} else {
-			cancelJob(&(job), "could not reach target");
+			cancelJob(job, "could not reach target");
 		}
 	}
 	return false;
@@ -151,39 +150,47 @@ bool AI::checkJobBoard() {
 void AI::finishJob() {
 	jobState = 0;
 	controlled->state = STATE_IDLE;
-	switch(curJob.type) {
+	switch(curJob->type) {
 		case JOB_TYPE_MINING: {
-			if (curJob.targetPoint != NULL) {
+			if (curJob->targetPoint != NULL) {
 				Material* tileMaterial;
 
-				curMap->setTasked(curJob.targetPoint->tileX,curJob.targetPoint->tileY, false);
-				curMap->setColor(curJob.targetPoint->tileX,curJob.targetPoint->tileY, COLOR_NONE);
-				tileMaterial = curMap->getTile(curJob.targetPoint->tileX, curJob.targetPoint->tileY)->madeOf;
+				curMap->setTasked(curJob->targetPoint->tileX,curJob->targetPoint->tileY, false);
+				curMap->setColor(curJob->targetPoint->tileX,curJob->targetPoint->tileY, COLOR_NONE);
+				tileMaterial = curMap->getTile(curJob->targetPoint->tileX, curJob->targetPoint->tileY)->madeOf;
 				//std::cout << tileMaterial->tileID << " " << dirt->wallID << std::endl;
-				curMap->setTile(curJob.targetPoint->tileX,curJob.targetPoint->tileY, tileMaterial->tileID);
+				curMap->setTile(curJob->targetPoint->tileX,curJob->targetPoint->tileY, tileMaterial->tileID);
 			}
 			break;
 		}
 		case JOB_TYPE_WOODCUT: {
-			if (curJob.targetEnt == NULL) {
-				cancelJob(&(curJob), "target destroyed or missing");
+			if (curJob->targetEnt == NULL) {
+				cancelJob(curJob, "target destroyed or missing");
 				return;
 			}
-			RequestQueues::entityRequests.push_back(entRequest::newEntRequest("Wood", curJob.targetEnt->realX, curJob.targetEnt->realY, ENT_TYPE_ITEM));
-			RequestQueues::entityRequests.push_back(entRequest::delEntRequest(curJob.targetEnt->uid, ENT_TYPE_DOODAD));
+			RequestQueues::entityRequests.push_back(entRequest::newEntRequest("Wood", curJob->targetEnt->realX, curJob->targetEnt->realY, ENT_TYPE_ITEM));
+			RequestQueues::entityRequests.push_back(entRequest::delEntRequest(curJob->targetEnt->uid, ENT_TYPE_DOODAD));
 			break;
 		}
 		case JOB_TYPE_BUILD: {
-			if (curJob.targetEnt == NULL) {
-				cancelJob(&(curJob), "item destroyed or missing");
+			if (curJob->targetEnt == NULL) {
+				cancelJob(curJob, "item destroyed or missing");
 				return;
 			}
-			RequestQueues::entityRequests.push_back(entRequest::delEntRequest(curJob.targetEnt->uid, ENT_TYPE_ITEM));
-			curMap->setTasked(curJob.targetPoint->tileX, curJob.targetPoint->tileY, false);
-			curMap->setColor(curJob.targetPoint->tileX, curJob.targetPoint->tileY, COLOR_NONE);
-			curMap->setRoom(curJob.targetPoint->tileX, curJob.targetPoint->tileY, curJob.roomIDToBuild);
+			RequestQueues::entityRequests.push_back(entRequest::delEntRequest(curJob->targetEnt->uid, ENT_TYPE_ITEM));
+			curMap->setTasked(curJob->targetPoint->tileX, curJob->targetPoint->tileY, false);
+			curMap->setColor(curJob->targetPoint->tileX, curJob->targetPoint->tileY, COLOR_NONE);
+			curMap->setRoom(curJob->targetPoint->tileX, curJob->targetPoint->tileY, curJob->roomIDToBuild);
 			// DEBUG:
-			curMap->setTile(curJob.targetPoint->tileX, curJob.targetPoint->tileY, 0);
+			curMap->setTile(curJob->targetPoint->tileX, curJob->targetPoint->tileY, 0);
+			break;
+		}
+	}
+	
+	for (std::vector<Job*>::iterator it = JobQueue::jobQueue.begin() ; it != JobQueue::jobQueue.end(); ++it) {
+		if ((*it) == curJob) {
+			JobQueue::jobQueue.erase(it);
+			delete curJob;
 			break;
 		}
 	}
@@ -193,34 +200,34 @@ void AI::finishJob() {
 void AI::progressJobStage() {
 	switch(jobState) {
 		case JOB_STAGE_WALKING_TO_DEST: {
-			switch(curJob.type) {
+			switch(curJob->type) {
 				case JOB_TYPE_BUILD: {
-					if (curJob.targetEnt == NULL) {
-						cancelJob(&(curJob), "item destroyed or missing");
+					if (curJob->targetEnt == NULL) {
+						cancelJob(curJob, "item destroyed or missing");
 						return;
 					}
 
-					Item* targetItem = ((Item*) curJob.targetEnt);
+					Item* targetItem = ((Item*) curJob->targetEnt);
 					if (controlled->hasItem(targetItem)) {
-						float dx = curJob.targetPoint->realX - controlled->realX;
-						float dy = curJob.targetPoint->realY - controlled->realY;
+						float dx = curJob->targetPoint->realX - controlled->realX;
+						float dy = curJob->targetPoint->realY - controlled->realY;
 						if (dx*dx + dy*dy > UNIT_PICKUP_DISTANCE) {
-							walkToPoint(*(curJob.targetPoint), TexXYToTileXY(controlled->realX, controlled->realY));
+							walkToPoint(*(curJob->targetPoint), TexXYToTileXY(controlled->realX, controlled->realY));
 						} else {
 							// Job success
 							jobState = JOB_STAGE_ACTING;
 							controlled->startTask(0.5);
 						}
 					} else if (targetItem->inInventory) {
-						cancelJob(&(curJob), "item destroyed or missing");
+						cancelJob(curJob, "item destroyed or missing");
 						return;
 					} else {
-						float dx = curJob.targetEnt->realX - controlled->realX;
-						float dy = curJob.targetEnt->realY - controlled->realY;
+						float dx = curJob->targetEnt->realX - controlled->realX;
+						float dy = curJob->targetEnt->realY - controlled->realY;
 						if (dx*dx + dy*dy > UNIT_PICKUP_DISTANCE) {
-							walkToPoint(TexXYToTileXY(curJob.targetEnt->realX, curJob.targetEnt->realY), TexXYToTileXY(controlled->realX, controlled->realY));
+							walkToPoint(TexXYToTileXY(curJob->targetEnt->realX, curJob->targetEnt->realY), TexXYToTileXY(controlled->realX, controlled->realY));
 						} else {
-							Item* targetItem = (Item*)curJob.targetEnt;
+							Item* targetItem = (Item*)curJob->targetEnt;
 							controlled->pickupItem(targetItem);
 						}
 					}
@@ -252,11 +259,9 @@ void AI::update(float dt) {
 		progressJobStage();
 	} else {
 		timeSinceLastUpdate -= dt;
-		if (timeSinceLastUpdate <= 0) {
-			if (controlled->state == STATE_IDLE) {
-				if (!checkJobBoard()) {
-					timeSinceLastUpdate = UNIT_AI_UPDATE_TIME;
-				}
+		if (timeSinceLastUpdate <= 0 && controlled->state == STATE_IDLE) {
+			if (!checkJobBoard()) {
+				timeSinceLastUpdate = UNIT_AI_UPDATE_TIME;
 			}
 		}
 	}

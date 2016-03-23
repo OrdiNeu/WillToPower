@@ -14,19 +14,24 @@ void XmlLoader::loadUnits(UnitManager* unit_manager, std::string filename) {
     }
 }
 
+// Putting this into its own function because it's really non-intuitive
+bool XmlLoader::hasTag(std::string text, std::string tag) {
+    return text.find(tag) != std::string::npos;
+}
+
 int XmlLoader::parseTags(std::string tags) {
     int retVal = 0;
 
-    if (tags.find("IS_WALKABLE") != std::string::npos) {
+    if (hasTag(tags,"IS_WALKABLE")) {
         retVal |= IS_WALKABLE;
     }
-    if (tags.find("IS_MINABLE") != std::string::npos) {
+    if (hasTag(tags,"IS_MINABLE")) {
         retVal |= IS_MINABLE;
     }
-    if (tags.find("IS_WALL") != std::string::npos) {
+    if (hasTag(tags,"IS_WALL")) {
         retVal |= WALL;
     }
-    
+
     return retVal;
 }
 

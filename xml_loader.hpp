@@ -14,6 +14,7 @@
 class XmlLoader {
 private:
 	static Tile* loadTile(boost::property_tree::ptree tileTree, Map* map = NULL, Material* matMadeOf = NULL);
+	static bool hasTag(std::string text, std::string tag);
 	static int parseTags(std::string tags);
 public:
 	static void loadUnits(UnitManager* unit_manager, std::string filename);
