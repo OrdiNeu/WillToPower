@@ -6,7 +6,7 @@ AStarNode::AStarNode(int x, int y, int target_x, int target_y, int g, AStarNode*
 	this->g = g;
 	int dx = (x-target_x);
 	int dy = (y-target_y);
-	h = sqrt(dx*dx + float(dy*dy)/4);
+	h = sqrt(dx*dx + float(dy*dy)/TILE_DIST_DY_CONV_FACTOR);
 	this->parent = parent;
 	prev = NULL;
 	next = NULL;

@@ -21,3 +21,9 @@ point TexXYToTileXY(float texX, float texY) {
 	retVal.tileY = (int) (floor(realY - 0.5*oddY)*2 + oddY);	// There is likely a more elegant way of stating this, but I just spent 5 hours getting the math right
 	return retVal;
 }
+
+float tileDistSq(point a, point b) {
+	float dx = (a.tileX + (a.tileY%2)/2) - (b.tileX + (b.tileY%2)/2);
+	float dy = a.tileY - b.tileY;
+	return dx*dx+dy*dy/TILE_DIST_DY_CONV_FACTOR;
+}

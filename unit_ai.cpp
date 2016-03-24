@@ -182,7 +182,7 @@ void AI::finishJob() {
 			curMap->setColor(curJob->targetPoint->tileX, curJob->targetPoint->tileY, COLOR_NONE);
 			curMap->setRoom(curJob->targetPoint->tileX, curJob->targetPoint->tileY, curJob->roomIDToBuild);
 			// DEBUG:
-			curMap->setTile(curJob->targetPoint->tileX, curJob->targetPoint->tileY, 0);
+			curMap->setTile(curJob->targetPoint->tileX, curJob->targetPoint->tileY, 8);
 			break;
 		}
 	}
@@ -202,6 +202,8 @@ void AI::progressJobStage() {
 		case JOB_STAGE_WALKING_TO_DEST: {
 			switch(curJob->type) {
 				case JOB_TYPE_BUILD: {
+					point controlledPoint = TexXYToTileXY(controlled->realX, controlled->realY);
+
 					if (curJob->targetEnt == NULL) {
 						cancelJob(curJob, "item destroyed or missing");
 						return;
@@ -209,10 +211,8 @@ void AI::progressJobStage() {
 
 					Item* targetItem = ((Item*) curJob->targetEnt);
 					if (controlled->hasItem(targetItem)) {
-						float dx = curJob->targetPoint->realX - controlled->realX;
-						float dy = curJob->targetPoint->realY - controlled->realY;
-						if (dx*dx + dy*dy > UNIT_PICKUP_DISTANCE) {
-							walkToPoint(*(curJob->targetPoint), TexXYToTileXY(controlled->realX, controlled->realY));
+						if (tileDistSq(*(curJob->targetPoint), controlledPoint) > UNIT_PICKUP_DISTANCE) {
+							walkToPoint(*(curJob->targetPoint), controlledPoint, UNIT_PICKUP_DISTANCE);
 						} else {
 							// Job success
 							jobState = JOB_STAGE_ACTING;
@@ -222,10 +222,9 @@ void AI::progressJobStage() {
 						cancelJob(curJob, "item destroyed or missing");
 						return;
 					} else {
-						float dx = curJob->targetEnt->realX - controlled->realX;
-						float dy = curJob->targetEnt->realY - controlled->realY;
-						if (dx*dx + dy*dy > UNIT_PICKUP_DISTANCE) {
-							walkToPoint(TexXYToTileXY(curJob->targetEnt->realX, curJob->targetEnt->realY), TexXYToTileXY(controlled->realX, controlled->realY));
+						point targetPoint = TexXYToTileXY(curJob->targetEnt->realX, curJob->targetEnt->realY);
+						if (tileDistSq(targetPoint, controlledPoint) > UNIT_PICKUP_DISTANCE) {
+							walkToPoint(targetPoint, controlledPoint, UNIT_PICKUP_DISTANCE);
 						} else {
 							Item* targetItem = (Item*)curJob->targetEnt;
 							controlled->pickupItem(targetItem);

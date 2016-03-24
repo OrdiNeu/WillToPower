@@ -40,6 +40,11 @@ Unit* Unit::clone(std::string newUID) {
 }
 
 void Unit::update(float dt) {
+	// Prevent sudden jumping
+	if (dt > 1) {
+		dt = 1;
+	}
+
 	// Determine what to do depending on state
 	switch (state) {
 		case STATE_WALKING: {
