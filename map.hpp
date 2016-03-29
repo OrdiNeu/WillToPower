@@ -1,7 +1,6 @@
 #ifndef MAP_HPP
 #define MAP_HPP
 
-#include <SFML/Graphics.hpp>
 #include <iostream>
 #include "tile.hpp"
 #include "constants.hpp"
@@ -9,13 +8,6 @@
 #include "entity.hpp"
 #include "bounds_check.hpp"
 #include "point.hpp"
-
-const int NUM_DEFAULT_COLORS = 2;
-const sf::Color DEFAULT_TILE_COLORS[] = {sf::Color(255,255,255), sf::Color(255,0,0)};
-enum defaultColors {
-	COLOR_NONE,
-	COLOR_TASKED,
-};
 
 class Map {
 	friend class WorldGenerator;
@@ -40,6 +32,11 @@ protected:
 	void addRoom(Room* roomToAdd);
 	void addMaterial(Material* matToAdd);
 public:
+	int width, height;
+
+	static point TexXYToTileXY(float texX, float texY);
+	static point TileXYToTexXY(int x, int y);
+	
 	Map();
 	~Map();
 	void init(int width, int height);
@@ -68,10 +65,6 @@ public:
 	void clearColor(int x, int y);
 	bool inBounds(int x, int y);
 	std::vector<Tile*> getTileDict(){ return tileDict; };
-	int width, height;
-
-	static point TexXYToTileXY(float texX, float texY);
-	static point TileXYToTexXY(int x, int y);
 };
 
 #endif

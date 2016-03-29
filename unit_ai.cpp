@@ -49,9 +49,9 @@ void AI::continueWalking() {
 			// Are we at the target location?
 			point nextLoc = controlled->curPath.back();
 			if (curPos.tileX != nextLoc.tileX || curPos.tileY != nextLoc.tileY) {
-				std::cout << "Unit ended up somewhere unexpected - need to recreate path" << std::endl;
-				std::cout << "(Expected " << nextLoc.tileX << "," << nextLoc.tileY << "), got (" << curPos.tileX << "," << curPos.tileY << "))" << std::endl;
-				std::cout << "Last known position:" << lastKnownPos.tileX << "," << lastKnownPos.tileY << std::endl;
+				DEBUG_OUTPUT << "Unit ended up somewhere unexpected - need to recreate path" << std::endl;
+				DEBUG_OUTPUT << "(Expected " << nextLoc.tileX << "," << nextLoc.tileY << "), got (" << curPos.tileX << "," << curPos.tileY << "))" << std::endl;
+				DEBUG_OUTPUT << "Last known position:" << lastKnownPos.tileX << "," << lastKnownPos.tileY << std::endl;
 				// We meed to recreate the path
 				int targetX, targetY;
 				while (!controlled->curPath.empty()) {

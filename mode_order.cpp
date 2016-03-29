@@ -72,9 +72,12 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 					std::vector<Doodad*> doodadsHere = entManager->doodadManager->getDoodadsAtPoint(x,y);
 					for (Doodad* thisDoodad : doodadsHere) {
 						if (thisDoodad->hasTags(IS_TREE)) {
-							if (doCreateJob) createJob(JOB_TYPE_WOODCUT, SKILL_WOODCUT, thisDoodad, point());
+							if (doCreateJob) {
+								createJob(JOB_TYPE_WOODCUT, SKILL_WOODCUT, thisDoodad, point());
+								thisDoodad->tags |= DOODAD_TASKED;
+							}
 							if (colorize) thisDoodad->spr.setColor(DEFAULT_TILE_COLORS[COLOR_TASKED]);
-							if (uncolorize) thisDoodad->spr.setColor(DEFAULT_TILE_COLORS[COLOR_NONE]);
+							if (uncolorize && !thisDoodad->hasTags(DOODAD_TASKED)) thisDoodad->spr.setColor(DEFAULT_TILE_COLORS[COLOR_NONE]);
 						}
 					}
 					break;
@@ -207,6 +210,17 @@ void ModeOrder::handleMouse(sf::RenderWindow* screen) {
 		rightClicked = false;
 	}
 };
+
+void ModeOrder::flushRequests() {
+	/*while (!RequestQueues::uiRequests.empty()) {
+		// parse this request
+		uiRequest request = RequestQueues::uiRequests.back();
+
+		// TODO: Handle this request
+
+ 		RequestQueues::uiRequests.pop_back();
+	}*/
+}
 
 void ModeOrder::update(float dt, sf::RenderWindow* screen) {
 	sf::Event e;

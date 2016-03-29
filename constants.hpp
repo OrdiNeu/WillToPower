@@ -1,6 +1,10 @@
 #ifndef CONSTANTS_HPP
 #define CONSTANTS_HPP
 
+#include <SFML/Graphics.hpp>
+
+#define DEBUG_OUTPUT std::cout
+
 const int X_SCALE = 2;
 const int Y_SCALE = 2;
 const int WINDOW_HEIGHT = 600;
@@ -19,5 +23,13 @@ const float TILE_DIST_DY_CONV_FACTOR = TILE_WIDTH*TILE_WIDTH/(TILE_HEIGHT*TILE_H
 const int MAX_FPS=30;
 const int WORLD_WIDTH_IN_MAPS = 20;
 const int WORLD_LENGTH_IN_MAPS = 20;
+
+// Colours
+const int NUM_DEFAULT_COLORS = 2;
+const sf::Color DEFAULT_TILE_COLORS[] = {sf::Color(255,255,255), sf::Color(255,0,0)};
+enum defaultColors {
+	COLOR_NONE,
+	COLOR_TASKED,
+};
 
 #endif

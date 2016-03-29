@@ -15,7 +15,7 @@ void Entity::moveToRealXY(float x, float y) {
 
 void Entity::loadSprite(std::string filename) {
 	if (filename != "EMPTY" && !tex.loadFromFile(filename)) {
-		std::cout << "ERROR: Could not load " << filename << std::endl;
+		DEBUG_OUTPUT << "ERROR: Could not load " << filename << std::endl;
 		return;
 	};
 

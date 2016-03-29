@@ -38,10 +38,12 @@ private:
 	void handleMouse(sf::RenderWindow* screen);
 	void drawUI();
 	int orderTypeToJobType(int order_type);
+	void flushRequests();
 public:
 	float screenX;
 	float screenY;
 	int curOrderType;
+
 	ModeOrder();
 	void init();
 	void update(float dt, sf::RenderWindow* screen);

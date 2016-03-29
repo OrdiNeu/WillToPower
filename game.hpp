@@ -12,15 +12,15 @@
 #include "xml_loader.hpp"
 
 class Game {
-	private:
-		sf::RenderWindow screen;
-		Mode* curMode;
-	public:
-		void init();
-		int run();
-		void update(float dt);
-		void render();
-		~Game();
+private:
+	sf::RenderWindow screen;
+	Mode* curMode;
+public:
+	void init();
+	int run();
+	void update(float dt);
+	void render();
+	~Game();
 };
 
 #endif

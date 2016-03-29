@@ -45,11 +45,25 @@ private:
 	entRequest() {};
 };
 
+/*class uiRequest {
+public:
+	std::string eventName;
+
+	static uiRequest newUIRequest(std::string eventName) {
+		uiRequest thisRequest;
+		thisRequest.eventName = eventName;
+		return thisRequest;
+	};
+private:
+	uiRequest() {};
+};*/
+
 // The request queue is a queue of things that we want the entity manager, current map, etc. to do.
 // e..g. making new units, changing the walkability of tiles, etc.
 class RequestQueues {
 public:
 	static std::vector<entRequest> entityRequests;
+	//static std::vector<uiRequest> uiRequests;
 	//static std::vector<mapRequest> mapRequests;
 };
 

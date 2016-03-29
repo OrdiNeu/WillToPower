@@ -7,9 +7,10 @@
 #include "entity.hpp"
 
 enum DOODAD_TAGS {
-	NONE,
-	PATHING_BLOCK,
-	IS_TREE
+	NONE = 0,
+	PATHING_BLOCK = 1 << 0,
+	IS_TREE = 1 << 1,
+	DOODAD_TASKED = 1 << 2
 };
 
 // For those who don't know Blizzard terminology: doodads are background fixtures that do not have AI, and generally do less than units
