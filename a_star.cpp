@@ -64,6 +64,17 @@ bool AStarNode::contains(int x, int y) {
 	return false;
 }
 
+// Insert into this linked list in no particular order
+void AStarNode::unsortedInsert(AStarNode* node) {
+	AStarNode* nextNode = next;
+	if (nextNode != NULL) {
+		node->next = nextNode;
+		nextNode->prev = node;
+	}
+	next = node;
+	node->prev = this;
+}
+
 // Please remember to delete the returned objects
 // Returns a vector with no points if no path found, and a vector of points otherwise
 std::vector<point> AStarSearch(Map* map, int startx, int starty, int endx, int endy, float max_dist_to_accept) {
@@ -146,7 +157,7 @@ std::vector<point> AStarSearch(Map* map, int startx, int starty, int endx, int e
 			//cout << "endInsert: ";
 			OpenList = OpenList->next;
 			thisNode->next = NULL;
-			ClosedList->insert(thisNode);	// TODO: Speedup closed list by not having it be sorted
+			ClosedList->unsortedInsert(thisNode);
 		}
 	}
 
