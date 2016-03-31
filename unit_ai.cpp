@@ -90,7 +90,10 @@ bool AI::meetsJobRequirements(Job* job) {
 
 bool AI::checkJobBoard() {
 	// Check the job board for stuff to do
-	//int jobPicked = -1;
+	point targetPoint;
+	point curPoint = TexXYToTileXY(controlled->realX, controlled->realY);
+	Job* pickedJob = NULL;
+	std::vector<point> closestRoute;
 	for (unsigned int i = 0; i < JobQueue::jobQueue.size(); i++) {
 		Job* job = JobQueue::jobQueue[i];
 
@@ -99,11 +102,9 @@ bool AI::checkJobBoard() {
 		}
 
 		// Passed all checks: determine what to do depending on the type of job
-		point curPoint = TexXYToTileXY(controlled->realX, controlled->realY);
 		lastKnownPos.tileX = curPoint.tileX;
 		lastKnownPos.tileY = curPoint.tileY;
 		std::vector<point> route;
-		point targetPoint;
 		switch(job->type) {
 			case JOB_TYPE_MINING: {
 				if (job->targetPoint == NULL) {
@@ -134,14 +135,22 @@ bool AI::checkJobBoard() {
 			}
 		}
 
+		route = AStarSearch(curMap, curPoint.tileX, curPoint.tileY, targetPoint.tileX, targetPoint.tileY, 1);
+		if (route.size() != 0 && (pickedJob == NULL || route.size() < closestRoute.size())) {
+			closestRoute = route;
+			pickedJob = job;
+		}
+	}
+
+	if (pickedJob != NULL) {
 		// Pathfind to the job and pick it up
 		if (walkToPoint(targetPoint, curPoint, 1)) {
-			curJob = job;
-			job->assigned = controlled;
+			curJob = pickedJob;
+			pickedJob->assigned = controlled;
 			jobState = JOB_STAGE_WALKING_TO_DEST;
 			return true;
 		} else {
-			cancelJob(job, "could not reach target");
+			cancelJob(pickedJob, "could not reach target");
 		}
 	}
 	return false;

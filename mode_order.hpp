@@ -1,13 +1,15 @@
 #ifndef MODE_ORDER
 #define MODE_ORDER
+#include <SFML/Graphics.hpp>
 #include "mode.hpp"
 #include "bounds_check.hpp"
 #include "constants.hpp"
 #include "unit_manager.hpp"
-#include <SFML/Graphics.hpp>
 #include "job_queue.hpp"
 #include "request_queue.hpp"
 #include "point.hpp"
+#include "ui_drawable.hpp"
+#include "ui_container.hpp"
 
 enum ORDER_MODE {
 	ORDER_MODE_DIG,
@@ -29,6 +31,9 @@ private:
 	int selectLastX, selectLastY;
 	Unit* test;
 	AI* testai;
+	UIDrawable* digButton;
+	UIDrawable* woodcutButton;
+	UIDrawable* buildButton;
 
 	sf::Vector2i getMousePos();
 	void findTasksInArea(int type, int x0, int x1, int y0, int y1, bool doCreateJob, bool colorize, bool uncolorize);
@@ -36,7 +41,8 @@ private:
 	sf::Vector2i getMousePos(sf::RenderWindow* screen);
 	void handleKeyboard(float dt);
 	void handleMouse(sf::RenderWindow* screen);
-	void drawUI();
+	void drawUI(sf::RenderTarget* screen);
+	void checkUIForClick(float x, float y);
 	int orderTypeToJobType(int order_type);
 	void flushRequests();
 public:

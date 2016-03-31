@@ -1,11 +1,11 @@
-#ifndef UI_BUTTON_HPP
-#define UI_BUTTON_HPP
+#ifndef UI_DRAWABLE_HPP
+#define UI_DRAWABLE_HPP
 
 #include <SFML/Graphics.hpp>
 #include "constants.hpp"
 #include "request_queue.hpp"
 
-class UIButton {
+class UIDrawable {
 protected:
 	float width;
 	float height;
@@ -16,7 +16,7 @@ public:
 	float screenX, screenY;
 	float dx, dy;
 
-	UIButton(std::string filename, float screenX, float screenY);
+	UIDrawable(std::string filename, float screenX, float screenY);
 	void loadSprite(std::string filename);
 	virtual void render(sf::RenderTarget* screen);
 	virtual void update(float dt);

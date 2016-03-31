@@ -18,6 +18,10 @@ void ModeOrder::init() {
 	screenY = 0;
 	selectionActive = SELECT_TYPE_NONE;
 	curOrderType = ORDER_MODE_DIG;
+
+	digButton = new UIDrawable("./data/images/skills/BoostAtk.png", 0, WINDOW_HEIGHT-40);
+	woodcutButton = new UIDrawable("./data/images/skills/VoltIcon.png", 40, WINDOW_HEIGHT-40);
+	buildButton = new UIDrawable("./data/images/skills/HealIcon.png", 80, WINDOW_HEIGHT-40);
 }
 
 void ModeOrder::setOrderMode(int orderType) {
@@ -145,6 +149,16 @@ void ModeOrder::handleKeyboard(float dt) {
 	}
 };
 
+void ModeOrder::checkUIForClick(float x, float y) {
+	if (digButton->isClicked(x,y)) {
+		setOrderMode(ORDER_MODE_DIG);
+	} else if (woodcutButton->isClicked(x,y)) {
+		setOrderMode(ORDER_MODE_CUTTREE);
+	} else if (buildButton->isClicked(x,y)) {
+		setOrderMode(ORDER_MODE_BUILD);
+	}
+}
+
 void ModeOrder::handleMouse(sf::RenderWindow* screen) {
 	sf::Vector2i mousePos = getMousePos(screen);
 
@@ -155,6 +169,7 @@ void ModeOrder::handleMouse(sf::RenderWindow* screen) {
 			selectStartX = startPoint.tileX;
 			selectStartY = startPoint.tileY;
 			leftClicked = true;
+			checkUIForClick(mousePos.x, mousePos.y);
 		} else if (selectionActive == SELECT_TYPE_LEFT) {
 			point thisPoint = TexXYToTileXY(mousePos.x, mousePos.y);
 			if (thisPoint.tileX != selectLastX || thisPoint.tileY != selectLastY) {
@@ -235,6 +250,13 @@ void ModeOrder::update(float dt, sf::RenderWindow* screen) {
 	handleMouse(screen);
 }
 
+// To be moved into a UI container class
+void ModeOrder::drawUI(sf::RenderTarget* screen) {
+	digButton->render(screen);
+	woodcutButton->render(screen);
+	buildButton->render(screen);
+}
+
 void ModeOrder::render(sf::RenderTarget* screen) {
 	sf::Vector2u size = screen->getSize();
 	sf::View view = screen->getView();
@@ -242,4 +264,5 @@ void ModeOrder::render(sf::RenderTarget* screen) {
 	screen->setView(view);
 	curMap->render(screen);
 	entManager->render(screen);
+	drawUI(screen);
 }
