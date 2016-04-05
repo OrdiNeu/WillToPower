@@ -5,6 +5,7 @@
 #include <iostream>
 #include "constants.hpp"
 #include "entity.hpp"
+#include "material.hpp"
 
 enum DOODAD_TAGS {
 	NONE = 0,
@@ -22,6 +23,7 @@ public:
 	Doodad* clone(std::string newUID);
 	void update(float dt);
 	void render(sf::RenderTarget* screen);
+	Material* madeOf;
 };
 
 #endif

@@ -14,7 +14,6 @@ PerlinNoiseGenerator::PerlinNoiseGenerator(int seed) : seed(seed) {
 		noiseGridY[i] = new double[PERLIN_HEIGHT];
 		for (int j = 0; j < PERLIN_HEIGHT; j++) {
 			// For each point, generate a random 2D unit vector. We also divide it by 2 to save time later
-			//TODO: FIgure out why I can't use M_PI in this scope
 			float angle = 2*3.14159*((float) rand() / (float) RAND_MAX);
 			noiseGridX[i][j] = sin(angle)/2;
 			noiseGridY[i][j] = cos(angle)/2;

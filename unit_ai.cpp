@@ -167,8 +167,7 @@ void AI::finishJob() {
 				curMap->setTasked(curJob->targetPoint->tileX,curJob->targetPoint->tileY, false);
 				curMap->setColor(curJob->targetPoint->tileX,curJob->targetPoint->tileY, COLOR_NONE);
 				tileMaterial = curMap->getTile(curJob->targetPoint->tileX, curJob->targetPoint->tileY)->madeOf;
-				//std::cout << tileMaterial->tileID << " " << dirt->wallID << std::endl;
-				curMap->setTile(curJob->targetPoint->tileX,curJob->targetPoint->tileY, tileMaterial->tileID);
+				curMap->setTile(curJob->targetPoint->tileX,curJob->targetPoint->tileY, tileMaterial->getRandomTileID());
 			}
 			break;
 		}

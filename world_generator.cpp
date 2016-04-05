@@ -34,8 +34,8 @@ WorldGenerator::~WorldGenerator() {
 		delete maps[x];
 	}	
 }
-void WorldGenerator::addDefaultTiles(Map* map) {
-	XmlLoader::loadMaterials(map, "./data/materials.xml");
+void WorldGenerator::loadMaterials(Map* map) {
+	XmlLoader::loadMaterials(entManager->doodadManager, map, "./data/materials.xml");
 	Doodad tree = Doodad("TREE", "./data/images/Tree.png", 0, 0, IS_TREE | PATHING_BLOCK);
 	entManager->doodadManager->addNewEntType("Tree", tree);
 	Item item = Item("WOOD", "./data/images/skills/HealIcon.png", 0, 0, IS_WOOD);
@@ -46,7 +46,7 @@ Map* WorldGenerator::generateMap(int map_x, int map_y) {
 	Map* retVal = new Map();
 	retVal->init(MAP_WIDTH, MAP_HEIGHT);
 	
-	addDefaultTiles(retVal);
+	loadMaterials(retVal);
 
 	// Get the forest layer
 	for (int x = map_x; x < retVal->width+map_x; x++) {
@@ -64,10 +64,10 @@ Map* WorldGenerator::generateMap(int map_x, int map_y) {
 				}
 			} else if (forestFactor < -0.5) {
 				// This is a dry region
+				retVal->setTile(x,y,1);
 				if (rand() % 2 == 1) {
-					retVal->setTile(x,y,4);
-				} else {
-					retVal->setTile(x,y,7);
+					point thisPoint = TileXYToTexXY(x,y);
+					RequestQueues::entityRequests.push_back(entRequest::newEntRequest("dirt_0", thisPoint.realX, thisPoint.realY, ENT_TYPE_DOODAD));
 				}
 			} else {
 				retVal->setTile(x,y,0);

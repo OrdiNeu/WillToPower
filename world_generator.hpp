@@ -26,7 +26,7 @@ private:
 	Map*** maps;
 
 	void createGenerators();
-	void addDefaultTiles(Map* map);
+	void loadMaterials(Map* map);
 	Map* generateMap(int map_x, int map_y);
 };
 

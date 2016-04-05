@@ -168,6 +168,8 @@ void ModeOrder::handleMouse(sf::RenderWindow* screen) {
 			point startPoint = TexXYToTileXY(mousePos.x, mousePos.y);
 			selectStartX = startPoint.tileX;
 			selectStartY = startPoint.tileY;
+			selectLastX = selectStartX;
+			selectLastY = selectStartY;
 			leftClicked = true;
 			checkUIForClick(mousePos.x, mousePos.y);
 		} else if (selectionActive == SELECT_TYPE_LEFT) {

@@ -13,12 +13,13 @@
 
 class XmlLoader {
 private:
-	static Tile* loadTile(boost::property_tree::ptree tileTree, Map* map = NULL, Material* matMadeOf = NULL);
+	static Tile* loadTile(boost::property_tree::ptree tile_tree, Map* map = NULL, Material* mat_made_of = NULL);
+	static Doodad* loadWall(boost::property_tree::ptree wall_tree, DoodadManager* doodad_manager, Material* mat_made_of = NULL);
 	static bool hasTag(std::string text, std::string tag);
 	static int parseTags(std::string tags);
 public:
 	static void loadUnits(UnitManager* unit_manager, std::string filename);
-	static void loadMaterials(Map* map, std::string filename);
+	static void loadMaterials(DoodadManager* doodad_manager, Map* map, std::string filename);
 };
 
 #endif 

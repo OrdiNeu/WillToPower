@@ -9,18 +9,23 @@ Game::~Game(){
 }
 
 void Game::init(){
-	screen.create(sf::VideoMode(WINDOW_WIDTH,WINDOW_HEIGHT), "Will To Power: 0 FPS");
-	Mode::entManager = new EntityManager();
-	Mode::entManager->unitManager = new UnitManager();
-	Mode::entManager->doodadManager = new DoodadManager();
-	Mode::entManager->itemManager = new ItemManager();
-	XmlLoader::loadUnits(Mode::entManager->unitManager,"./data/units.xml");
-	Mode::worldGen = new WorldGenerator(Mode::entManager,0);
-	Mode::curMap = Mode::worldGen->getMap(0,0);
-	Mode::entManager->unitManager->curMap = Mode::curMap;
-	Mode::entManager->doodadManager->curMap = Mode::curMap;
-	curMode = new ModeOrder();
-	curMode->init();
+	try {
+		screen.create(sf::VideoMode(WINDOW_WIDTH,WINDOW_HEIGHT), "Will To Power: 0 FPS");
+		Mode::entManager = new EntityManager();
+		Mode::entManager->unitManager = new UnitManager();
+		Mode::entManager->doodadManager = new DoodadManager();
+		Mode::entManager->itemManager = new ItemManager();
+		XmlLoader::loadUnits(Mode::entManager->unitManager,"./data/units.xml");
+		Mode::worldGen = new WorldGenerator(Mode::entManager,0);
+		Mode::curMap = Mode::worldGen->getMap(0,0);
+		Mode::entManager->unitManager->curMap = Mode::curMap;
+		Mode::entManager->doodadManager->curMap = Mode::curMap;
+		curMode = new ModeOrder();
+		curMode->init();
+	}
+	catch (std::exception &e) {
+		std::cerr << "Uncaught exception during init: " << e.what() << std::endl;
+	}
 }
 
 int Game::run(){

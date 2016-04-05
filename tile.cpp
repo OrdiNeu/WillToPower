@@ -1,15 +1,14 @@
 #include "tile.hpp"
-using namespace std;
 
 Tile::Tile() : Entity("0", "EMPTY", 0, 0, 0) {
 }
 
-Tile::Tile(string filename, int tags) : Entity("0", filename, 0, 0, tags) {
+Tile::Tile(std::string filename, int tags) : Entity("0", filename, 0, 0, tags) {
 }
 
 void Tile::render(sf::RenderTarget* screen, float x, float y) {
-	int yoffset = hasTag(WALL)*(WALL_HEIGHT-TILE_HEIGHT);
-	spr.setPosition(x, y - yoffset/*-tex.getSize().y*/);
+	//int yoffset = hasTag(WALL)*(WALL_HEIGHT-TILE_HEIGHT);
+	spr.setPosition(x, y /*- yoffset*/);
 	screen->draw(spr);
 }
 
