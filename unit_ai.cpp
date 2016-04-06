@@ -139,6 +139,8 @@ bool AI::checkJobBoard() {
 		if (route.size() != 0 && (pickedJob == NULL || route.size() < closestRoute.size())) {
 			closestRoute = route;
 			pickedJob = job;
+		} else if (route.size() == 0) {
+			cancelJob(job, "could not reach target");
 		}
 	}
 
@@ -149,8 +151,6 @@ bool AI::checkJobBoard() {
 			pickedJob->assigned = controlled;
 			jobState = JOB_STAGE_WALKING_TO_DEST;
 			return true;
-		} else {
-			cancelJob(pickedJob, "could not reach target");
 		}
 	}
 	return false;
