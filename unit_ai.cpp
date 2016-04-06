@@ -91,9 +91,9 @@ bool AI::meetsJobRequirements(Job* job) {
 bool AI::checkJobBoard() {
 	// Check the job board for stuff to do
 	point curPoint = TexXYToTileXY(controlled->realX, controlled->realY);
-	Job* pickedJob = NULL;
 	point closestPoint;
 	std::vector<point> closestRoute;
+	curJob = NULL;
 	for (unsigned int i = 0; i < JobQueue::jobQueue.size(); i++) {
 		point targetPoint;
 		Job* job = JobQueue::jobQueue[i];
@@ -137,20 +137,19 @@ bool AI::checkJobBoard() {
 		}
 
 		route = AStarSearch(curMap, curPoint.tileX, curPoint.tileY, targetPoint.tileX, targetPoint.tileY, 1);
-		if (route.size() != 0 && (pickedJob == NULL || route.size() < closestRoute.size())) {
+		if (route.size() != 0 && (curJob == NULL || route.size() < closestRoute.size())) {
 			closestRoute = route;
-			pickedJob = job;
+			curJob = job;
 			closestPoint = targetPoint;
 		} else if (route.size() == 0) {
 			cancelJob(job, "could not reach target");
 		}
 	}
 
-	if (pickedJob != NULL) {
+	if (curJob != NULL) {
 		// Pathfind to the job and pick it up
 		if (walkToPoint(closestPoint, curPoint, 1)) {
-			curJob = pickedJob;
-			pickedJob->assigned = controlled;
+			curJob->assigned = controlled;
 			jobState = JOB_STAGE_WALKING_TO_DEST;
 			return true;
 		}
