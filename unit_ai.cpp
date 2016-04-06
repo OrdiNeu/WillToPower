@@ -107,11 +107,11 @@ bool AI::checkJobBoard() {
 		std::vector<point> route;
 		switch(job->type) {
 			case JOB_TYPE_MINING: {
-				if (job->targetPoint == NULL) {
-					std::cerr << "Error: mining job created without a target point" << std::endl;
+				if (job->targetEnt == NULL) {
+					std::cerr << "Error: mining job created without a target ent" << std::endl;
 					continue;
 				}
-				targetPoint = *(job->targetPoint);
+				targetPoint = TexXYToTileXY(job->targetEnt->realX, job->targetEnt->realY);
 				break;
 			}
 			case JOB_TYPE_WOODCUT: {
@@ -161,13 +161,8 @@ void AI::finishJob() {
 	controlled->state = STATE_IDLE;
 	switch(curJob->type) {
 		case JOB_TYPE_MINING: {
-			if (curJob->targetPoint != NULL) {
-				Material* tileMaterial;
-
-				curMap->setTasked(curJob->targetPoint->tileX,curJob->targetPoint->tileY, false);
-				curMap->setColor(curJob->targetPoint->tileX,curJob->targetPoint->tileY, COLOR_NONE);
-				tileMaterial = curMap->getTile(curJob->targetPoint->tileX, curJob->targetPoint->tileY)->madeOf;
-				curMap->setTile(curJob->targetPoint->tileX,curJob->targetPoint->tileY, tileMaterial->getRandomTileID());
+			if (curJob->targetEnt != NULL) {
+				RequestQueues::entityRequests.push_back(entRequest::delEntRequest(curJob->targetEnt->uid, ENT_TYPE_DOODAD));
 			}
 			break;
 		}

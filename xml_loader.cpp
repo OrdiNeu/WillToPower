@@ -28,9 +28,9 @@ int XmlLoader::parseTags(std::string tags) {
     if (hasTag(tags,"IS_MINABLE")) {
         retVal |= IS_MINABLE;
     }
-    /*if (hasTag(tags,"IS_WALL")) {
-        retVal |= WALL;
-    }*/
+    if (hasTag(tags,"PATHING_BLOCK")) {
+        retVal |= PATHING_BLOCK;
+    }
 
     return retVal;
 }
@@ -40,7 +40,7 @@ Doodad* XmlLoader::loadWall(boost::property_tree::ptree wall_tree, DoodadManager
     std::string tags = wall_tree.get<std::string>("tags");
     std::ostringstream stream;
     stream << mat_made_of->name << "_" << mat_made_of->wallIDs.size();
-    Doodad* thisWall = new Doodad(stream.str(), filename, 0, 0, parseTags(tags));
+    Doodad* thisWall = new Doodad(stream.str(), filename, 0, 0, parseTags(tags) | DRAW_SPECIAL);
 
     if (doodad_manager != NULL) {
         doodad_manager->addNewEntType(stream.str(), *thisWall);

@@ -25,8 +25,8 @@
       <tags>IS_WALKABLE</tags>
     </floor>
     <wall>
-      <filename>./data/images/DirtBlock1.png</filename>
-      <tags>IS_MINABLE|IS_WALL</tags>
+      <filename>./data/images/DirtBlock1.png</filename> 
+      <tags>IS_MINABLE|PATHING_BLOCK</tags>
     </wall>
   </material>
   <material>

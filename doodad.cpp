@@ -15,6 +15,7 @@ void Doodad::update(float dt) {
 }
 
 void Doodad::render(sf::RenderTarget* screen) {
-	spr.setPosition(realX - tex.getSize().x, realY - (height*2));
+	float yoffset = hasTags(DRAW_SPECIAL) * (HALF_TILE_HEIGHT);
+	spr.setPosition(realX - tex.getSize().x, realY - (height*2) + yoffset);
 	screen->draw(spr);
 }

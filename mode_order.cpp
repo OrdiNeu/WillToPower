@@ -56,18 +56,19 @@ void ModeOrder::findTasksInArea(int type, int x0, int x1, int y0, int y1, bool d
 			switch (type) {
 				case JOB_TYPE_MINING:
 				{
-					// Mining jobs: any tile with the IS_MINABLE tag is assigned a mining job
-					if (curMap->inBounds(x,y) && curMap->getTile(x,y)->hasTag(IS_MINABLE)) {
-						if (doCreateJob) {
-							point thisSpot = TileXYToTexXY(x, y);
-							createJob(JOB_TYPE_MINING, SKILL_MINING, NULL, thisSpot);
-							curMap->setTasked(x,y,true);
+					// Mining jobs: any doodad with the IS_MINABLE tag is assigned a mining job
+					std::vector<Doodad*> doodadsHere = entManager->doodadManager->getDoodadsAtPoint(x,y);
+					for (Doodad* thisDoodad : doodadsHere) {
+						if (thisDoodad->hasTags(IS_MINABLE)) {
+							if (doCreateJob) {
+								createJob(JOB_TYPE_MINING, SKILL_WOODCUT, thisDoodad, point());
+								thisDoodad->tags |= DOODAD_TASKED;
+							}
+							if (colorize) thisDoodad->spr.setColor(DEFAULT_TILE_COLORS[COLOR_TASKED]);
+							if (uncolorize && !thisDoodad->hasTags(DOODAD_TASKED)) thisDoodad->spr.setColor(DEFAULT_TILE_COLORS[COLOR_NONE]);
 						}
-
-						// need to rethink this: where should the color for a tile actually be determined? In map?
-						if (colorize) curMap->setColor(x, y, COLOR_TASKED);
-						if (uncolorize && !curMap->getTasked(x,y)) curMap->setColor(x, y, COLOR_NONE);
 					}
+					break;
 					break;
 				}
 				case JOB_TYPE_WOODCUT:

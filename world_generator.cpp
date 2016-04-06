@@ -65,7 +65,7 @@ Map* WorldGenerator::generateMap(int map_x, int map_y) {
 			} else if (forestFactor < -0.5) {
 				// This is a dry region
 				retVal->setTile(x,y,1);
-				if (rand() % 2 == 1) {
+				if (rand() % 2 == 0) {
 					point thisPoint = TileXYToTexXY(x,y);
 					RequestQueues::entityRequests.push_back(entRequest::newEntRequest("dirt_0", thisPoint.realX, thisPoint.realY, ENT_TYPE_DOODAD));
 				}
