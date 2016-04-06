@@ -19,9 +19,9 @@ void ModeOrder::init() {
 	selectionActive = SELECT_TYPE_NONE;
 	curOrderType = ORDER_MODE_DIG;
 
-	digButton = new UIDrawable("./data/images/skills/BoostAtk.png", -WINDOW_WIDTH/2, WINDOW_HEIGHT/2-40);
-	woodcutButton = new UIDrawable("./data/images/skills/VoltIcon.png", -WINDOW_WIDTH/2+40, WINDOW_HEIGHT/2-40);
-	buildButton = new UIDrawable("./data/images/skills/HealIcon.png", -WINDOW_WIDTH/2+80, WINDOW_HEIGHT/2-40);
+	digButton = new UIDrawable("./data/images/skills/BoostAtk.png", 0, WINDOW_HEIGHT-40);
+	woodcutButton = new UIDrawable("./data/images/skills/VoltIcon.png", 40, WINDOW_HEIGHT-40);
+	buildButton = new UIDrawable("./data/images/skills/HealIcon.png", 80, WINDOW_HEIGHT-40);
 }
 
 void ModeOrder::setOrderMode(int orderType) {

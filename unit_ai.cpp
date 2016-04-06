@@ -185,7 +185,7 @@ void AI::finishJob() {
 			curMap->setColor(curJob->targetPoint->tileX, curJob->targetPoint->tileY, COLOR_NONE);
 			curMap->setRoom(curJob->targetPoint->tileX, curJob->targetPoint->tileY, curJob->roomIDToBuild);
 			// DEBUG:
-			curMap->setTile(curJob->targetPoint->tileX, curJob->targetPoint->tileY, 8);
+			curMap->setTile(curJob->targetPoint->tileX, curJob->targetPoint->tileY, 2);
 			break;
 		}
 	}

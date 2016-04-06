@@ -6,7 +6,8 @@ UIDrawable::UIDrawable(std::string filename, float screenX, float screenY) : fil
 
 void UIDrawable::render(sf::RenderTarget* screen) {
 	sf::Vector2f screen_center = screen->getView().getCenter();
-	spr.setPosition(screenX + screen_center.x, screenY + screen_center.y);
+	sf::Vector2f screen_size = screen->getView().getSize();
+	spr.setPosition(screenX + screen_center.x - screen_size.x/2, screenY + screen_center.y - screen_size.y/2);
 	screen->draw(spr);
 }
 
