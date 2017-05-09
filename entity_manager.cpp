@@ -4,11 +4,13 @@ void EntityManager::render(sf::RenderTarget* screen) {
 	// Single run of a bubble sort while we go through and render
 	for (std::vector<Entity*>::iterator it = ents.begin() ; it != ents.end(); ++it) {
 		Entity* ent = *it;
-		Entity* nextEnt = *(it+1);
-		if ((it+1) != ents.end() && ent->realY > nextEnt->realY) {
-			*it = (*(it+1));
-			(*(it+1)) = ent;
-			ent = nextEnt;
+		if ((it+1) != ents.end()) {
+			Entity* nextEnt = *(it + 1);
+			if (ent->realY > nextEnt->realY) {
+				*it = (*(it+1));
+				(*(it+1)) = ent;
+				ent = nextEnt;
+			}
 		}
 		ent->render(screen);
 	}
@@ -54,7 +56,7 @@ void EntityManager::addToEntList(Entity* newEnt) {
 }
 
 Entity* EntityManager::addNewEntByType(std::string name, int type, float x, float y) {
-	Entity* newEnt;
+	Entity* newEnt = NULL;
 	if (type == ENT_TYPE_UNIT) {
 		newEnt = unitManager->addNewEntByType(name, x, y);
 	} else if (type == ENT_TYPE_DOODAD) {
